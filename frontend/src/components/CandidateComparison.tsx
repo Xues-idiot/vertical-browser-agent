@@ -10,6 +10,14 @@ interface Candidate {
   summary: string;
   current_company?: string;
   years_experience?: number;
+  score_breakdown?: {
+    hard_conditions?: number;
+    skill_match?: number;
+    industry_exp?: number;
+    potential?: number;
+  };
+  tags?: string[];
+  matched_criteria?: string[];
 }
 
 interface CandidateComparisonProps {
@@ -225,16 +233,26 @@ export default function CandidateComparison({
                   }}
                   className="px-3 py-1.5 bg-white/20 text-white text-sm rounded-lg hover:bg-white/30 transition-colors flex items-center gap-1"
                 >
-                  🔗 复制分享链接
+                  🔗 分享链接
                 </button>
                 <button
                   onClick={() => {
-                    const headers = ["姓名", "匹配分", "等级", "公司", "经验"];
+                    // Enhanced CSV with more fields
+                    const headers = ["姓名", "匹配分", "等级", "公司", "经验", "硬性条件", "技能匹配", "行业经验", "发展潜力", "标签", "匹配标准"];
                     const rows = selectedCandidates.map(c => [
-                      c.candidate_name, c.match_score, c.level,
-                      c.current_company || "", c.years_experience || ""
+                      c.candidate_name,
+                      c.match_score,
+                      c.level === "strong_recommend" ? "强烈推荐" : "可备选",
+                      c.current_company || "",
+                      c.years_experience || "",
+                      c.score_breakdown?.hard_conditions || "",
+                      c.score_breakdown?.skill_match || "",
+                      c.score_breakdown?.industry_exp || "",
+                      c.score_breakdown?.potential || "",
+                      (c.tags || []).join(";"),
+                      (c.matched_criteria || []).join(";")
                     ]);
-                    const csv = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+                    const csv = [headers.join(","), ...rows.map(r => r.map(v => `"${v}"`).join(","))].join("\n");
                     const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" });
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement("a");
@@ -243,9 +261,35 @@ export default function CandidateComparison({
                     a.click();
                     URL.revokeObjectURL(url);
                   }}
-                  className="px-3 py-1.5 bg-white/20 text-white text-sm rounded-lg hover:bg-white/30 transition-colors flex items-center gap-1"
+                  className="px-3 py-1.5 bg-amber-500/40 text-white text-sm rounded-lg hover:bg-amber-500/50 transition-colors flex items-center gap-1"
                 >
-                  📥 导出CSV
+                  📊 详细CSV
+                </button>
+                <button
+                  onClick={() => {
+                    // JSON export with full details
+                    const exportData = {
+                      exported_at: new Date().toISOString(),
+                      candidates_count: selectedCandidates.length,
+                      criteria: criteria,
+                      candidates: selectedCandidates.map((c, i) => ({
+                        rank: i + 1,
+                        ...c,
+                        level_label: c.level === "strong_recommend" ? "强烈推荐" : "可备选"
+                      }))
+                    };
+                    const json = JSON.stringify(exportData, null, 2);
+                    const blob = new Blob([json], { type: "application/json" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = `candidate-comparison-${Date.now()}.json`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                  }}
+                  className="px-3 py-1.5 bg-emerald-500/40 text-white text-sm rounded-lg hover:bg-emerald-500/50 transition-colors flex items-center gap-1"
+                >
+                  📋 JSON
                 </button>
               </>
             )}

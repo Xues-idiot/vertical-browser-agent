@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.33.0] - 2026-03-25
+
+### Added
+
+#### 候选人对比导出增强
+- **详细CSV导出** - 包含评分明细、标签、匹配标准
+- **JSON完整导出** - 包含时间戳、排名、完整信息
+- **双格式支持** - 简单CSV和详细CSV可选
+
+---
+
 ## [1.32.0] - 2026-03-25
 
 ### Added
