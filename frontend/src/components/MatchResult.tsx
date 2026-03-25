@@ -500,6 +500,8 @@ export default function MatchResult({
   const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [batchSelected, setBatchSelected] = useState<string[]>([]);
+  const [batchMode, setBatchMode] = useState(false);
 
   // Combine all candidates
   const allCandidates = [...strongRecommendations, ...backupCandidates];
@@ -611,8 +613,23 @@ export default function MatchResult({
             </svg>
           </div>
 
+          {/* Batch Mode Toggle */}
+          <button
+            onClick={() => {
+              setBatchMode(!batchMode);
+              setBatchSelected([]);
+            }}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              batchMode
+                ? "bg-purple-600 text-white"
+                : "bg-[#111827] text-gray-400 border border-gray-700 hover:border-purple-500"
+            }`}
+          >
+            {batchMode ? "✓ 退出批量" : "📋 批量操作"}
+          </button>
+
           {/* Tag Filters */}
-          {allTags.length > 0 && (
+          {allTags.length > 0 && !batchMode && (
             <div className="flex flex-wrap gap-2">
               {allTags.map((tag) => (
                 <button
@@ -640,6 +657,59 @@ export default function MatchResult({
         </div>
       </div>
 
+      {/* Batch Action Toolbar */}
+      {batchMode && batchSelected.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-purple-900/30 border border-purple-500/30 rounded-xl p-4 flex items-center justify-between"
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-purple-300 text-sm font-medium">
+              已选择 {batchSelected.length} 位候选人
+            </span>
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => {
+                batchSelected.forEach(name => {
+                  const c = allCandidates.find(a => a.candidate_name === name);
+                  if (c) handleStatusChange(c, "interview");
+                });
+                setBatchSelected([]);
+              }}
+              className="px-4 py-2 bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 rounded-lg hover:bg-emerald-600/30 transition-colors text-sm"
+            >
+              📅 批量面试
+            </button>
+            <button
+              onClick={() => {
+                // Export selected candidates
+                const selected = allCandidates.filter(c => batchSelected.includes(c.candidate_name));
+                const data = JSON.stringify(selected, null, 2);
+                const blob = new Blob([data], { type: "application/json" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `candidates-batch-${Date.now()}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                setBatchSelected([]);
+              }}
+              className="px-4 py-2 bg-cyan-600/20 text-cyan-400 border border-cyan-500/30 rounded-lg hover:bg-cyan-600/30 transition-colors text-sm"
+            >
+              📥 导出选中
+            </button>
+            <button
+              onClick={() => setBatchSelected([])}
+              className="px-4 py-2 bg-gray-600/20 text-gray-400 border border-gray-500/30 rounded-lg hover:bg-gray-600/30 transition-colors text-sm"
+            >
+              取消
+            </button>
+          </div>
+        </motion.div>
+      )}
+
       {/* 强烈推荐 */}
       {filteredStrong.length > 0 && (
         <motion.div
@@ -661,15 +731,43 @@ export default function MatchResult({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ scale: 1.01, borderColor: "#10B981" }}
-                onClick={() => setSelectedCandidate(candidate)}
-                className="border border-gray-700 rounded-lg p-5 hover:shadow-lg transition-all bg-[#111827] cursor-pointer"
+                onClick={() => {
+                  if (batchMode) {
+                    setBatchSelected(prev =>
+                      prev.includes(candidate.candidate_name)
+                        ? prev.filter(n => n !== candidate.candidate_name)
+                        : [...prev, candidate.candidate_name]
+                    );
+                  } else {
+                    setSelectedCandidate(candidate);
+                  }
+                }}
+                className={`border rounded-lg p-5 hover:shadow-lg transition-all bg-[#111827] cursor-pointer ${
+                  batchMode
+                    ? "border-gray-700 hover:border-purple-500"
+                    : "border-gray-700"
+                } ${batchSelected.includes(candidate.candidate_name) ? "border-purple-500 bg-purple-900/10" : ""}`}
               >
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <span className="w-8 h-8 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center font-bold text-sm border border-emerald-500/30">
-                        {index + 1}
-                      </span>
+                      {batchMode ? (
+                        <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${
+                          batchSelected.includes(candidate.candidate_name)
+                            ? "bg-purple-600 border-purple-600"
+                            : "border-gray-500"
+                        }`}>
+                          {batchSelected.includes(candidate.candidate_name) && (
+                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                        </div>
+                      ) : (
+                        <span className="w-8 h-8 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center font-bold text-sm border border-emerald-500/30">
+                          {index + 1}
+                        </span>
+                      )}
                       <div>
                         <h4 className="font-semibold text-white text-lg">
                           {candidate.candidate_name}
@@ -739,15 +837,43 @@ export default function MatchResult({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 + index * 0.1 }}
                 whileHover={{ scale: 1.01, borderColor: "#F59E0B" }}
-                onClick={() => setSelectedCandidate(candidate)}
-                className="border border-gray-700 rounded-lg p-5 hover:shadow-lg transition-all bg-[#111827] cursor-pointer"
+                onClick={() => {
+                  if (batchMode) {
+                    setBatchSelected(prev =>
+                      prev.includes(candidate.candidate_name)
+                        ? prev.filter(n => n !== candidate.candidate_name)
+                        : [...prev, candidate.candidate_name]
+                    );
+                  } else {
+                    setSelectedCandidate(candidate);
+                  }
+                }}
+                className={`border rounded-lg p-5 hover:shadow-lg transition-all bg-[#111827] cursor-pointer ${
+                  batchMode
+                    ? "border-gray-700 hover:border-purple-500"
+                    : "border-gray-700"
+                } ${batchSelected.includes(candidate.candidate_name) ? "border-purple-500 bg-purple-900/10" : ""}`}
               >
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <span className="w-8 h-8 bg-amber-500/20 text-amber-400 rounded-full flex items-center justify-center font-bold text-sm border border-amber-500/30">
-                        {index + 1}
-                      </span>
+                      {batchMode ? (
+                        <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${
+                          batchSelected.includes(candidate.candidate_name)
+                            ? "bg-purple-600 border-purple-600"
+                            : "border-gray-500"
+                        }`}>
+                          {batchSelected.includes(candidate.candidate_name) && (
+                            <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                        </div>
+                      ) : (
+                        <span className="w-8 h-8 bg-amber-500/20 text-amber-400 rounded-full flex items-center justify-center font-bold text-sm border border-amber-500/30">
+                          {index + 1}
+                        </span>
+                      )}
                       <div>
                         <h4 className="font-semibold text-white text-lg">
                           {candidate.candidate_name}

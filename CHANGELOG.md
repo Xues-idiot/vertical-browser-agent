@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.8.0] - 2026-03-25
+
+### Added
+
+#### 批量操作功能
+- **批量选择模式** - 点击"批量操作"进入选择模式
+- **多选复选框** - 候选人卡片添加复选框
+- **批量操作工具栏** - 选中后显示工具栏
+- **批量标记面试** - 一键将选中候选人设为面试状态
+- **批量导出** - 导出选中的候选人数据
+
+---
+
 ## [1.7.0] - 2026-03-25
 
 ### Added
