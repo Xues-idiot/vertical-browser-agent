@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.24.0] - 2026-03-25
+
+### Added
+
+#### 面试反馈记录
+- **面试反馈字段** - 候选人数据结构支持面试轮次
+- **星级评分** - 每轮面试支持1-5星评价
+- **反馈详情** - 显示面试日期和反馈内容
+
+---
+
 ## [1.23.0] - 2026-03-25
 
 ### Added

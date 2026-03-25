@@ -28,6 +28,7 @@ interface Candidate {
   source_name?: string;  // 来源名称（如猎头名称或网站名称）
   score_history?: { date: string; score: number }[];  // 评分历史
   starred?: boolean;  // 收藏标记
+  interviews?: { round: number; date: string; feedback: string; rating: number }[];  // 面试反馈
 }
 
 interface MatchResultProps {
@@ -468,6 +469,31 @@ function CandidateDetailModal({
                       {similar.match_score}%
                     </span>
                   </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Interview Feedback */}
+          {(candidate.interviews || []).length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                面试反馈 ({candidate.interviews?.length}轮)
+              </h3>
+              <div className="space-y-3">
+                {candidate.interviews?.map((interview, i) => (
+                  <div key={i} className="bg-[#111827] rounded-lg p-3 border border-gray-700">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium text-cyan-400">第{interview.round}轮面试</span>
+                      <div className="flex items-center gap-1">
+                        {Array.from({ length: 5 }).map((_, si) => (
+                          <span key={si} className={`text-sm ${si < interview.rating ? "text-amber-400" : "text-gray-600"}`}>★</span>
+                        ))}
+                      </div>
+                    </div>
+                    <p className="text-xs text-gray-400 mb-1">{interview.date}</p>
+                    <p className="text-sm text-gray-300">{interview.feedback}</p>
+                  </div>
                 ))}
               </div>
             </div>
