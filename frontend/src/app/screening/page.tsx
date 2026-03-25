@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import JDInput from "@/components/JDInput";
 import ResumeList from "@/components/ResumeList";
@@ -43,6 +43,47 @@ export default function ScreeningPage() {
   const [showComparison, setShowComparison] = useState(false);
   const [showJDComparison, setShowJDComparison] = useState(false);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger shortcuts when typing in inputs
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      // Cmd/Ctrl + 1/2/3 for view modes (when on result page)
+      if ((e.metaKey || e.ctrlKey) && step === "result") {
+        if (e.key === "1") {
+          e.preventDefault();
+          setViewMode("list");
+        } else if (e.key === "2") {
+          e.preventDefault();
+          setViewMode("funnel");
+        } else if (e.key === "3") {
+          e.preventDefault();
+          setViewMode("compare");
+        } else if (e.key === "d") {
+          e.preventDefault();
+          setShowJDComparison(true);
+        }
+      }
+
+      // Escape to close modals
+      if (e.key === "Escape") {
+        setShowJDComparison(false);
+      }
+
+      // R to reset (when on result page)
+      if (e.key === "r" && step === "result" && !e.metaKey && !e.ctrlKey) {
+        e.preventDefault();
+        handleReset();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [step]);
 
   const handleJDSubmit = (url: string) => {
     setJdUrl(url);

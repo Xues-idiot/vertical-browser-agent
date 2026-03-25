@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.13.0] - 2026-03-25
+
+### Added
+
+#### 键盘快捷键支持
+- **⌘+1/2/3** - 切换视图模式（列表/漏斗/对比）
+- **⌘+D** - 打开JD对比面板
+- **ESC** - 关闭弹窗
+- **R** - 重置筛选
+- 快捷键在输入框外触发
+
+---
+
 ## [1.12.0] - 2026-03-25
 
 ### Added
