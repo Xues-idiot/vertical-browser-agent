@@ -9,6 +9,7 @@ import ReportView from "@/components/ReportView";
 import BrowserPreview from "@/components/BrowserPreview";
 import PipelineFunnel from "@/components/PipelineFunnel";
 import CandidateComparison from "@/components/CandidateComparison";
+import JDComparison from "@/components/JDComparison";
 import { screeningAPI } from "@/lib/api";
 
 interface Candidate {
@@ -40,6 +41,7 @@ export default function ScreeningPage() {
   const [report, setReport] = useState<Report | null>(null);
   const [viewMode, setViewMode] = useState<"list" | "funnel" | "compare">("list");
   const [showComparison, setShowComparison] = useState(false);
+  const [showJDComparison, setShowJDComparison] = useState(false);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
 
   const handleJDSubmit = (url: string) => {
@@ -215,7 +217,7 @@ export default function ScreeningPage() {
               className="flex items-center gap-2"
             >
               <span className="px-3 py-1 bg-cyan-500/20 text-cyan-400 text-xs font-medium rounded-full border border-cyan-500/30">
-                v1.0
+                v1.5
               </span>
             </motion.div>
           </div>
@@ -347,6 +349,12 @@ export default function ScreeningPage() {
                       ⚖️ 对比
                     </button>
                   </div>
+                  <button
+                    onClick={() => setShowJDComparison(true)}
+                    className="bg-purple-600/20 text-purple-400 border border-purple-500/30 px-4 py-2 rounded-lg hover:bg-purple-600/30 transition-colors flex items-center gap-2 text-sm"
+                  >
+                    📑 JD对比
+                  </button>
 
                   <motion.button
                     whileHover={{ scale: 1.05 }}
@@ -480,6 +488,13 @@ export default function ScreeningPage() {
                 </motion.div>
               )}
             </motion.div>
+          )}
+          {showJDComparison && report && (
+            <JDComparison
+              candidates={candidates}
+              criteria={report.screening_criteria}
+              onClose={() => setShowJDComparison(false)}
+            />
           )}
         </AnimatePresence>
       </main>
