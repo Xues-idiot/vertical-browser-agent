@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.29.0] - 2026-03-25
+
+### Added
+
+#### 招聘漏斗阶段展开详情
+- **可点击展开** - 点击漏斗各阶段查看候选人明细
+- **候选人列表** - 显示阶段内候选人姓名、经验、评分
+- **快捷预览** - 最多显示5位候选人，支持展开/收起
+
+---
+
 ## [1.28.0] - 2026-03-25
 
 ### Added

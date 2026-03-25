@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 
 interface Candidate {
   candidate_name: string;
@@ -8,6 +9,7 @@ interface Candidate {
   level: string;
   status?: "pending" | "interview" | "offer" | "hired" | "rejected";
   source?: string;
+  years_experience?: number;
 }
 
 interface PipelineFunnelProps {
@@ -66,6 +68,7 @@ function getStatusCounts(candidates: Candidate[], total: number) {
 }
 
 export default function PipelineFunnel({ candidates, totalResumes }: PipelineFunnelProps) {
+  const [expandedStage, setExpandedStage] = useState<string | null>(null);
   const counts = getStatusCounts(candidates, totalResumes);
 
   // Calculate percentages for funnel width
@@ -93,6 +96,17 @@ export default function PipelineFunnel({ candidates, totalResumes }: PipelineFun
               const count = counts[stage.key as keyof typeof counts];
               const percentage = (count / maxCount) * 100;
               const isLast = index === stages.length - 1;
+              const isExpanded = expandedStage === stage.key;
+
+              // 获取该阶段的候选人
+              const stageCandidates = candidates.filter(c => {
+                if (stage.key === "total") return true;
+                if (stage.key === "screened") return c.level === "strong_recommend" || c.level === "backup";
+                if (stage.key === "interview") return c.status === "interview" || c.status === "offer" || c.status === "hired";
+                if (stage.key === "offer") return c.status === "offer" || c.status === "hired";
+                if (stage.key === "hired") return c.status === "hired";
+                return false;
+              });
 
               return (
                 <motion.div
@@ -102,7 +116,10 @@ export default function PipelineFunnel({ candidates, totalResumes }: PipelineFun
                   transition={{ delay: index * 0.1 }}
                   className="relative"
                 >
-                  <div className="flex items-center gap-4">
+                  <div
+                    className={`flex items-center gap-4 cursor-pointer ${isExpanded ? "bg-[#111827] rounded-lg p-3 -mx-3" : ""}`}
+                    onClick={() => setExpandedStage(isExpanded ? null : stage.key)}
+                  >
                     {/* Stage label */}
                     <div className="w-24 flex items-center gap-2">
                       <span className="text-lg">{stage.icon}</span>
@@ -137,12 +154,43 @@ export default function PipelineFunnel({ candidates, totalResumes }: PipelineFun
                     </div>
 
                     {/* Percentage */}
-                    <div className="w-16 text-right">
+                    <div className="w-16 text-right flex items-center gap-2">
                       <span className={`text-sm font-medium ${stage.color}`}>
                         {totalResumes > 0 ? Math.round((count / totalResumes) * 100) : 0}%
                       </span>
+                      {stageCandidates.length > 0 && (
+                        <span className="text-xs text-gray-500">
+                          {isExpanded ? "▲" : "▼"}
+                        </span>
+                      )}
                     </div>
                   </div>
+
+                  {/* Expanded candidate list */}
+                  <AnimatePresence>
+                    {isExpanded && stageCandidates.length > 0 && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="mt-2 ml-28 space-y-2 overflow-hidden"
+                      >
+                        {stageCandidates.slice(0, 5).map((c, i) => (
+                          <div key={i} className="flex items-center gap-3 bg-[#111827] rounded-lg px-3 py-2">
+                            <span className={`w-2 h-2 rounded-full ${c.level === "strong_recommend" ? "bg-emerald-500" : "bg-amber-500"}`} />
+                            <span className="text-sm text-gray-300 flex-1 truncate">{c.candidate_name}</span>
+                            <span className="text-xs text-gray-500">{c.years_experience}年</span>
+                            <span className="text-sm font-medium text-cyan-400">{c.match_score}%</span>
+                          </div>
+                        ))}
+                        {stageCandidates.length > 5 && (
+                          <div className="text-xs text-gray-500 text-center py-1">
+                            还有 {stageCandidates.length - 5} 位候选人...
+                          </div>
+                        )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </motion.div>
               );
             })}
