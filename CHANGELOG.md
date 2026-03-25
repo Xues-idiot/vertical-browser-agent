@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.34.1] - 2026-03-25
+
+### Fixed
+
+#### Bug修复
+- **候选人姓名传递** - ResumeList现在将候选人姓名嵌入简历文本中传递给后端
+- **空状态处理** - 改善了数组空状态的处理
+
+---
+
 ## [1.34.0] - 2026-03-25
 
 ### Added

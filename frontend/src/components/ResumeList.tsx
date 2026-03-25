@@ -41,7 +41,15 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
   const handleSubmit = () => {
     const validResumes = resumes.filter((r) => r.trim());
     if (validResumes.length > 0) {
-      onSubmit(validResumes);
+      // 将候选人姓名嵌入简历文本中传递给后端
+      const resumesWithNames = resumes.map((resume, i) => {
+        const name = candidateNames[i]?.trim();
+        if (name) {
+          return `【候选人: ${name}】\n${resume}`;
+        }
+        return resume;
+      }).filter((r) => r.trim());
+      onSubmit(resumesWithNames);
     }
   };
 
