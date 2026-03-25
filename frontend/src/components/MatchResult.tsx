@@ -29,6 +29,24 @@ interface Candidate {
   score_history?: { date: string; score: number }[];  // 评分历史
   starred?: boolean;  // 收藏标记
   interviews?: { round: number; date: string; feedback: string; rating: number }[];  // 面试反馈
+  percentile?: number;  // 百分位排名
+}
+
+// 计算候选人在全体中的百分位排名
+function calculatePercentile(candidates: Candidate[], candidateName: string): number {
+  const sorted = [...candidates].sort((a, b) => b.match_score - a.match_score);
+  const index = sorted.findIndex(c => c.candidate_name === candidateName);
+  if (index === -1) return 0;
+  return Math.round(((sorted.length - index - 1) / sorted.length) * 100);
+}
+
+// 获取百分位等级标签
+function getPercentileLabel(percentile: number): { label: string; color: string; bg: string } {
+  if (percentile >= 90) return { label: "顶尖", color: "text-emerald-400", bg: "bg-emerald-500" };
+  if (percentile >= 70) return { label: "优秀", color: "text-cyan-400", bg: "bg-cyan-500" };
+  if (percentile >= 50) return { label: "良好", color: "text-blue-400", bg: "bg-blue-500" };
+  if (percentile >= 30) return { label: "一般", color: "text-amber-400", bg: "bg-amber-500" };
+  return { label: "靠后", color: "text-gray-400", bg: "bg-gray-500" };
 }
 
 interface MatchResultProps {
@@ -131,16 +149,22 @@ function generateKeyHighlights(candidate: Candidate): string[] {
 function CandidateDetailModal({
   candidate,
   criteria,
+  allCandidates,
   onClose,
   onStatusChange,
 }: {
   candidate: Candidate;
   criteria: string[];
+  allCandidates: Candidate[];
   onClose: () => void;
   onStatusChange: (status: CandidateStatus) => void;
 }) {
   const [status, setStatus] = useState<CandidateStatus>("pending");
   const [note, setNote] = useState("");
+
+  // 计算百分位排名
+  const percentile = calculatePercentile(allCandidates, candidate.candidate_name);
+  const percentileInfo = getPercentileLabel(percentile);
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return "text-emerald-400";
@@ -180,8 +204,18 @@ function CandidateDetailModal({
                 {candidate.current_company && ` · ${candidate.current_company}`}
               </p>
             </div>
-            <div className={`text-4xl font-bold ${getScoreColor(candidate.match_score)}`}>
-              {candidate.match_score}%
+            <div className="text-right">
+              <div className={`text-4xl font-bold ${getScoreColor(candidate.match_score)}`}>
+                {candidate.match_score}%
+              </div>
+              <div className="flex items-center gap-2 mt-1 justify-end">
+                <span className={`text-xs font-medium ${percentileInfo.color}`}>
+                  超越 {percentile}% 的候选人
+                </span>
+                <span className={`text-xs px-2 py-0.5 rounded-full text-white ${percentileInfo.bg}`}>
+                  {percentileInfo.label}
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -723,6 +757,7 @@ export default function MatchResult({
           <CandidateDetailModal
             candidate={selectedCandidate}
             criteria={criteria}
+            allCandidates={allCandidates}
             onClose={() => setSelectedCandidate(null)}
             onStatusChange={(status) => handleStatusChange(selectedCandidate, status)}
           />

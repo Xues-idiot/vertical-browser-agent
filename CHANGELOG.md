@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.26.0] - 2026-03-25
+
+### Added
+
+#### 候选人百分位排名
+- **百分位计算** - 根据全体候选人计算相对排名
+- **百分位标签** - 顶尖/优秀/良好/一般/靠后五档
+- **详情页展示** - 候选人详情modal显示超越百分比
+- **动态计算** - 实时根据候选人列表计算排名
+
+---
+
 ## [1.25.0] - 2026-03-25
 
 ### Added
