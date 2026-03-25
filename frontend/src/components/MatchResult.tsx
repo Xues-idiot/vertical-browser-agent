@@ -21,6 +21,8 @@ interface Candidate {
   resume_text?: string;
   score_breakdown?: ScoreBreakdown;
   tags?: string[];
+  ai_reason?: string;  // AI推荐理由
+  key_highlights?: string[];  // 关键经历亮点
 }
 
 interface MatchResultProps {
@@ -30,6 +32,82 @@ interface MatchResultProps {
 }
 
 type CandidateStatus = "pending" | "interview" | "offer" | "rejected";
+
+// AI推荐理由生成
+function generateAIRecommendation(candidate: Candidate): string {
+  const reasons: string[] = [];
+  const sb = candidate.score_breakdown;
+
+  if (sb?.hard_conditions && sb.hard_conditions >= 80) {
+    reasons.push("硬性条件完全达标：学历、工作年限等基础要求符合JD标准");
+  } else if (sb?.hard_conditions && sb.hard_conditions >= 60) {
+    reasons.push("硬性条件基本满足，可进一步沟通确认");
+  }
+
+  if (sb?.skill_match && sb.skill_match >= 80) {
+    reasons.push("技能匹配度极高，具备岗位所需核心技能");
+  } else if (sb?.skill_match && sb.skill_match >= 60) {
+    reasons.push("技能与岗位要求有一定匹配，上手成本较低");
+  }
+
+  if (sb?.industry_exp && sb.industry_exp >= 80) {
+    reasons.push("行业经验深厚，熟悉行业痛点和解决方案");
+  } else if (sb?.industry_exp && sb.industry_exp >= 60) {
+    reasons.push("有相关行业背景，能快速融入团队");
+  }
+
+  if (sb?.potential && sb.potential >= 80) {
+    reasons.push("发展潜力优秀，具备成长为专家的潜质");
+  } else if (sb?.potential && sb.potential >= 60) {
+    reasons.push("有一定的成长空间，值得培养");
+  }
+
+  if (candidate.tags?.includes("大厂经验")) {
+    reasons.push("具有知名企业工作背景，视野和专业度高");
+  }
+  if (candidate.tags?.includes("管理经验")) {
+    reasons.push("具备团队管理经验，可承担更大责任");
+  }
+  if (candidate.tags?.includes("海归")) {
+    reasons.push("具有国际化背景，语言和跨文化沟通能力强");
+  }
+
+  if (reasons.length === 0) {
+    return "综合评估后推荐，建议面试进一步了解";
+  }
+
+  return reasons.join("；") + "。";
+}
+
+// 关键经历亮点提取
+function generateKeyHighlights(candidate: Candidate): string[] {
+  const highlights: string[] = [];
+
+  if (candidate.years_experience && candidate.years_experience >= 5) {
+    highlights.push(`${candidate.years_experience}年相关工作经验，资历深厚`);
+  } else if (candidate.years_experience) {
+    highlights.push(`${candidate.years_experience}年工作经验，有一定积累`);
+  }
+
+  if (candidate.current_company) {
+    highlights.push(`当前任职于 ${candidate.current_company}`);
+  }
+
+  if (candidate.tags) {
+    const notableTags = candidate.tags.filter(t =>
+      ["大厂经验", "管理经验", "海归", "SaaS", "创业经验"].includes(t)
+    );
+    if (notableTags.length > 0) {
+      highlights.push(`标签优势：${notableTags.join("、")}`);
+    }
+  }
+
+  if (candidate.matched_criteria && candidate.matched_criteria.length > 0) {
+    highlights.push(`匹配标准：${candidate.matched_criteria.slice(0, 2).join("、")}`);
+  }
+
+  return highlights.slice(0, 4);
+}
 
 function CandidateDetailModal({
   candidate,
@@ -231,6 +309,42 @@ function CandidateDetailModal({
               ))}
             </div>
           </div>
+
+          {/* AI推荐理由 */}
+          <div className="mb-6">
+            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
+              AI推荐理由
+            </h3>
+            <div className="bg-gradient-to-r from-purple-900/30 to-purple-900/10 rounded-xl p-4 border border-purple-500/30">
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">🤖</span>
+                <div className="flex-1">
+                  <p className="text-gray-200 text-sm leading-relaxed">
+                    {candidate.ai_reason || generateAIRecommendation(candidate)}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 关键经历亮点 */}
+          {(candidate.key_highlights || generateKeyHighlights(candidate)).length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                关键经历亮点
+              </h3>
+              <div className="space-y-2">
+                {(candidate.key_highlights || generateKeyHighlights(candidate)).map((highlight, i) => (
+                  <div key={i} className="flex items-start gap-2 bg-[#111827] rounded-lg p-3 border border-gray-700">
+                    <span className="w-5 h-5 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
+                      {i + 1}
+                    </span>
+                    <p className="text-gray-300 text-sm">{highlight}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Resume Text Preview */}
           {candidate.resume_text && (
