@@ -151,14 +151,18 @@ function CandidateDetailModal({
   candidate,
   criteria,
   allCandidates,
+  customTags,
   onClose,
   onStatusChange,
+  onAddTag,
 }: {
   candidate: Candidate;
   criteria: string[];
   allCandidates: Candidate[];
+  customTags: Map<string, string[]>;
   onClose: () => void;
   onStatusChange: (status: CandidateStatus) => void;
+  onAddTag?: (candidateName: string, tag: string) => void;
 }) {
   const [status, setStatus] = useState<CandidateStatus>("pending");
   const [note, setNote] = useState("");
@@ -166,6 +170,52 @@ function CandidateDetailModal({
   // 计算百分位排名
   const percentile = calculatePercentile(allCandidates, candidate.candidate_name);
   const percentileInfo = getPercentileLabel(percentile);
+
+  // Auto-suggest tags based on candidate profile
+  const suggestTags = (c: Candidate): string[] => {
+    const suggestions: string[] = [];
+    const existingTags = [...(c.tags || []), ...(customTags.get(c.candidate_name) || [])];
+
+    if (c.current_company) {
+      const company = c.current_company.toLowerCase();
+      if (["阿里巴巴", "腾讯", "字节跳动", "百度", "京东", "美团", "华为"].some(b => company.includes(b))) {
+        suggestions.push("大厂经验");
+      }
+      if (["创业", " startup", "startup"].some(b => company.includes(b))) {
+        suggestions.push("创业经验");
+      }
+    }
+
+    if (c.years_experience) {
+      if (c.years_experience >= 8) suggestions.push("资深专家");
+      else if (c.years_experience >= 5) suggestions.push("经验丰富");
+      else if (c.years_experience >= 3) suggestions.push("中高年级");
+    }
+
+    if (c.summary) {
+      const summary = c.summary.toLowerCase();
+      if (summary.includes("硕士") || summary.includes("研究生")) suggestions.push("硕士学历");
+      if (summary.includes("博士")) suggestions.push("博士学历");
+      if (summary.includes("海归") || summary.includes("海外")) suggestions.push("海归");
+      if (summary.includes("985") || summary.includes("211")) suggestions.push("985/211");
+    }
+
+    if (c.matched_criteria) {
+      c.matched_criteria.forEach(criteria => {
+        const cr = criteria.toLowerCase();
+        if (cr.includes("管理")) suggestions.push("管理经验");
+        if (cr.includes("SaaS")) suggestions.push("SaaS");
+        if (cr.includes("电商")) suggestions.push("电商");
+        if (cr.includes("金融")) suggestions.push("金融");
+        if (cr.includes("AI") || cr.includes("人工智能")) suggestions.push("AI");
+      });
+    }
+
+    if (c.match_score >= 85) suggestions.push("高分候选人");
+    if (c.level === "strong_recommend") suggestions.push("强烈推荐");
+
+    return [...new Set(suggestions)].filter(s => !existingTags.includes(s));
+  };
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return "text-emerald-400";
@@ -371,6 +421,30 @@ function CandidateDetailModal({
               ))}
             </div>
           </div>
+
+          {/* 推荐标签 */}
+          {(() => {
+            const suggestions = suggestTags(candidate);
+            return suggestions.length > 0 ? (
+              <div className="mb-6">
+                <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                  💡 推荐标签
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {suggestions.map((tag) => (
+                    <button
+                      key={tag}
+                      onClick={() => onAddTag?.(candidate.candidate_name, tag)}
+                      className="bg-purple-500/20 text-purple-400 px-3 py-1.5 rounded-full text-sm border border-purple-500/30 hover:bg-purple-500/30 transition-colors flex items-center gap-1"
+                    >
+                      <span className="text-xs">+</span>
+                      {tag}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : null;
+          })()}
 
           {/* AI推荐理由 */}
           <div className="mb-6">
@@ -770,8 +844,10 @@ export default function MatchResult({
             candidate={selectedCandidate}
             criteria={criteria}
             allCandidates={allCandidates}
+            customTags={customTags}
             onClose={() => setSelectedCandidate(null)}
             onStatusChange={(status) => handleStatusChange(selectedCandidate, status)}
+            onAddTag={addTagToCandidate}
           />
         )}
       </AnimatePresence>

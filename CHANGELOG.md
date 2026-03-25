@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.32.0] - 2026-03-25
+
+### Added
+
+#### 候选人标签自动推荐
+- **智能推荐** - 基于公司、经验、学历等自动推荐标签
+- **一键添加** - 点击推荐标签即可添加到候选人
+- **去重显示** - 只显示未添加的标签建议
+
+---
+
 ## [1.31.0] - 2026-03-25
 
 ### Added
