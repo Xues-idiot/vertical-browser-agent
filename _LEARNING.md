@@ -1,0 +1,72 @@
+# Spider 垂直浏览器Agent - 学习记录
+
+## 学习日志
+
+### 迭代思考 (v1.1 - 2026-03-25)
+
+#### 产品分析
+**Spider vs browser-use 的核心差异**:
+- browser-use: 通用型，开发者用，API驱动
+- Spider: 垂直HR场景，HR用，可视化界面 + 智能匹配
+- 关键洞察: "我能做任何浏览器操作也是为了服务于HR的"
+
+**架构启示**:
+- 底层browser-controller是基础设施，让一切成为可能
+- 上层HR垂直能力是核心竞争力
+- 架构要可扩展，支持未来其他垂直场景(法务、金融等)
+
+#### 使用HR Skills分析
+从 `pm-agent-forge/skills/hr/recruitment` 和 `hr/resume-screening` 学到:
+1. **简历筛选流程**: 理解职位需求 → 建立评估标准 → 筛选 → 评估匹配度 → 排序
+2. **候选人评估维度**: 硬性条件30% + 专业能力30% + 发展潜力20% + 文化匹配20%
+3. **Pipeline漏斗**: 简历投递 → 筛选 → 初试 → 复试 → Offer → 入职
+4. **评估工具**: 结构化评估模板、评分等级、优劣势分析
+
+#### 当前Spider的Gap分析
+| 功能 | 状态 | 说明 |
+|------|------|------|
+| 候选人详情Modal | ✅ 已实现 | 点击查看完整匹配分析 |
+| 筛选标准说明 | ✅ 已实现 | Modal中显示匹配criteria |
+| 候选人状态流转 | ✅ 已实现 | 待沟通→面试中→Offer→淘汰 |
+| 批量导出 | ✅ 已实现 | JSON和CSV |
+| Pipeline可视化 | ⚠️ 待增强 | 需要更直观的漏斗展示 |
+| JD对比 | ⚠️ 待增强 | 多候选人横评 |
+| ATS集成 | ⚠️ 待增强 | 导出到招聘系统 |
+
+#### shadcn/ui组件删除的产品思考
+**为什么删除**:
+- 143个通用组件增加维护负担
+- 大部分组件未被使用(页面内联了样式)
+- 产品定位于"业务组件自包含"
+
+**保留的5个核心业务组件**:
+- JDInput: JD输入
+- ResumeList: 简历列表
+- MatchResult: 匹配结果展示
+- ReportView: 报告查看
+- BrowserPreview: 浏览器预览
+
+**潜在风险**:
+- 未来开发新UI功能时可能需要重新添加
+- 决策: 保持精简，按需添加
+
+#### 架构决策记录
+1. **Toast移至providers**: 通用utility不应在components/
+2. **Modal自实现**: 不依赖shadcn/Modal，保持组件自包含
+3. **不使用外部状态管理**: Next.js Context足够
+
+### 代码优化
+- 修复layout.tsx中ToastContainer错误引用
+- 修复AppProvider中useToast fallback缺少toasts字段
+- MatchResult组件添加候选人点击事件和Modal
+
+### GitHub 新发现
+- (待记录)
+
+### Sigma Skills 新应用
+- `hr/recruitment`: 招聘流程知识 → 用于分析Spider功能Gap
+- `hr/resume-screening`: 简历评估框架 → 用于设计候选人评分展示
+
+---
+
+*学习记录 | Spider | 2026-03-25*
