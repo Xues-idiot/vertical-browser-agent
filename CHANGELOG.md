@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.22.0] - 2026-03-25
+
+### Added
+
+#### JD模板库功能
+- **JDTemplates组件** - 招聘需求模板管理
+- **模板保存** - 本地存储JD模板
+- **快捷复用** - 一键使用模板填充
+- **预设模板** - 包含3个默认岗位模板
+
+---
+
 ## [1.21.0] - 2026-03-25
 
 ### Added
