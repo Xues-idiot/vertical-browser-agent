@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.16.0] - 2026-03-25
+
+### Added
+
+#### 候选人笔记预览
+- **笔记状态** - 候选人卡片显示是否有笔记
+- **笔记预览** - 显示笔记前30字预览
+- **笔记持久化** - 本地存储笔记内容
+
+---
+
 ## [1.15.0] - 2026-03-25
 
 ### Added

@@ -556,6 +556,7 @@ export default function MatchResult({
   const [starred, setStarred] = useState<Set<string>>(new Set());
   const [showOnlyStarred, setShowOnlyStarred] = useState(false);
   const [minScore, setMinScore] = useState<number>(0);
+  const [notes, setNotes] = useState<Map<string, string>>(new Map());
 
   // Combine all candidates
   const allCandidates = [...strongRecommendations, ...backupCandidates];
@@ -900,6 +901,12 @@ export default function MatchResult({
                             {tag}
                           </span>
                         ))}
+                      </div>
+                    )}
+                    {notes.get(candidate.candidate_name) && (
+                      <div className="flex items-center gap-1 mt-2 text-xs text-gray-500">
+                        <span>📝</span>
+                        <span className="truncate max-w-[150px]">{notes.get(candidate.candidate_name)?.slice(0, 30)}</span>
                       </div>
                     )}
                     <p className="text-cyan-400 text-xs mt-2 hover:underline">
