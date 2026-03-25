@@ -24,6 +24,8 @@ interface Candidate {
   ai_reason?: string;  // AI推荐理由
   key_highlights?: string[];  // 关键经历亮点
   similar_candidates?: Candidate[];  // 相似候选人
+  source?: "referral" | "headhunter" | "website" | "resume_db" | "other";  // 简历来源
+  source_name?: string;  // 来源名称（如猎头名称或网站名称）
 }
 
 interface MatchResultProps {
@@ -784,6 +786,20 @@ export default function MatchResult({
                         <span>🏢</span> {candidate.current_company}
                       </p>
                     )}
+                    {candidate.source && (
+                      <div className="flex items-center gap-1 mt-2">
+                        <span className="text-xs px-2 py-0.5 bg-gray-500/20 text-gray-400 rounded border border-gray-500/30">
+                          {candidate.source === "referral" && "👥 内推"}
+                          {candidate.source === "headhunter" && "🎯 猎头"}
+                          {candidate.source === "website" && "🌐 网站"}
+                          {candidate.source === "resume_db" && "📁 简历库"}
+                          {candidate.source === "other" && "📋 其他"}
+                        </span>
+                        {candidate.source_name && (
+                          <span className="text-xs text-gray-500">- {candidate.source_name}</span>
+                        )}
+                      </div>
+                    )}
                     <p className="text-gray-400 text-sm mt-3">{candidate.summary}</p>
                     {candidate.tags && candidate.tags.length > 0 && (
                       <div className="flex flex-wrap gap-1 mt-2">
@@ -889,6 +905,20 @@ export default function MatchResult({
                       <p className="text-sm text-gray-400 mt-2 flex items-center gap-1">
                         <span>🏢</span> {candidate.current_company}
                       </p>
+                    )}
+                    {candidate.source && (
+                      <div className="flex items-center gap-1 mt-2">
+                        <span className="text-xs px-2 py-0.5 bg-gray-500/20 text-gray-400 rounded border border-gray-500/30">
+                          {candidate.source === "referral" && "👥 内推"}
+                          {candidate.source === "headhunter" && "🎯 猎头"}
+                          {candidate.source === "website" && "🌐 网站"}
+                          {candidate.source === "resume_db" && "📁 简历库"}
+                          {candidate.source === "other" && "📋 其他"}
+                        </span>
+                        {candidate.source_name && (
+                          <span className="text-xs text-gray-500">- {candidate.source_name}</span>
+                        )}
+                      </div>
                     )}
                     <p className="text-gray-400 text-sm mt-3">{candidate.summary}</p>
                     {candidate.tags && candidate.tags.length > 0 && (

@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.9.0] - 2026-03-25
+
+### Added
+
+#### 候选人来源追踪
+- **来源字段** - 支持内推/猎头/网站/简历库/其他
+- **来源名称** - 可记录具体来源（如猎头名称）
+- **来源标签** - 候选人卡片显示来源标签
+- **来源详情** - 候选人详情显示来源信息
+
+---
+
 ## [1.8.0] - 2026-03-25
 
 ### Added
