@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.28.0] - 2026-03-25
+
+### Added
+
+#### 候选人面试排期视图
+- **InterviewSchedule组件** - 面试安排日历视图
+- **即将到来/已完成** - 切换查看未面试和已面试
+- **按日期分组** - 清晰展示面试时间线
+- **面试轮次显示** - 显示面试轮次、时间和评分
+
+---
+
 ## [1.27.0] - 2026-03-25
 
 ### Added
