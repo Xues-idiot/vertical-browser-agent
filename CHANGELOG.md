@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.30.0] - 2026-03-25
+
+### Added
+
+#### 候选人笔记筛选增强
+- **有笔记筛选** - 一键筛选已添加笔记的候选人
+- **笔记计数** - 显示已添加笔记的候选人数量
+- **快速过滤** - 与收藏、评分筛选组合使用
+
+---
+
 ## [1.29.0] - 2026-03-25
 
 ### Added

@@ -624,6 +624,7 @@ export default function MatchResult({
   const [batchMode, setBatchMode] = useState(false);
   const [starred, setStarred] = useState<Set<string>>(new Set());
   const [showOnlyStarred, setShowOnlyStarred] = useState(false);
+  const [showOnlyWithNotes, setShowOnlyWithNotes] = useState(false);
   const [minScore, setMinScore] = useState<number>(0);
   const [notes, setNotes] = useState<Map<string, string>>(new Map());
   const [sortBy, setSortBy] = useState<"score" | "name" | "experience">("score");
@@ -669,8 +670,9 @@ export default function MatchResult({
       selectedTags.length === 0 ||
       selectedTags.every((tag) => getAllTags(c).includes(tag));
     const matchesStarred = !showOnlyStarred || starred.has(c.candidate_name);
+    const matchesNotes = !showOnlyWithNotes || notes.has(c.candidate_name);
     const matchesScore = c.match_score >= minScore;
-    return matchesSearch && matchesTags && matchesStarred && matchesScore;
+    return matchesSearch && matchesTags && matchesStarred && matchesNotes && matchesScore;
   });
 
   const filteredBackup = backupCandidates.filter((c) => {
@@ -683,6 +685,7 @@ export default function MatchResult({
       selectedTags.length === 0 ||
       selectedTags.every((tag) => getAllTags(c).includes(tag));
     const matchesStarred = !showOnlyStarred || starred.has(c.candidate_name);
+    const matchesNotes = !showOnlyWithNotes || notes.has(c.candidate_name);
     const matchesScore = c.match_score >= minScore;
     return matchesSearch && matchesTags && matchesStarred && matchesScore;
   });
@@ -817,6 +820,20 @@ export default function MatchResult({
             }`}
           >
             ★ 我的收藏 ({starred.size})
+          </button>
+
+          {/* Notes filter */}
+          <button
+            onClick={() => {
+              setShowOnlyWithNotes(!showOnlyWithNotes);
+            }}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              showOnlyWithNotes
+                ? "bg-cyan-600 text-white"
+                : "bg-[#111827] text-gray-400 border border-gray-700 hover:border-cyan-500"
+            }`}
+          >
+            📝 有笔记 ({notes.size})
           </button>
 
           {/* Score Range Filter */}
