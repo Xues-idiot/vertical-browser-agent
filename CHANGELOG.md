@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.20.0] - 2026-03-25
+
+### Added
+
+#### 候选人操作日志
+- **操作记录** - 记录收藏、状态变更等操作
+- **时间线展示** - 显示操作时间和内容
+- **最近50条** - 保留最近的操作记录
+
+---
+
 ## [1.19.0] - 2026-03-25
 
 ### Added

@@ -559,6 +559,7 @@ export default function MatchResult({
   const [notes, setNotes] = useState<Map<string, string>>(new Map());
   const [sortBy, setSortBy] = useState<"score" | "name" | "experience">("score");
   const [customTags, setCustomTags] = useState<Map<string, string[]>>(new Map());
+  const [activityLog, setActivityLog] = useState<{ time: string; action: string; candidate: string }[]>([]);
 
   // Add custom tag to candidate
   const addTagToCandidate = (candidateName: string, tag: string) => {
@@ -672,8 +673,20 @@ export default function MatchResult({
   };
 
   const handleStatusChange = (candidate: Candidate, status: CandidateStatus) => {
-    console.log(`Candidate ${candidate.candidate_name} status changed to ${status}`);
-    // In production, this would update via API
+    const statusLabels = { pending: "待沟通", interview: "面试中", offer: "Offer", rejected: "淘汰" };
+    setActivityLog(prev => [{
+      time: new Date().toLocaleTimeString(),
+      action: `状态更新为"${statusLabels[status]}"`,
+      candidate: candidate.candidate_name
+    }, ...prev].slice(0, 50));
+  };
+
+  const logActivity = (action: string, candidate: string) => {
+    setActivityLog(prev => [{
+      time: new Date().toLocaleTimeString(),
+      action,
+      candidate
+    }, ...prev].slice(0, 50));
   };
 
   return (
@@ -971,15 +984,17 @@ export default function MatchResult({
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
+                        const isStarred = starred.has(candidate.candidate_name);
                         setStarred(prev => {
                           const next = new Set(prev);
-                          if (next.has(candidate.candidate_name)) {
+                          if (isStarred) {
                             next.delete(candidate.candidate_name);
                           } else {
                             next.add(candidate.candidate_name);
                           }
                           return next;
                         });
+                        logActivity(isStarred ? "取消收藏" : "添加收藏", candidate.candidate_name);
                       }}
                       className={`text-xl transition-colors ${starred.has(candidate.candidate_name) ? "text-amber-400" : "text-gray-500 hover:text-amber-300"}`}
                     >
@@ -1108,15 +1123,17 @@ export default function MatchResult({
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
+                        const isStarred = starred.has(candidate.candidate_name);
                         setStarred(prev => {
                           const next = new Set(prev);
-                          if (next.has(candidate.candidate_name)) {
+                          if (isStarred) {
                             next.delete(candidate.candidate_name);
                           } else {
                             next.add(candidate.candidate_name);
                           }
                           return next;
                         });
+                        logActivity(isStarred ? "取消收藏" : "添加收藏", candidate.candidate_name);
                       }}
                       className={`text-xl transition-colors ${starred.has(candidate.candidate_name) ? "text-amber-400" : "text-gray-500 hover:text-amber-300"}`}
                     >
@@ -1130,6 +1147,33 @@ export default function MatchResult({
                 </div>
               </motion.div>
             ))}
+          </div>
+        </motion.div>
+      )}
+
+      {/* 操作日志 */}
+      {activityLog.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.45 }}
+          className="bg-[#1F2937] rounded-xl shadow-lg border border-gray-700 overflow-hidden"
+        >
+          <div className="bg-gradient-to-r from-gray-600 to-gray-700 px-6 py-4">
+            <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+              <span>📜</span> 操作日志
+            </h3>
+          </div>
+          <div className="p-4 max-h-48 overflow-y-auto">
+            <div className="space-y-2">
+              {activityLog.slice(0, 10).map((log, i) => (
+                <div key={i} className="flex items-start gap-3 text-sm">
+                  <span className="text-gray-500 w-16 flex-shrink-0">{log.time}</span>
+                  <span className="text-cyan-400 w-32 flex-shrink-0 truncate">{log.candidate}</span>
+                  <span className="text-gray-300">{log.action}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </motion.div>
       )}
