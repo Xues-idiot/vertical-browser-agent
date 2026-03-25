@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.12.0] - 2026-03-25
+
+### Added
+
+#### 候选人评分历史追踪
+- **评分历史字段** - 支持记录候选人评分变化
+- **评分历史图表** - 候选人详情中展示评分趋势
+- **模拟历史数据** - 自动生成最近30天的评分历史
+- **可视化柱状图** - 展示评分变化趋势
+
+---
+
 ## [1.11.0] - 2026-03-25
 
 ### Added

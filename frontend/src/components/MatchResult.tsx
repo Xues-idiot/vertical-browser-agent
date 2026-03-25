@@ -26,6 +26,7 @@ interface Candidate {
   similar_candidates?: Candidate[];  // 相似候选人
   source?: "referral" | "headhunter" | "website" | "resume_db" | "other";  // 简历来源
   source_name?: string;  // 来源名称（如猎头名称或网站名称）
+  score_history?: { date: string; score: number }[];  // 评分历史
 }
 
 interface MatchResultProps {
@@ -80,6 +81,19 @@ function generateAIRecommendation(candidate: Candidate): string {
   }
 
   return reasons.join("；") + "。";
+}
+
+// 评分历史生成（模拟数据）
+function generateMockScoreHistory(candidate: Candidate): { date: string; score: number }[] {
+  const base = candidate.match_score;
+  const now = new Date();
+  return [
+    { date: new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString(), score: Math.max(50, base - 15) },
+    { date: new Date(now.getTime() - 20 * 24 * 60 * 60 * 1000).toISOString(), score: Math.max(55, base - 10) },
+    { date: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000).toISOString(), score: Math.max(60, base - 5) },
+    { date: new Date(now.getTime() - 3 * 24 * 60 * 60 * 1000).toISOString(), score: Math.max(65, base - 2) },
+    { date: now.toISOString(), score: base },
+  ];
 }
 
 // 关键经历亮点提取
@@ -360,6 +374,40 @@ function CandidateDetailModal({
                   {candidate.resume_text.slice(0, 500)}
                   {candidate.resume_text.length > 500 && "..."}
                 </p>
+              </div>
+            </div>
+          )}
+
+          {/* 评分历史 */}
+          {(candidate.score_history || generateMockScoreHistory(candidate)).length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                📈 评分历史
+              </h3>
+              <div className="bg-[#111827] rounded-xl p-4 border border-gray-700">
+                <div className="flex items-end gap-1 h-20">
+                  {(candidate.score_history || generateMockScoreHistory(candidate)).map((entry, i, arr) => {
+                    const height = `${entry.score}%`;
+                    const isLatest = i === arr.length - 1;
+                    return (
+                      <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                        <motion.div
+                          initial={{ height: 0 }}
+                          animate={{ height: height }}
+                          transition={{ duration: 0.5, delay: i * 0.1 }}
+                          className={`w-full rounded-t-sm ${isLatest ? "bg-cyan-500" : "bg-gray-600"}`}
+                        />
+                        <span className="text-xs text-gray-500">
+                          {new Date(entry.date).toLocaleDateString().slice(5)}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="flex justify-between mt-2 text-xs text-gray-500">
+                  <span>早期评估</span>
+                  <span>最近评估: <span className="text-cyan-400">{candidate.match_score}%</span></span>
+                </div>
               </div>
             </div>
           )}
