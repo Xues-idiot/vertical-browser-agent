@@ -795,7 +795,7 @@ export default function MatchResult({
     const matchesStarred = !showOnlyStarred || starred.has(c.candidate_name);
     const matchesNotes = !showOnlyWithNotes || notes.has(c.candidate_name);
     const matchesScore = c.match_score >= minScore;
-    return matchesSearch && matchesTags && matchesStarred && matchesScore;
+    return matchesSearch && matchesTags && matchesStarred && matchesNotes && matchesScore;
   });
 
   // Sort candidates

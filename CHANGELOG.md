@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.34.2] - 2026-03-25
+
+### Fixed
+
+#### Bug修复
+- **过滤条件缺失** - filteredBackup现在正确应用matchesNotes筛选条件
+- **运行时错误** - InterviewTimeline搜索时正确处理e.note为undefined的情况
+
+---
+
 ## [1.34.1] - 2026-03-25
 
 ### Fixed

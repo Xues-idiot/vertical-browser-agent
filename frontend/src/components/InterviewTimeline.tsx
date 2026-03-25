@@ -33,7 +33,7 @@ export default function InterviewTimeline({ events }: InterviewTimelineProps) {
     const matchesAction = !filter || e.action === filter;
     const matchesSearch = !searchQuery ||
       e.candidate_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      e.note?.toLowerCase().includes(searchQuery.toLowerCase());
+      (e.note ? e.note.toLowerCase().includes(searchQuery.toLowerCase()) : false);
     return matchesAction && matchesSearch;
   });
 
