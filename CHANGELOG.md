@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.18.0] - 2026-03-25
+
+### Added
+
+#### 候选人对比分享链接
+- **复制分享链接** - 一键复制候选人对比URL
+- **分享已选候选人** - 选择2人以上可生成分享链接
+- **便捷协作** - 链接包含选中的候选人信息
+
+---
+
 ## [1.17.0] - 2026-03-25
 
 ### Added

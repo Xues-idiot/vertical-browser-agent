@@ -214,12 +214,26 @@ export default function CandidateComparison({
               选择2-4位候选人进行横向对比
             </p>
           </div>
-          <button
-            onClick={onClose}
-            className="text-cyan-100 hover:text-white transition-colors"
-          >
-            ✕
-          </button>
+          <div className="flex items-center gap-3">
+            {selectedCandidates.length >= 2 && (
+              <button
+                onClick={() => {
+                  const ids = selectedCandidates.map(c => c.candidate_name).join(",");
+                  const url = `${window.location.origin}${window.location.pathname}?compare=${encodeURIComponent(ids)}`;
+                  navigator.clipboard.writeText(url);
+                }}
+                className="px-3 py-1.5 bg-white/20 text-white text-sm rounded-lg hover:bg-white/30 transition-colors flex items-center gap-1"
+              >
+                🔗 复制分享链接
+              </button>
+            )}
+            <button
+              onClick={onClose}
+              className="text-cyan-100 hover:text-white transition-colors"
+            >
+              ✕
+            </button>
+          </div>
         </div>
 
         <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
