@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.3.0] - 2026-03-25
+
+### Added
+
+#### 评分可解释性增强
+- **Score Breakdown评分明细**
+  - 硬性条件 (30%权重)
+  - 技能匹配 (30%权重)
+  - 行业经验 (20%权重)
+  - 发展潜力 (20%权重)
+- **可视化进度条** - 各维度得分动画展示
+- **评分透明度** - HR能理解为什么得出该分数
+
+#### 候选人标签
+- **标签显示** - 候选人卡片展示标签
+  - 大厂经验、海归、SaaS等
+  - 强烈推荐用青色标签
+  - 可备选用琥珀色标签
+- **数据结构** - 支持 tags 数组字段
+
+---
+
 ## [1.2.0] - 2026-03-25
 
 ### Added

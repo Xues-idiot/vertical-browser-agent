@@ -3,6 +3,13 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+interface ScoreBreakdown {
+  hard_conditions?: number;    // 硬性条件
+  skill_match?: number;        // 技能匹配
+  industry_exp?: number;        // 行业经验
+  potential?: number;          // 发展潜力
+}
+
 interface Candidate {
   candidate_name: string;
   match_score: number;
@@ -12,6 +19,8 @@ interface Candidate {
   years_experience?: number;
   matched_criteria?: string[];
   resume_text?: string;
+  score_breakdown?: ScoreBreakdown;
+  tags?: string[];
 }
 
 interface MatchResultProps {
@@ -88,9 +97,12 @@ function CandidateDetailModal({
               匹配度分析
             </h3>
             <div className="bg-[#111827] rounded-xl p-4 border border-gray-700">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="flex-1 bg-gray-700 rounded-full h-3 overflow-hidden">
-                  <div
+              <div className="flex items-center gap-3 mb-4">
+                <div className="flex-1 bg-gray-700 rounded-full h-4 overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${candidate.match_score}%` }}
+                    transition={{ duration: 0.8 }}
                     className={`h-full rounded-full ${
                       candidate.match_score >= 80
                         ? "bg-emerald-500"
@@ -98,14 +110,87 @@ function CandidateDetailModal({
                         ? "bg-amber-500"
                         : "bg-red-500"
                     }`}
-                    style={{ width: `${candidate.match_score}%` }}
                   />
                 </div>
-                <span className={`font-bold ${getScoreColor(candidate.match_score)}`}>
+                <span className={`text-2xl font-bold ${getScoreColor(candidate.match_score)}`}>
                   {candidate.match_score}%
                 </span>
               </div>
-              <p className="text-gray-300 text-sm">{candidate.summary}</p>
+
+              {/* Score Breakdown */}
+              {candidate.score_breakdown && (
+                <div className="mt-4 space-y-3">
+                  <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                    评分明细
+                  </h4>
+                  {candidate.score_breakdown.hard_conditions !== undefined && (
+                    <div className="flex items-center gap-3">
+                      <span className="w-20 text-xs text-gray-400">硬性条件</span>
+                      <div className="flex-1 bg-gray-700/50 rounded-full h-2 overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${candidate.score_breakdown.hard_conditions}%` }}
+                          transition={{ duration: 0.8, delay: 0.1 }}
+                          className="h-full bg-cyan-500 rounded-full"
+                        />
+                      </div>
+                      <span className="w-10 text-xs text-cyan-400 font-medium">
+                        {candidate.score_breakdown.hard_conditions}%
+                      </span>
+                    </div>
+                  )}
+                  {candidate.score_breakdown.skill_match !== undefined && (
+                    <div className="flex items-center gap-3">
+                      <span className="w-20 text-xs text-gray-400">技能匹配</span>
+                      <div className="flex-1 bg-gray-700/50 rounded-full h-2 overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${candidate.score_breakdown.skill_match}%` }}
+                          transition={{ duration: 0.8, delay: 0.2 }}
+                          className="h-full bg-emerald-500 rounded-full"
+                        />
+                      </div>
+                      <span className="w-10 text-xs text-emerald-400 font-medium">
+                        {candidate.score_breakdown.skill_match}%
+                      </span>
+                    </div>
+                  )}
+                  {candidate.score_breakdown.industry_exp !== undefined && (
+                    <div className="flex items-center gap-3">
+                      <span className="w-20 text-xs text-gray-400">行业经验</span>
+                      <div className="flex-1 bg-gray-700/50 rounded-full h-2 overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${candidate.score_breakdown.industry_exp}%` }}
+                          transition={{ duration: 0.8, delay: 0.3 }}
+                          className="h-full bg-amber-500 rounded-full"
+                        />
+                      </div>
+                      <span className="w-10 text-xs text-amber-400 font-medium">
+                        {candidate.score_breakdown.industry_exp}%
+                      </span>
+                    </div>
+                  )}
+                  {candidate.score_breakdown.potential !== undefined && (
+                    <div className="flex items-center gap-3">
+                      <span className="w-20 text-xs text-gray-400">发展潜力</span>
+                      <div className="flex-1 bg-gray-700/50 rounded-full h-2 overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${candidate.score_breakdown.potential}%` }}
+                          transition={{ duration: 0.8, delay: 0.4 }}
+                          className="h-full bg-purple-500 rounded-full"
+                        />
+                      </div>
+                      <span className="w-10 text-xs text-purple-400 font-medium">
+                        {candidate.score_breakdown.potential}%
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <p className="text-gray-300 text-sm mt-4">{candidate.summary}</p>
             </div>
           </div>
 
@@ -340,6 +425,15 @@ export default function MatchResult({
                       </p>
                     )}
                     <p className="text-gray-400 text-sm mt-3">{candidate.summary}</p>
+                    {candidate.tags && candidate.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        {candidate.tags.slice(0, 3).map((tag, i) => (
+                          <span key={i} className="text-xs px-2 py-0.5 bg-cyan-500/20 text-cyan-400 rounded-full border border-cyan-500/30">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                     <p className="text-cyan-400 text-xs mt-2 hover:underline">
                       点击查看详情 →
                     </p>
@@ -409,6 +503,15 @@ export default function MatchResult({
                       </p>
                     )}
                     <p className="text-gray-400 text-sm mt-3">{candidate.summary}</p>
+                    {candidate.tags && candidate.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        {candidate.tags.slice(0, 3).map((tag, i) => (
+                          <span key={i} className="text-xs px-2 py-0.5 bg-amber-500/20 text-amber-400 rounded-full border border-amber-500/30">
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                     <p className="text-cyan-400 text-xs mt-2 hover:underline">
                       点击查看详情 →
                     </p>

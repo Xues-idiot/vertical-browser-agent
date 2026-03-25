@@ -78,6 +78,14 @@ export default function ScreeningPage() {
           level: "strong_recommend",
           summary: "匹配度高",
           years_experience: 5 - i,
+          score_breakdown: {
+            hard_conditions: 85 + Math.floor(Math.random() * 10),
+            skill_match: 80 + Math.floor(Math.random() * 15),
+            industry_exp: 75 + Math.floor(Math.random() * 15),
+            potential: 70 + Math.floor(Math.random() * 20),
+          },
+          tags: i === 0 ? ["大厂经验", "管理经验", "SaaS"] : ["海归", "本科985"],
+          matched_criteria: ["经验≥3年", "有SaaS经验", "本科学历"],
         }));
         const backups = resumes.slice(2).map((r, i) => ({
           candidate_name: `备选候选人${i + 1}`,
@@ -85,6 +93,14 @@ export default function ScreeningPage() {
           level: "backup",
           summary: "基本匹配",
           years_experience: 3 - i,
+          score_breakdown: {
+            hard_conditions: 60 + Math.floor(Math.random() * 15),
+            skill_match: 65 + Math.floor(Math.random() * 15),
+            industry_exp: 70 + Math.floor(Math.random() * 10),
+            potential: 60 + Math.floor(Math.random() * 15),
+          },
+          tags: i === 0 ? ["创业经验"] : ["小厂经验"],
+          matched_criteria: ["有电商经验"],
         }));
         setReport({
           position_name: "高级产品经理",
@@ -111,6 +127,14 @@ export default function ScreeningPage() {
         level: "strong_recommend",
         summary: "匹配度高",
         years_experience: 5 - i,
+        score_breakdown: {
+          hard_conditions: 85 + Math.floor(Math.random() * 10),
+          skill_match: 80 + Math.floor(Math.random() * 15),
+          industry_exp: 75 + Math.floor(Math.random() * 15),
+          potential: 70 + Math.floor(Math.random() * 20),
+        },
+        tags: i === 0 ? ["大厂经验", "管理经验", "SaaS"] : ["海归", "本科985"],
+        matched_criteria: ["经验≥3年", "有SaaS经验", "本科学历"],
       }));
       const backups = resumes.slice(2).map((r, i) => ({
         candidate_name: `备选候选人${i + 1}`,
@@ -118,6 +142,14 @@ export default function ScreeningPage() {
         level: "backup",
         summary: "基本匹配",
         years_experience: 3 - i,
+        score_breakdown: {
+          hard_conditions: 60 + Math.floor(Math.random() * 15),
+          skill_match: 65 + Math.floor(Math.random() * 15),
+          industry_exp: 70 + Math.floor(Math.random() * 10),
+          potential: 60 + Math.floor(Math.random() * 15),
+        },
+        tags: i === 0 ? ["创业经验"] : ["小厂经验"],
+        matched_criteria: ["有电商经验"],
       }));
       setReport({
         position_name: "高级产品经理",
