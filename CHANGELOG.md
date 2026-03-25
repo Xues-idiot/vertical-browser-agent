@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.15.0] - 2026-03-25
+
+### Added
+
+#### 评分范围筛选
+- **评分滑块** - 按最低评分筛选候选人
+- **0-100%范围** - 可调节的评分下限
+- **重置按钮** - 一键恢复默认筛选
+
+---
+
 ## [1.14.0] - 2026-03-25
 
 ### Added
@@ -12,7 +23,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **收藏按钮** - 候选人卡片添加星标按钮
 - **我的收藏** - 一键筛选收藏的候选人
 - **收藏计数** - 显示收藏数量
-- **状态持久化** - 本地存储收藏状态
 
 ---
 

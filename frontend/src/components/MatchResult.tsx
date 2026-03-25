@@ -555,6 +555,7 @@ export default function MatchResult({
   const [batchMode, setBatchMode] = useState(false);
   const [starred, setStarred] = useState<Set<string>>(new Set());
   const [showOnlyStarred, setShowOnlyStarred] = useState(false);
+  const [minScore, setMinScore] = useState<number>(0);
 
   // Combine all candidates
   const allCandidates = [...strongRecommendations, ...backupCandidates];
@@ -575,7 +576,8 @@ export default function MatchResult({
       selectedTags.length === 0 ||
       selectedTags.every((tag) => c.tags?.includes(tag));
     const matchesStarred = !showOnlyStarred || starred.has(c.candidate_name);
-    return matchesSearch && matchesTags && matchesStarred;
+    const matchesScore = c.match_score >= minScore;
+    return matchesSearch && matchesTags && matchesStarred && matchesScore;
   });
 
   const filteredBackup = backupCandidates.filter((c) => {
@@ -588,7 +590,8 @@ export default function MatchResult({
       selectedTags.length === 0 ||
       selectedTags.every((tag) => c.tags?.includes(tag));
     const matchesStarred = !showOnlyStarred || starred.has(c.candidate_name);
-    return matchesSearch && matchesTags && matchesStarred;
+    const matchesScore = c.match_score >= minScore;
+    return matchesSearch && matchesTags && matchesStarred && matchesScore;
   });
 
   const toggleTag = (tag: string) => {
@@ -696,6 +699,28 @@ export default function MatchResult({
           >
             ★ 我的收藏 ({starred.size})
           </button>
+
+          {/* Score Range Filter */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-400">评分:</span>
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={minScore}
+              onChange={(e) => setMinScore(Number(e.target.value))}
+              className="w-24 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-cyan-500"
+            />
+            <span className="text-xs text-cyan-400 w-10">{minScore}%+</span>
+            {minScore > 0 && (
+              <button
+                onClick={() => setMinScore(0)}
+                className="text-xs text-gray-500 hover:text-white"
+              >
+                重置
+              </button>
+            )}
+          </div>
 
           {/* Tag Filters */}
           {allTags.length > 0 && !batchMode && (
