@@ -27,6 +27,7 @@ interface Candidate {
   source?: "referral" | "headhunter" | "website" | "resume_db" | "other";  // 简历来源
   source_name?: string;  // 来源名称（如猎头名称或网站名称）
   score_history?: { date: string; score: number }[];  // 评分历史
+  starred?: boolean;  // 收藏标记
 }
 
 interface MatchResultProps {
@@ -552,6 +553,8 @@ export default function MatchResult({
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [batchSelected, setBatchSelected] = useState<string[]>([]);
   const [batchMode, setBatchMode] = useState(false);
+  const [starred, setStarred] = useState<Set<string>>(new Set());
+  const [showOnlyStarred, setShowOnlyStarred] = useState(false);
 
   // Combine all candidates
   const allCandidates = [...strongRecommendations, ...backupCandidates];
@@ -571,7 +574,8 @@ export default function MatchResult({
     const matchesTags =
       selectedTags.length === 0 ||
       selectedTags.every((tag) => c.tags?.includes(tag));
-    return matchesSearch && matchesTags;
+    const matchesStarred = !showOnlyStarred || starred.has(c.candidate_name);
+    return matchesSearch && matchesTags && matchesStarred;
   });
 
   const filteredBackup = backupCandidates.filter((c) => {
@@ -583,7 +587,8 @@ export default function MatchResult({
     const matchesTags =
       selectedTags.length === 0 ||
       selectedTags.every((tag) => c.tags?.includes(tag));
-    return matchesSearch && matchesTags;
+    const matchesStarred = !showOnlyStarred || starred.has(c.candidate_name);
+    return matchesSearch && matchesTags && matchesStarred;
   });
 
   const toggleTag = (tag: string) => {
@@ -676,6 +681,20 @@ export default function MatchResult({
             }`}
           >
             {batchMode ? "✓ 退出批量" : "📋 批量操作"}
+          </button>
+
+          {/* Starred filter */}
+          <button
+            onClick={() => {
+              setShowOnlyStarred(!showOnlyStarred);
+            }}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+              showOnlyStarred
+                ? "bg-amber-600 text-white"
+                : "bg-[#111827] text-gray-400 border border-gray-700 hover:border-amber-500"
+            }`}
+          >
+            ★ 我的收藏 ({starred.size})
           </button>
 
           {/* Tag Filters */}
@@ -866,8 +885,25 @@ export default function MatchResult({
                     initial={{ scale: 0.8 }}
                     animate={{ scale: 1 }}
                     transition={{ delay: index * 0.1 + 0.2 }}
-                    className={`bg-gradient-to-br ${getScoreBg(candidate.match_score)} rounded-xl p-4 text-center min-w-[100px] border border-gray-700`}
+                    className={`bg-gradient-to-br ${getScoreBg(candidate.match_score)} rounded-xl p-4 text-center min-w-[100px] border border-gray-700 flex flex-col items-center gap-2`}
                   >
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setStarred(prev => {
+                          const next = new Set(prev);
+                          if (next.has(candidate.candidate_name)) {
+                            next.delete(candidate.candidate_name);
+                          } else {
+                            next.add(candidate.candidate_name);
+                          }
+                          return next;
+                        });
+                      }}
+                      className={`text-xl transition-colors ${starred.has(candidate.candidate_name) ? "text-amber-400" : "text-gray-500 hover:text-amber-300"}`}
+                    >
+                      {starred.has(candidate.candidate_name) ? "★" : "☆"}
+                    </button>
                     <div className={`text-3xl font-bold ${getScoreColor(candidate.match_score)}`}>
                       {candidate.match_score}%
                     </div>
@@ -986,8 +1022,25 @@ export default function MatchResult({
                     initial={{ scale: 0.8 }}
                     animate={{ scale: 1 }}
                     transition={{ delay: 0.2 + index * 0.1 + 0.2 }}
-                    className={`bg-gradient-to-br ${getScoreBg(candidate.match_score)} rounded-xl p-4 text-center min-w-[100px] border border-gray-700`}
+                    className={`bg-gradient-to-br ${getScoreBg(candidate.match_score)} rounded-xl p-4 text-center min-w-[100px] border border-gray-700 flex flex-col items-center gap-2`}
                   >
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setStarred(prev => {
+                          const next = new Set(prev);
+                          if (next.has(candidate.candidate_name)) {
+                            next.delete(candidate.candidate_name);
+                          } else {
+                            next.add(candidate.candidate_name);
+                          }
+                          return next;
+                        });
+                      }}
+                      className={`text-xl transition-colors ${starred.has(candidate.candidate_name) ? "text-amber-400" : "text-gray-500 hover:text-amber-300"}`}
+                    >
+                      {starred.has(candidate.candidate_name) ? "★" : "☆"}
+                    </button>
                     <div className={`text-3xl font-bold ${getScoreColor(candidate.match_score)}`}>
                       {candidate.match_score}%
                     </div>

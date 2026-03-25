@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.14.0] - 2026-03-25
+
+### Added
+
+#### 收藏候选人功能
+- **收藏按钮** - 候选人卡片添加星标按钮
+- **我的收藏** - 一键筛选收藏的候选人
+- **收藏计数** - 显示收藏数量
+- **状态持久化** - 本地存储收藏状态
+
+---
+
 ## [1.13.0] - 2026-03-25
 
 ### Added
