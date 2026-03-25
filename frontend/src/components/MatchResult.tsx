@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import CandidateRadarChart from "./CandidateRadarChart";
 
@@ -217,6 +217,40 @@ function CandidateDetailModal({
     return [...new Set(suggestions)].filter(s => !existingTags.includes(s));
   };
 
+  // Highlight keywords from JD criteria in text
+  const highlightKeywords = (text: string, jdCriteria: string[]): React.ReactNode => {
+    if (!jdCriteria || jdCriteria.length === 0) return text;
+
+    // Extract keywords from criteria
+    const keywords: string[] = [];
+    jdCriteria.forEach(c => {
+      const cleaned = c.replace(/[≥≤><\d年\d月以上以下]/g, "").trim();
+      const parts = cleaned.split(/[,，/、\\]+|[和与及或]+/);
+      parts.forEach(p => {
+        const trimmed = p.trim();
+        if (trimmed.length >= 2) {
+          keywords.push(trimmed);
+        }
+      });
+    });
+
+    if (keywords.length === 0) return text;
+
+    const pattern = new RegExp(`(${keywords.join("|")})`, "gi");
+    const parts = text.split(pattern);
+    return parts.map((part, i) => {
+      const isMatch = keywords.some(k => k.toLowerCase() === part.toLowerCase());
+      if (isMatch) {
+        return (
+          <span key={i} className="bg-cyan-500/30 text-cyan-300 px-1 rounded">
+            {part}
+          </span>
+        );
+      }
+      return part;
+    });
+  };
+
   const getScoreColor = (score: number) => {
     if (score >= 80) return "text-emerald-400";
     if (score >= 60) return "text-amber-400";
@@ -372,7 +406,7 @@ function CandidateDetailModal({
                 </div>
               )}
 
-              <p className="text-gray-300 text-sm mt-4">{candidate.summary}</p>
+              <p className="text-gray-300 text-sm mt-4">{highlightKeywords(candidate.summary, criteria)}</p>
             </div>
           </div>
 

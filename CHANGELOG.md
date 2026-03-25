@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.34.0] - 2026-03-25
+
+### Added
+
+#### JD关键词高亮显示
+- **智能高亮** - 在候选人摘要中高亮JD关键词
+- **自动提取** - 从筛选标准中提取关键词
+- **视觉突出** - 青色背景标注匹配项
+
+---
+
 ## [1.33.0] - 2026-03-25
 
 ### Added
