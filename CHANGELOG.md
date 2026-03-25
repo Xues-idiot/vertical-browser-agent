@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.25.0] - 2026-03-25
+
+### Added
+
+#### 招聘数据仪表盘
+- **RecruitmentDashboard组件** - 招聘数据概览仪表盘
+- **7项统计数据** - 收到简历/通过筛选/强烈推荐/可备选/平均匹配分/面试中/待发Offer
+- **评分分布图表** - 90+/80-89/70-79/60-69/<60各分数段分布
+- **进度条动画** - 各项指标可视化进度条动画展示
+
+---
+
 ## [1.24.0] - 2026-03-25
 
 ### Added
