@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.31.0] - 2026-03-25
+
+### Added
+
+#### 面试时间线增强
+- **统计概览** - 显示总事件/已安排/已完成/已发Offer/已入职数量
+- **搜索功能** - 按候选人姓名或备注搜索时间线
+- **实时过滤** - 筛选和搜索组合使用
+
+---
+
 ## [1.30.0] - 2026-03-25
 
 ### Added

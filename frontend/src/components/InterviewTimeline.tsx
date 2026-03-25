@@ -27,10 +27,24 @@ const actionConfig: Record<string, { label: string; icon: string; color: string;
 
 export default function InterviewTimeline({ events }: InterviewTimelineProps) {
   const [filter, setFilter] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredEvents = filter
-    ? events.filter(e => e.action === filter)
-    : events;
+  const filteredEvents = events.filter(e => {
+    const matchesAction = !filter || e.action === filter;
+    const matchesSearch = !searchQuery ||
+      e.candidate_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      e.note?.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesAction && matchesSearch;
+  });
+
+  // 统计信息
+  const stats = {
+    total: events.length,
+    scheduled: events.filter(e => e.action === "interview_scheduled").length,
+    completed: events.filter(e => e.action === "interview_completed").length,
+    offers: events.filter(e => e.action === "offer_sent").length,
+    hired: events.filter(e => e.action === "hired").length,
+  };
 
   const sortedEvents = [...filteredEvents].sort(
     (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
@@ -50,6 +64,44 @@ export default function InterviewTimeline({ events }: InterviewTimelineProps) {
       </div>
 
       <div className="p-6">
+        {/* Stats summary */}
+        <div className="grid grid-cols-5 gap-3 mb-6">
+          <div className="bg-[#111827] rounded-lg p-3 text-center">
+            <div className="text-xl font-bold text-white">{stats.total}</div>
+            <div className="text-xs text-gray-400">总事件</div>
+          </div>
+          <div className="bg-[#111827] rounded-lg p-3 text-center">
+            <div className="text-xl font-bold text-cyan-400">{stats.scheduled}</div>
+            <div className="text-xs text-gray-400">已安排</div>
+          </div>
+          <div className="bg-[#111827] rounded-lg p-3 text-center">
+            <div className="text-xl font-bold text-emerald-400">{stats.completed}</div>
+            <div className="text-xs text-gray-400">已完成</div>
+          </div>
+          <div className="bg-[#111827] rounded-lg p-3 text-center">
+            <div className="text-xl font-bold text-purple-400">{stats.offers}</div>
+            <div className="text-xs text-gray-400">已发Offer</div>
+          </div>
+          <div className="bg-[#111827] rounded-lg p-3 text-center">
+            <div className="text-xl font-bold text-amber-400">{stats.hired}</div>
+            <div className="text-xs text-gray-400">已入职</div>
+          </div>
+        </div>
+
+        {/* Search */}
+        <div className="relative mb-4">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="搜索候选人或备注..."
+            className="w-full bg-[#111827] border border-gray-700 rounded-lg px-4 py-2 pl-10 text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:border-indigo-500"
+          />
+          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+
         {/* Filter tabs */}
         <div className="flex flex-wrap gap-2 mb-6">
           <button
