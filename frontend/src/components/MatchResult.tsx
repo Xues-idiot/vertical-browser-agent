@@ -558,13 +558,34 @@ export default function MatchResult({
   const [minScore, setMinScore] = useState<number>(0);
   const [notes, setNotes] = useState<Map<string, string>>(new Map());
   const [sortBy, setSortBy] = useState<"score" | "name" | "experience">("score");
+  const [customTags, setCustomTags] = useState<Map<string, string[]>>(new Map());
+
+  // Add custom tag to candidate
+  const addTagToCandidate = (candidateName: string, tag: string) => {
+    setCustomTags(prev => {
+      const next = new Map(prev);
+      const existing = next.get(candidateName) || [];
+      if (!existing.includes(tag)) {
+        next.set(candidateName, [...existing, tag]);
+      }
+      return next;
+    });
+  };
+
+  // Get all tags for a candidate (built-in + custom)
+  const getAllTags = (candidate: Candidate) => {
+    return [...(candidate.tags || []), ...(customTags.get(candidate.candidate_name) || [])];
+  };
 
   // Combine all candidates
   const allCandidates = [...strongRecommendations, ...backupCandidates];
 
-  // Extract all unique tags
+  // Extract all unique tags (including custom tags)
   const allTags = Array.from(
-    new Set(allCandidates.flatMap((c) => c.tags || []))
+    new Set([
+      ...allCandidates.flatMap((c) => c.tags || []),
+      ...Array.from(customTags.values()).flat()
+    ])
   );
 
   // Filter candidates
@@ -576,7 +597,7 @@ export default function MatchResult({
       c.summary.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesTags =
       selectedTags.length === 0 ||
-      selectedTags.every((tag) => c.tags?.includes(tag));
+      selectedTags.every((tag) => getAllTags(c).includes(tag));
     const matchesStarred = !showOnlyStarred || starred.has(c.candidate_name);
     const matchesScore = c.match_score >= minScore;
     return matchesSearch && matchesTags && matchesStarred && matchesScore;
@@ -590,7 +611,7 @@ export default function MatchResult({
       c.summary.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesTags =
       selectedTags.length === 0 ||
-      selectedTags.every((tag) => c.tags?.includes(tag));
+      selectedTags.every((tag) => getAllTags(c).includes(tag));
     const matchesStarred = !showOnlyStarred || starred.has(c.candidate_name);
     const matchesScore = c.match_score >= minScore;
     return matchesSearch && matchesTags && matchesStarred && matchesScore;
@@ -922,9 +943,9 @@ export default function MatchResult({
                       </div>
                     )}
                     <p className="text-gray-400 text-sm mt-3">{candidate.summary}</p>
-                    {candidate.tags && candidate.tags.length > 0 && (
+                    {getAllTags(candidate).length > 0 && (
                       <div className="flex flex-wrap gap-1 mt-2">
-                        {candidate.tags.slice(0, 3).map((tag, i) => (
+                        {getAllTags(candidate).slice(0, 3).map((tag, i) => (
                           <span key={i} className="text-xs px-2 py-0.5 bg-cyan-500/20 text-cyan-400 rounded-full border border-cyan-500/30">
                             {tag}
                           </span>
@@ -1065,9 +1086,9 @@ export default function MatchResult({
                       </div>
                     )}
                     <p className="text-gray-400 text-sm mt-3">{candidate.summary}</p>
-                    {candidate.tags && candidate.tags.length > 0 && (
+                    {getAllTags(candidate).length > 0 && (
                       <div className="flex flex-wrap gap-1 mt-2">
-                        {candidate.tags.slice(0, 3).map((tag, i) => (
+                        {getAllTags(candidate).slice(0, 3).map((tag, i) => (
                           <span key={i} className="text-xs px-2 py-0.5 bg-amber-500/20 text-amber-400 rounded-full border border-amber-500/30">
                             {tag}
                           </span>

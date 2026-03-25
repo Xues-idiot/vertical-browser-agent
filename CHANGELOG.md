@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.19.0] - 2026-03-25
+
+### Added
+
+#### 候选人自定义标签
+- **自定义标签** - 可为候选人添加自定义标签
+- **标签聚合** - 内置标签与自定义标签合并显示
+- **标签过滤** - 自定义标签也支持筛选
+
+---
+
 ## [1.18.0] - 2026-03-25
 
 ### Added
