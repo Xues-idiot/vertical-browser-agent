@@ -141,7 +141,7 @@ export default function BrowserPreview({ screenshot, currentStep }: BrowserPrevi
             </span>
           </div>
           <span className="text-xs text-gray-500">
-            Spider v1.0
+            Spider v1.34.2
           </span>
         </div>
       </div>

@@ -179,7 +179,7 @@ export default function PipelineFunnel({ candidates, totalResumes }: PipelineFun
                           <div key={i} className="flex items-center gap-3 bg-[#111827] rounded-lg px-3 py-2">
                             <span className={`w-2 h-2 rounded-full ${c.level === "strong_recommend" ? "bg-emerald-500" : "bg-amber-500"}`} />
                             <span className="text-sm text-gray-300 flex-1 truncate">{c.candidate_name}</span>
-                            <span className="text-xs text-gray-500">{c.years_experience}年</span>
+                            <span className="text-xs text-gray-500">{c.years_experience ? `${c.years_experience}年` : "-"}</span>
                             <span className="text-sm font-medium text-cyan-400">{c.match_score}%</span>
                           </div>
                         ))}

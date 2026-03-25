@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.34.3] - 2026-03-25
+
+### Fixed
+
+#### Bug修复
+- **版本号显示不一致** - 多处版本号已统一为v1.34.2
+- **工作年限显示错误** - PipelineFunnel正确处理years_experience为undefined的情况
+
+---
+
 ## [1.34.2] - 2026-03-25
 
 ### Fixed

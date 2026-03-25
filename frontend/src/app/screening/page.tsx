@@ -258,7 +258,7 @@ export default function ScreeningPage() {
               className="flex items-center gap-2"
             >
               <span className="px-3 py-1 bg-cyan-500/20 text-cyan-400 text-xs font-medium rounded-full border border-cyan-500/30">
-                v1.5
+                v1.34.2
               </span>
             </motion.div>
           </div>
@@ -545,7 +545,7 @@ export default function ScreeningPage() {
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex justify-between items-center text-sm text-gray-400">
             <div className="flex items-center gap-4">
-              <span>Spider v1.0</span>
+              <span>Spider v1.34.2</span>
               <span className="w-px h-4 bg-gray-600" />
               <span>垂直浏览器Agent</span>
             </div>
