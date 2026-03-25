@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.27.0] - 2026-03-25
+
+### Added
+
+#### 候选人竞争力雷达图
+- **CandidateRadarChart组件** - SVG雷达图可视化
+- **四维分析** - 硬性条件/技能匹配/行业经验/发展潜力
+- **动态动画** - 数据多边形和点动画入场
+- **清晰标注** - 各维度标签和百分比显示
+
+---
+
 ## [1.26.0] - 2026-03-25
 
 ### Added

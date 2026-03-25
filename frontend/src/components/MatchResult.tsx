@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import CandidateRadarChart from "./CandidateRadarChart";
 
 interface ScoreBreakdown {
   hard_conditions?: number;    // 硬性条件
@@ -323,6 +324,14 @@ function CandidateDetailModal({
 
               <p className="text-gray-300 text-sm mt-4">{candidate.summary}</p>
             </div>
+          </div>
+
+          {/* 竞争力雷达图 */}
+          <div className="mb-6">
+            <CandidateRadarChart
+              scoreBreakdown={candidate.score_breakdown}
+              candidateName={candidate.candidate_name}
+            />
           </div>
 
           {/* Matched Criteria */}
