@@ -4,6 +4,35 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.2.0] - 2026-03-25
+
+### Added
+
+#### HR专业功能
+- **招聘漏斗可视化** (`PipelineFunnel`)
+  - 候选人状态流转追踪
+  - 收到简历 → 通过筛选 → 进入面试 → 发放Offer → 成功入职
+  - 各阶段转化率分析
+  - 实时漏斗宽度可视化
+
+- **候选人横向对比** (`CandidateComparison`)
+  - 选择2-4位候选人对比
+  - 表格形式对比分析
+  - 分数条形图可视化
+  - 多维度评分对比
+
+#### 视图模式切换
+- **列表视图** - 传统候选人列表
+- **漏斗视图** - Pipeline漏斗可视化
+- **对比视图** - 候选人横向比较
+
+### Changed
+
+- **screening页面** - 添加视图切换按钮组 (列表/漏斗/对比)
+- **版本号** - 升级到 v1.2.0
+
+---
+
 ## [1.1.0] - 2026-03-25
 
 ### Added

@@ -1,0 +1,308 @@
+"use client";
+
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
+interface Candidate {
+  candidate_name: string;
+  match_score: number;
+  level: string;
+  summary: string;
+  current_company?: string;
+  years_experience?: number;
+}
+
+interface CandidateComparisonProps {
+  candidates: Candidate[];
+  criteria: string[];
+  onClose: () => void;
+}
+
+function CandidateCard({
+  candidate,
+  isSelected,
+  onClick,
+  rank,
+}: {
+  candidate: Candidate;
+  isSelected: boolean;
+  onClick: () => void;
+  rank: number;
+}) {
+  const getScoreColor = (score: number) => {
+    if (score >= 80) return "text-emerald-400";
+    if (score >= 60) return "text-amber-400";
+    return "text-red-400";
+  };
+
+  const getScoreBg = (score: number) => {
+    if (score >= 80) return "from-emerald-500/20 to-emerald-600/10";
+    if (score >= 60) return "from-amber-500/20 to-amber-600/10";
+    return "from-red-500/20 to-red-600/10";
+  };
+
+  return (
+    <motion.div
+      whileHover={{ scale: 1.02 }}
+      onClick={onClick}
+      className={`cursor-pointer rounded-xl border-2 transition-all ${
+        isSelected
+          ? "border-cyan-500 bg-cyan-500/10"
+          : "border-gray-700 bg-[#111827] hover:border-gray-500"
+      }`}
+    >
+      <div className="p-4">
+        <div className="flex items-center gap-3 mb-3">
+          <span className="w-6 h-6 bg-cyan-500/20 text-cyan-400 rounded-full flex items-center justify-center text-xs font-bold">
+            {rank}
+          </span>
+          <div className="flex-1">
+            <h4 className="font-semibold text-white">{candidate.candidate_name}</h4>
+            {candidate.current_company && (
+              <p className="text-xs text-gray-400">{candidate.current_company}</p>
+            )}
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div className={`px-3 py-1.5 rounded-lg bg-gradient-to-br ${getScoreBg(candidate.match_score)} border border-gray-700`}>
+            <span className={`text-xl font-bold ${getScoreColor(candidate.match_score)}`}>
+              {candidate.match_score}
+            </span>
+            <span className="text-xs text-gray-400 ml-1">分</span>
+          </div>
+          <span className={`text-xs px-2 py-1 rounded-full ${
+            candidate.level === "strong_recommend"
+              ? "bg-emerald-500/20 text-emerald-400"
+              : "bg-amber-500/20 text-amber-400"
+          }`}>
+            {candidate.level === "strong_recommend" ? "⭐强烈推荐" : "🟡可备选"}
+          </span>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function ComparisonTable({
+  candidates,
+  criteria,
+}: {
+  candidates: Candidate[];
+  criteria: string[];
+}) {
+  const getScoreColor = (score: number) => {
+    if (score >= 80) return "text-emerald-400";
+    if (score >= 60) return "text-amber-400";
+    return "text-red-400";
+  };
+
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full">
+        <thead>
+          <tr className="border-b border-gray-700">
+            <th className="text-left py-3 px-4 text-sm font-semibold text-gray-400">维度</th>
+            {candidates.map((c) => (
+              <th key={c.candidate_name} className="text-left py-3 px-4 text-sm font-semibold text-white min-w-[150px]">
+                {c.candidate_name}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          <tr className="border-b border-gray-700/50">
+            <td className="py-3 px-4 text-sm text-gray-400">匹配分</td>
+            {candidates.map((c) => (
+              <td key={c.candidate_name} className="py-3 px-4">
+                <span className={`text-lg font-bold ${getScoreColor(c.match_score)}`}>
+                  {c.match_score}%
+                </span>
+              </td>
+            ))}
+          </tr>
+          <tr className="border-b border-gray-700/50">
+            <td className="py-3 px-4 text-sm text-gray-400">推荐等级</td>
+            {candidates.map((c) => (
+              <td key={c.candidate_name} className="py-3 px-4">
+                <span className={`text-xs px-2 py-1 rounded-full ${
+                  c.level === "strong_recommend"
+                    ? "bg-emerald-500/20 text-emerald-400"
+                    : "bg-amber-500/20 text-amber-400"
+                }`}>
+                  {c.level === "strong_recommend" ? "强烈推荐" : "可备选"}
+                </span>
+              </td>
+            ))}
+          </tr>
+          <tr className="border-b border-gray-700/50">
+            <td className="py-3 px-4 text-sm text-gray-400">当前公司</td>
+            {candidates.map((c) => (
+              <td key={c.candidate_name} className="py-3 px-4 text-sm text-gray-300">
+                {c.current_company || "-"}
+              </td>
+            ))}
+          </tr>
+          <tr className="border-b border-gray-700/50">
+            <td className="py-3 px-4 text-sm text-gray-400">工作年限</td>
+            {candidates.map((c) => (
+              <td key={c.candidate_name} className="py-3 px-4 text-sm text-gray-300">
+                {c.years_experience ? `${c.years_experience}年` : "-"}
+              </td>
+            ))}
+          </tr>
+          <tr className="border-b border-gray-700/50">
+            <td className="py-3 px-4 text-sm text-gray-400">匹配摘要</td>
+            {candidates.map((c) => (
+              <td key={c.candidate_name} className="py-3 px-4 text-sm text-gray-300">
+                {c.summary}
+              </td>
+            ))}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+export default function CandidateComparison({
+  candidates,
+  criteria,
+  onClose,
+}: CandidateComparisonProps) {
+  const [selectedCandidates, setSelectedCandidates] = useState<Candidate[]>([]);
+
+  const toggleCandidate = (candidate: Candidate) => {
+    setSelectedCandidates((prev) => {
+      const exists = prev.find((c) => c.candidate_name === candidate.candidate_name);
+      if (exists) {
+        return prev.filter((c) => c.candidate_name !== candidate.candidate_name);
+      }
+      if (prev.length >= 4) {
+        return prev;
+      }
+      return [...prev, candidate];
+    });
+  };
+
+  const getScoreColor = (score: number) => {
+    if (score >= 80) return "text-emerald-400";
+    if (score >= 60) return "text-amber-400";
+    return "text-red-400";
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        className="bg-[#1F2937] rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-hidden border border-gray-700"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="bg-gradient-to-r from-cyan-600 to-cyan-700 px-6 py-4 flex justify-between items-center">
+          <div>
+            <h2 className="text-xl font-bold text-white">候选人对比</h2>
+            <p className="text-cyan-100 text-sm mt-1">
+              选择2-4位候选人进行横向对比
+            </p>
+          </div>
+          <button
+            onClick={onClose}
+            className="text-cyan-100 hover:text-white transition-colors"
+          >
+            ✕
+          </button>
+        </div>
+
+        <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
+          {/* Candidate Selection */}
+          <div className="mb-6">
+            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
+              选择候选人 (已选 {selectedCandidates.length}/4)
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+              {candidates.map((candidate, index) => (
+                <CandidateCard
+                  key={candidate.candidate_name}
+                  candidate={candidate}
+                  isSelected={selectedCandidates.some(
+                    (c) => c.candidate_name === candidate.candidate_name
+                  )}
+                  onClick={() => toggleCandidate(candidate)}
+                  rank={index + 1}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Comparison Table */}
+          <AnimatePresence>
+            {selectedCandidates.length >= 2 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="bg-[#111827] rounded-xl border border-gray-700 overflow-hidden"
+              >
+                <div className="bg-gradient-to-r from-gray-600 to-gray-700 px-6 py-3">
+                  <h3 className="text-sm font-semibold text-white flex items-center gap-2">
+                    <span>📊</span> 对比分析表
+                  </h3>
+                </div>
+                <ComparisonTable candidates={selectedCandidates} criteria={criteria} />
+
+                {/* Score visualization */}
+                <div className="p-6 border-t border-gray-700">
+                  <h4 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">
+                    分数对比
+                  </h4>
+                  <div className="space-y-4">
+                    {selectedCandidates.map((c) => (
+                      <div key={c.candidate_name} className="flex items-center gap-4">
+                        <span className="w-24 text-sm text-gray-300 truncate">
+                          {c.candidate_name}
+                        </span>
+                        <div className="flex-1 bg-gray-700 rounded-full h-4 overflow-hidden">
+                          <motion.div
+                            initial={{ width: 0 }}
+                            animate={{ width: `${c.match_score}%` }}
+                            transition={{ duration: 0.8, ease: "easeOut" }}
+                            className={`h-full rounded-full ${
+                              c.match_score >= 80
+                                ? "bg-emerald-500"
+                                : c.match_score >= 60
+                                ? "bg-amber-500"
+                                : "bg-red-500"
+                            }`}
+                          />
+                        </div>
+                        <span className={`w-12 text-right text-sm font-bold ${getScoreColor(c.match_score)}`}>
+                          {c.match_score}%
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {selectedCandidates.length < 2 && (
+            <div className="text-center py-12 text-gray-400">
+              <span className="text-4xl mb-4 block">👆</span>
+              <p>请选择至少2位候选人进行对比</p>
+            </div>
+          )}
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
