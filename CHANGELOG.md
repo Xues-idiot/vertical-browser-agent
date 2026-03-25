@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.17.0] - 2026-03-25
+
+### Added
+
+#### 候选人排序功能
+- **排序选项** - 按评分/姓名/经验排序
+- **下拉选择** - 快速切换排序方式
+- **实时排序** - 列表实时更新
+
+---
+
 ## [1.16.0] - 2026-03-25
 
 ### Added

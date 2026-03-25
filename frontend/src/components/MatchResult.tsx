@@ -557,6 +557,7 @@ export default function MatchResult({
   const [showOnlyStarred, setShowOnlyStarred] = useState(false);
   const [minScore, setMinScore] = useState<number>(0);
   const [notes, setNotes] = useState<Map<string, string>>(new Map());
+  const [sortBy, setSortBy] = useState<"score" | "name" | "experience">("score");
 
   // Combine all candidates
   const allCandidates = [...strongRecommendations, ...backupCandidates];
@@ -594,6 +595,19 @@ export default function MatchResult({
     const matchesScore = c.match_score >= minScore;
     return matchesSearch && matchesTags && matchesStarred && matchesScore;
   });
+
+  // Sort candidates
+  const sortCandidates = (candidates: Candidate[]) => {
+    return [...candidates].sort((a, b) => {
+      if (sortBy === "score") return b.match_score - a.match_score;
+      if (sortBy === "name") return a.candidate_name.localeCompare(b.candidate_name, "zh-CN");
+      if (sortBy === "experience") return (b.years_experience || 0) - (a.years_experience || 0);
+      return 0;
+    });
+  };
+
+  const sortedFilteredStrong = sortCandidates(filteredStrong);
+  const sortedFilteredBackup = sortCandidates(filteredBackup);
 
   const toggleTag = (tag: string) => {
     setSelectedTags((prev) =>
@@ -723,6 +737,20 @@ export default function MatchResult({
             )}
           </div>
 
+          {/* Sort Controls */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-400">排序:</span>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as "score" | "name" | "experience")}
+              className="bg-[#111827] border border-gray-700 rounded px-2 py-1 text-xs text-gray-300 focus:outline-none focus:border-cyan-500"
+            >
+              <option value="score">评分最高</option>
+              <option value="name">姓名排序</option>
+              <option value="experience">经验最多</option>
+            </select>
+          </div>
+
           {/* Tag Filters */}
           {allTags.length > 0 && !batchMode && (
             <div className="flex flex-wrap gap-2">
@@ -806,7 +834,7 @@ export default function MatchResult({
       )}
 
       {/* 强烈推荐 */}
-      {filteredStrong.length > 0 && (
+      {sortedFilteredStrong.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -815,11 +843,11 @@ export default function MatchResult({
         >
           <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 px-6 py-4">
             <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-              <span>⭐</span> 强烈推荐 ({filteredStrong.length}份)
+              <span>⭐</span> 强烈推荐 ({sortedFilteredStrong.length}份)
             </h3>
           </div>
           <div className="p-6 space-y-4">
-            {filteredStrong.map((candidate, index) => (
+            {sortedFilteredStrong.map((candidate, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 10 }}
@@ -949,7 +977,7 @@ export default function MatchResult({
       )}
 
       {/* 可备选 */}
-      {filteredBackup.length > 0 && (
+      {sortedFilteredBackup.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -958,11 +986,11 @@ export default function MatchResult({
         >
           <div className="bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-4">
             <h3 className="text-lg font-semibold text-amber-900 flex items-center gap-2">
-              <span>🟡</span> 可备选 ({filteredBackup.length}份)
+              <span>🟡</span> 可备选 ({sortedFilteredBackup.length}份)
             </h3>
           </div>
           <div className="p-6 space-y-4">
-            {filteredBackup.map((candidate, index) => (
+            {sortedFilteredBackup.map((candidate, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 10 }}
