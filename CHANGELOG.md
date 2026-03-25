@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.23.0] - 2026-03-25
+
+### Added
+
+#### JD输入模板快捷选择
+- **模板库按钮** - JD输入框添加模板库入口
+- **一键填充** - 选择模板自动填入输入框
+- **无缝集成** - 模板选择后直接使用
+
+---
+
 ## [1.22.0] - 2026-03-25
 
 ### Added

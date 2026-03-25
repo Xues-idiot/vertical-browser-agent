@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import JDTemplates from "./JDTemplates";
 
 interface JDInputProps {
   onSubmit: (jdUrl: string) => void;
@@ -10,6 +11,7 @@ interface JDInputProps {
 
 export default function JDInput({ onSubmit, loading }: JDInputProps) {
   const [jdUrl, setJdUrl] = useState("");
+  const [showTemplates, setShowTemplates] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,6 +40,12 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
           </h2>
           <p className="text-sm text-gray-400">粘贴招聘平台JD链接</p>
         </div>
+        <button
+          onClick={() => setShowTemplates(true)}
+          className="px-3 py-1.5 bg-purple-600/20 text-purple-400 border border-purple-500/30 rounded-lg hover:bg-purple-600/30 transition-colors text-sm"
+        >
+          📋 模板库
+        </button>
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -79,6 +87,18 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
           )}
         </motion.button>
       </form>
+
+      <AnimatePresence>
+        {showTemplates && (
+          <JDTemplates
+            onSelect={(prompt) => {
+              setJdUrl(prompt);
+              setShowTemplates(false);
+            }}
+            onClose={() => setShowTemplates(false)}
+          />
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
