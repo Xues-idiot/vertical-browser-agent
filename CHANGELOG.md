@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.11.0] - 2026-03-25
+
+### Added
+
+#### 面试时间线组件
+- **InterviewTimeline组件** - 候选人状态变更时间线
+- **状态记录** - 面试安排/完成、Offer发送/接受、淘汰、入职
+- **筛选标签** - 按状态类型筛选时间线
+- **时间排序** - 最新事件优先显示
+- **备注信息** - 支持面试官和备注记录
+
+---
+
 ## [1.10.0] - 2026-03-25
 
 ### Added
