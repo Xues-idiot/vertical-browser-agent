@@ -216,16 +216,38 @@ export default function CandidateComparison({
           </div>
           <div className="flex items-center gap-3">
             {selectedCandidates.length >= 2 && (
-              <button
-                onClick={() => {
-                  const ids = selectedCandidates.map(c => c.candidate_name).join(",");
-                  const url = `${window.location.origin}${window.location.pathname}?compare=${encodeURIComponent(ids)}`;
-                  navigator.clipboard.writeText(url);
-                }}
-                className="px-3 py-1.5 bg-white/20 text-white text-sm rounded-lg hover:bg-white/30 transition-colors flex items-center gap-1"
-              >
-                🔗 复制分享链接
-              </button>
+              <>
+                <button
+                  onClick={() => {
+                    const ids = selectedCandidates.map(c => c.candidate_name).join(",");
+                    const url = `${window.location.origin}${window.location.pathname}?compare=${encodeURIComponent(ids)}`;
+                    navigator.clipboard.writeText(url);
+                  }}
+                  className="px-3 py-1.5 bg-white/20 text-white text-sm rounded-lg hover:bg-white/30 transition-colors flex items-center gap-1"
+                >
+                  🔗 复制分享链接
+                </button>
+                <button
+                  onClick={() => {
+                    const headers = ["姓名", "匹配分", "等级", "公司", "经验"];
+                    const rows = selectedCandidates.map(c => [
+                      c.candidate_name, c.match_score, c.level,
+                      c.current_company || "", c.years_experience || ""
+                    ]);
+                    const csv = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+                    const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = `candidate-comparison-${Date.now()}.csv`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                  }}
+                  className="px-3 py-1.5 bg-white/20 text-white text-sm rounded-lg hover:bg-white/30 transition-colors flex items-center gap-1"
+                >
+                  📥 导出CSV
+                </button>
+              </>
             )}
             <button
               onClick={onClose}

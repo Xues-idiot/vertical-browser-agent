@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.21.0] - 2026-03-25
+
+### Added
+
+#### 候选人对比CSV导出
+- **导出CSV** - 候选人对比面板支持导出CSV
+- **便捷分享** - 选2人以上即可导出对比表格
+- **Excel兼容** - UTF-8编码，Excel可直接打开
+
+---
+
 ## [1.20.0] - 2026-03-25
 
 ### Added
