@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.4.0] - 2026-03-25
+
+### Added
+
+#### 候选人搜索/过滤
+- **搜索框** - 按姓名、公司、摘要搜索
+- **标签过滤** - 点击标签筛选符合条件的候选人
+- **多条件组合** - 搜索+标签同时生效
+- **清除过滤** - 一键重置所有过滤条件
+
+---
+
 ## [1.3.0] - 2026-03-25
 
 ### Added

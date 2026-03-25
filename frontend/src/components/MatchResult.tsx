@@ -323,6 +323,47 @@ export default function MatchResult({
   criteria,
 }: MatchResultProps) {
   const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
+  // Combine all candidates
+  const allCandidates = [...strongRecommendations, ...backupCandidates];
+
+  // Extract all unique tags
+  const allTags = Array.from(
+    new Set(allCandidates.flatMap((c) => c.tags || []))
+  );
+
+  // Filter candidates
+  const filteredStrong = strongRecommendations.filter((c) => {
+    const matchesSearch =
+      !searchQuery ||
+      c.candidate_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      c.current_company?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      c.summary.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesTags =
+      selectedTags.length === 0 ||
+      selectedTags.every((tag) => c.tags?.includes(tag));
+    return matchesSearch && matchesTags;
+  });
+
+  const filteredBackup = backupCandidates.filter((c) => {
+    const matchesSearch =
+      !searchQuery ||
+      c.candidate_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      c.current_company?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      c.summary.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesTags =
+      selectedTags.length === 0 ||
+      selectedTags.every((tag) => c.tags?.includes(tag));
+    return matchesSearch && matchesTags;
+  });
+
+  const toggleTag = (tag: string) => {
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    );
+  };
 
   const getLevelBadge = (level: string) => {
     switch (level) {
@@ -378,8 +419,54 @@ export default function MatchResult({
         )}
       </AnimatePresence>
 
+      {/* Search & Filter */}
+      <div className="bg-[#1F2937] rounded-xl p-4 border border-gray-700">
+        <div className="flex flex-col md:flex-row gap-4">
+          {/* Search Input */}
+          <div className="relative flex-1">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="搜索候选人姓名、公司、摘要..."
+              className="w-full bg-[#111827] border border-gray-700 rounded-lg px-4 py-2 pl-10 text-gray-100 placeholder-gray-500 focus:outline-none focus:border-cyan-500"
+            />
+            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+
+          {/* Tag Filters */}
+          {allTags.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {allTags.map((tag) => (
+                <button
+                  key={tag}
+                  onClick={() => toggleTag(tag)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                    selectedTags.includes(tag)
+                      ? "bg-cyan-600 text-white"
+                      : "bg-[#111827] text-gray-400 border border-gray-700 hover:border-cyan-500"
+                  }`}
+                >
+                  {tag}
+                </button>
+              ))}
+              {selectedTags.length > 0 && (
+                <button
+                  onClick={() => setSelectedTags([])}
+                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
+                >
+                  清除
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* 强烈推荐 */}
-      {strongRecommendations.length > 0 && (
+      {filteredStrong.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -388,11 +475,11 @@ export default function MatchResult({
         >
           <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 px-6 py-4">
             <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-              <span>⭐</span> 强烈推荐 ({strongRecommendations.length}份)
+              <span>⭐</span> 强烈推荐 ({filteredStrong.length}份)
             </h3>
           </div>
           <div className="p-6 space-y-4">
-            {strongRecommendations.map((candidate, index) => (
+            {filteredStrong.map((candidate, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 10 }}
@@ -457,7 +544,7 @@ export default function MatchResult({
       )}
 
       {/* 可备选 */}
-      {backupCandidates.length > 0 && (
+      {filteredBackup.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -466,11 +553,11 @@ export default function MatchResult({
         >
           <div className="bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-4">
             <h3 className="text-lg font-semibold text-amber-900 flex items-center gap-2">
-              <span>🟡</span> 可备选 ({backupCandidates.length}份)
+              <span>🟡</span> 可备选 ({filteredBackup.length}份)
             </h3>
           </div>
           <div className="p-6 space-y-4">
-            {backupCandidates.map((candidate, index) => (
+            {filteredBackup.map((candidate, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 10 }}
