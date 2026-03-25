@@ -23,6 +23,7 @@ interface Candidate {
   tags?: string[];
   ai_reason?: string;  // AI推荐理由
   key_highlights?: string[];  // 关键经历亮点
+  similar_candidates?: Candidate[];  // 相似候选人
 }
 
 interface MatchResultProps {
@@ -386,6 +387,41 @@ function CandidateDetailModal({
             </div>
           </div>
 
+          {/* 相似候选人 */}
+          {(candidate.similar_candidates || []).length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
+                👥 相似候选人
+              </h3>
+              <div className="space-y-2">
+                {candidate.similar_candidates?.slice(0, 3).map((similar, i) => (
+                  <button
+                    key={i}
+                    onClick={() => {
+                      // Switch to this similar candidate
+                      onClose();
+                      // The parent would need to handle this
+                    }}
+                    className="w-full flex items-center justify-between bg-[#111827] rounded-lg p-3 border border-gray-700 hover:border-cyan-500/50 transition-colors text-left"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="w-6 h-6 bg-gray-600/50 text-gray-400 rounded-full flex items-center justify-center text-xs">
+                        {i + 1}
+                      </span>
+                      <div>
+                        <p className="text-sm text-white font-medium">{similar.candidate_name}</p>
+                        <p className="text-xs text-gray-400">{similar.current_company}</p>
+                      </div>
+                    </div>
+                    <span className={`text-sm font-bold ${getScoreColor(similar.match_score)}`}>
+                      {similar.match_score}%
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Notes */}
           <div>
             <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
@@ -401,30 +437,55 @@ function CandidateDetailModal({
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="bg-[#111827] px-6 py-4 border-t border-gray-700 flex justify-end gap-3">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 text-gray-400 hover:text-white transition-colors"
-          >
-            关闭
-          </button>
-          <button
-            onClick={() => {
-              // Export candidate as JSON
-              const data = JSON.stringify({ ...candidate, note, status }, null, 2);
-              const blob = new Blob([data], { type: "application/json" });
-              const url = URL.createObjectURL(blob);
-              const a = document.createElement("a");
-              a.href = url;
-              a.download = `candidate-${candidate.candidate_name}.json`;
-              a.click();
-              URL.revokeObjectURL(url);
-            }}
-            className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors"
-          >
-            导出候选人
-          </button>
+        {/* Footer - Quick Actions */}
+        <div className="bg-[#111827] px-6 py-4 border-t border-gray-700">
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-sm text-gray-400">快捷操作</span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => {
+                setStatus("interview");
+                onStatusChange("interview");
+              }}
+              className="px-4 py-2 bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 rounded-lg hover:bg-emerald-600/30 transition-colors text-sm flex items-center gap-2"
+            >
+              📅 安排面试
+            </button>
+            <button
+              onClick={() => {
+                const subject = encodeURIComponent(`【Spider招聘】关于${candidate.candidate_name}的面试邀请`);
+                window.open(`mailto:?subject=${subject}`);
+              }}
+              className="px-4 py-2 bg-blue-600/20 text-blue-400 border border-blue-500/30 rounded-lg hover:bg-blue-600/30 transition-colors text-sm flex items-center gap-2"
+            >
+              ✉️ 发送邮件
+            </button>
+            <button
+              onClick={() => {
+                setStatus("offer");
+                onStatusChange("offer");
+              }}
+              className="px-4 py-2 bg-purple-600/20 text-purple-400 border border-purple-500/30 rounded-lg hover:bg-purple-600/30 transition-colors text-sm flex items-center gap-2"
+            >
+              🎯 发放Offer
+            </button>
+            <button
+              onClick={() => {
+                const data = JSON.stringify({ ...candidate, note, status }, null, 2);
+                const blob = new Blob([data], { type: "application/json" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `candidate-${candidate.candidate_name}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+              }}
+              className="px-4 py-2 bg-cyan-600/20 text-cyan-400 border border-cyan-500/30 rounded-lg hover:bg-cyan-600/30 transition-colors text-sm flex items-center gap-2"
+            >
+              📥 导出
+            </button>
+          </div>
         </div>
       </motion.div>
     </motion.div>

@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.7.0] - 2026-03-25
+
+### Added
+
+#### 候选人详情快捷操作
+- **快捷操作按钮组** - 安排面试、发送邮件、发放Offer、导出
+- **一键面试安排** - 快速标记面试状态
+- **邮件快捷发送** - 调用系统邮件客户端
+- **相似候选人** - 显示与当前候选人相似的其他候选人（最多3人）
+
+---
+
 ## [1.6.0] - 2026-03-25
 
 ### Added
