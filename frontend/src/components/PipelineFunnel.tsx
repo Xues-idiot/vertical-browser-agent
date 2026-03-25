@@ -7,6 +7,7 @@ interface Candidate {
   match_score: number;
   level: string;
   status?: "pending" | "interview" | "offer" | "hired" | "rejected";
+  source?: string;
 }
 
 interface PipelineFunnelProps {
@@ -197,6 +198,32 @@ export default function PipelineFunnel({ candidates, totalResumes }: PipelineFun
           </div>
           <div className="text-gray-500">
             漏斗更新时间: {new Date().toLocaleTimeString()}
+          </div>
+        </div>
+
+        {/* 来源统计 */}
+        <div className="mt-6 pt-6 border-t border-gray-700">
+          <h4 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">
+            来源渠道分析
+          </h4>
+          <div className="flex flex-wrap gap-2">
+            {["referral", "headhunter", "website", "resume_db", "other"].map((src) => {
+              const count = candidates.filter(c => c.source === src).length;
+              if (count === 0) return null;
+              return (
+                <span key={src} className="px-3 py-1.5 bg-[#111827] rounded-lg text-xs flex items-center gap-2">
+                  <span className="w-2 h-2 bg-cyan-500 rounded-full" />
+                  <span className="text-gray-400">
+                    {src === "referral" && "👥 内推"}
+                    {src === "headhunter" && "🎯 猎头"}
+                    {src === "website" && "🌐 网站"}
+                    {src === "resume_db" && "📁 简历库"}
+                    {src === "other" && "📋 其他"}
+                  </span>
+                  <span className="text-cyan-400 font-medium">{count}</span>
+                </span>
+              );
+            })}
           </div>
         </div>
       </div>

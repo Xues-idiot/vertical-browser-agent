@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.10.0] - 2026-03-25
+
+### Added
+
+#### 招聘漏斗来源统计
+- **来源渠道分析** - 显示各渠道候选人数量
+- **渠道标签** - 内推/猎头/网站/简历库/其他
+- **漏斗视图增强** - 在PipelineFunnel中集成来源统计
+
+---
+
 ## [1.9.0] - 2026-03-25
 
 ### Added
