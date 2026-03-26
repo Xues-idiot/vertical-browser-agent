@@ -1,24 +1,89 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import JDTemplates from "./JDTemplates";
+import { validateUrl, validateJDText } from "@/lib/validation";
 
 interface JDInputProps {
-  onSubmit: (jdUrl: string) => void;
+  onSubmit: (jdUrl: string, jdText?: string) => void;
   loading?: boolean;
+}
+
+// Extract key requirements from JD text
+function extractJDPreview(text: string): { skills: string[]; requirements: string[] } {
+  const skills: string[] = [];
+  const requirements: string[] = [];
+
+  // Common skill keywords to look for
+  const skillKeywords = [
+    "Python", "Java", "JavaScript", "TypeScript", "React", "Vue", "Angular", "Node.js",
+    "SQL", "MongoDB", "Redis", "Docker", "Kubernetes", "AWS", "GCP", "Azure",
+    "Git", "Linux", "Agile", "Scrum", "TensorFlow", "PyTorch", "Machine Learning",
+    "AI", "NLP", "Data Analysis", "Excel", "Power BI", "Tableau",
+    "Product", "Management", "Leadership", "Communication", "Presentation",
+    "SaaS", "B2B", "B2C", "E-commerce", "Fintech", "Blockchain",
+  ];
+
+  // Extract skills
+  skillKeywords.forEach(skill => {
+    if (text.toLowerCase().includes(skill.toLowerCase())) {
+      skills.push(skill);
+    }
+  });
+
+  // Extract requirements patterns
+  const experienceMatch = text.match(/(\d+[\+]?\s*年|\d+[\+]?\s*years?)\s*(以上?|以上|以下|以下|-)/i);
+  if (experienceMatch) {
+    requirements.push(`经验要求: ${experienceMatch[0]}`);
+  }
+
+  const degreeMatch = text.match(/(本科|硕士|博士|大专|高中|学历要求)[^。]*/i);
+  if (degreeMatch) {
+    requirements.push(degreeMatch[0].slice(0, 30));
+  }
+
+  // Extract salary if present
+  const salaryMatch = text.match(/(薪资?| salary)[^。]*(\d+[kK]?[-\s]?\d*[kK]?|\d+[万¥$])/i);
+  if (salaryMatch) {
+    requirements.push(`薪资: ${salaryMatch[0].slice(0, 20)}`);
+  }
+
+  return { skills: skills.slice(0, 8), requirements: requirements.slice(0, 3) };
 }
 
 export default function JDInput({ onSubmit, loading }: JDInputProps) {
   const [jdUrl, setJdUrl] = useState("");
-  const [showTemplates, setShowTemplates] = useState(false);
+  const [jdText, setJdText] = useState(""); // JD文本内容
+  const [inputMode, setInputMode] = useState<"url" | "text">("url"); // 输入模式
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Compute JD preview when text changes
+  const jdPreview = useMemo(() => {
+    if (inputMode !== "text" || jdText.length < 20) return null;
+    return extractJDPreview(jdText);
+  }, [jdText, inputMode]);
+
+  const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
-    if (jdUrl.trim()) {
+    setError(null);
+
+    // 验证
+    if (inputMode === "text") {
+      const textValidation = validateJDText(jdText);
+      if (!textValidation.valid) {
+        setError(textValidation.error || "JD文本验证失败");
+        return;
+      }
+      onSubmit(jdUrl.trim() || "文本模式", jdText.trim());
+    } else {
+      const urlValidation = validateUrl(jdUrl);
+      if (!urlValidation.valid) {
+        setError(urlValidation.error || "URL验证失败");
+        return;
+      }
       onSubmit(jdUrl.trim());
     }
-  };
+  }, [inputMode, jdUrl, jdText, onSubmit]);
 
   return (
     <motion.div
@@ -38,32 +103,113 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
           <h2 className="text-lg font-semibold text-white">
             输入职位JD
           </h2>
-          <p className="text-sm text-gray-400">粘贴招聘平台JD链接</p>
+          <p className="text-sm text-gray-400">
+            {inputMode === "url" ? "粘贴招聘平台JD链接" : "填写JD内容"}
+          </p>
         </div>
+      </div>
+
+      {/* 模式切换 */}
+      <div className="flex gap-2 mb-4">
         <button
-          onClick={() => setShowTemplates(true)}
-          className="px-3 py-1.5 bg-purple-600/20 text-purple-400 border border-purple-500/30 rounded-lg hover:bg-purple-600/30 transition-colors text-sm"
+          type="button"
+          onClick={() => setInputMode("url")}
+          className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+            inputMode === "url"
+              ? "bg-cyan-600 text-white"
+              : "bg-[#111827] text-gray-400 border border-gray-700 hover:border-cyan-500"
+          }`}
         >
-          📋 模板库
+          🔗 URL模式
+        </button>
+        <button
+          type="button"
+          onClick={() => setInputMode("text")}
+          className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+            inputMode === "text"
+              ? "bg-cyan-600 text-white"
+              : "bg-[#111827] text-gray-400 border border-gray-700 hover:border-cyan-500"
+          }`}
+        >
+          📝 文本模式
         </button>
       </div>
+
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-300 mb-2">
-            JD链接
-          </label>
-          <input
-            type="text"
-            value={jdUrl}
-            onChange={(e) => setJdUrl(e.target.value)}
-            placeholder="https://www.zhipin.com/job/..."
-            className="w-full px-4 py-3 border border-gray-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition bg-[#111827] text-white placeholder-gray-500"
-            disabled={loading}
-          />
-        </div>
+        {error && (
+          <div className="bg-red-500/20 border border-red-500/30 rounded-lg px-4 py-2 text-red-400 text-sm">
+            {error}
+          </div>
+        )}
+        {inputMode === "url" ? (
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              JD链接
+            </label>
+            <input
+              type="text"
+              value={jdUrl}
+              onChange={(e) => { setJdUrl(e.target.value); setError(null); }}
+              placeholder="https://www.zhipin.com/job/..."
+              className="w-full px-4 py-3 border border-gray-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition bg-[#111827] text-white placeholder-gray-500"
+              disabled={loading}
+            />
+          </div>
+        ) : (
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              JD内容
+            </label>
+            <textarea
+              value={jdText}
+              onChange={(e) => { setJdText(e.target.value); setError(null); }}
+              placeholder="粘贴职位描述..."
+              className="w-full px-4 py-3 border border-gray-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition bg-[#111827] text-white placeholder-gray-500 resize-none"
+              rows={6}
+              disabled={loading}
+            />
+            {/* JD Preview */}
+            {jdPreview && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                className="mt-3 bg-[#111827] rounded-lg p-3 border border-gray-700"
+              >
+                <div className="text-xs text-gray-400 mb-2 flex items-center gap-1">
+                  <span>🔍</span> JD智能解析预览
+                </div>
+                {jdPreview.skills.length > 0 && (
+                  <div className="mb-2">
+                    <span className="text-xs text-gray-500">识别技能: </span>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {jdPreview.skills.map(skill => (
+                        <span key={skill} className="bg-cyan-500/20 text-cyan-400 px-2 py-0.5 rounded text-xs">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {jdPreview.requirements.length > 0 && (
+                  <div>
+                    <span className="text-xs text-gray-500">关键要求: </span>
+                    <ul className="mt-1 space-y-1">
+                      {jdPreview.requirements.map((req, i) => (
+                        <li key={i} className="text-xs text-gray-300 flex items-center gap-1">
+                          <span className="w-1 h-1 bg-cyan-400 rounded-full" />
+                          {req}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </div>
+        )}
         <motion.button
           type="submit"
-          disabled={loading || !jdUrl.trim()}
+          disabled={loading || (inputMode === "url" ? !jdUrl.trim() : !jdText.trim())}
           whileHover={{ scale: loading ? 1 : 1.02 }}
           whileTap={{ scale: loading ? 1 : 0.98 }}
           className="w-full bg-gradient-to-r from-cyan-600 to-cyan-700 text-white py-3 px-4 rounded-lg disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed transition font-medium shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2"
@@ -87,18 +233,6 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
           )}
         </motion.button>
       </form>
-
-      <AnimatePresence>
-        {showTemplates && (
-          <JDTemplates
-            onSelect={(prompt) => {
-              setJdUrl(prompt);
-              setShowTemplates(false);
-            }}
-            onClose={() => setShowTemplates(false)}
-          />
-        )}
-      </AnimatePresence>
     </motion.div>
   );
 }

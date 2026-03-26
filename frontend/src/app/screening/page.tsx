@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import JDInput from "@/components/JDInput";
 import ResumeList from "@/components/ResumeList";
@@ -38,11 +38,34 @@ export default function ScreeningPage() {
   const [currentStep, setCurrentStep] = useState("init");
   const [loading, setLoading] = useState(false);
   const [jdUrl, setJdUrl] = useState("");
+  const [jdText, setJdText] = useState(""); // JD文本内容
   const [report, setReport] = useState<Report | null>(null);
   const [viewMode, setViewMode] = useState<"list" | "funnel" | "compare">("list");
   const [showComparison, setShowComparison] = useState(false);
   const [showJDComparison, setShowJDComparison] = useState(false);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
+
+  // Use refs to avoid stale state in async operations
+  const jdUrlRef = useRef(jdUrl);
+  const jdTextRef = useRef(jdText);
+  const cancelledRef = useRef(false);
+
+  // Keep refs in sync with state
+  useEffect(() => {
+    jdUrlRef.current = jdUrl;
+  }, [jdUrl]);
+  useEffect(() => {
+    jdTextRef.current = jdText;
+  }, [jdText]);
+
+  const handleReset = useCallback(() => {
+    setStep("input");
+    setCurrentStep("init");
+    setJdUrl("");
+    setReport(null);
+    setViewMode("list");
+    setCandidates([]);
+  }, []);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -83,16 +106,20 @@ export default function ScreeningPage() {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [step]);
+  }, [step, handleReset]);
 
-  const handleJDSubmit = (url: string) => {
+  const handleJDSubmit = useCallback((url: string, text?: string) => {
     setJdUrl(url);
-  };
+    if (text) {
+      setJdText(text);
+    }
+  }, []);
 
-  const handleResumeSubmit = async (resumes: string[]) => {
+  const handleResumeSubmit = useCallback(async (resumes: string[]) => {
     setLoading(true);
     setStep("screening");
     setCurrentStep("parsing_jd");
+    cancelledRef.current = false;
 
     try {
       const steps = [
@@ -104,11 +131,18 @@ export default function ScreeningPage() {
       ];
 
       for (const s of steps) {
+        if (cancelledRef.current) return;
         setCurrentStep(s);
         await new Promise((resolve) => setTimeout(resolve, 500));
       }
 
-      const response = await screeningAPI.submit({ jd_url: jdUrl, resume_list: resumes });
+      if (cancelledRef.current) return;
+
+      const response = await screeningAPI.submit({
+        jd_url: jdUrlRef.current,
+        ...(jdTextRef.current ? { jd_content: jdTextRef.current } : {}),
+        resume_list: resumes
+      });
 
       if (response.success && response.data?.report) {
         setReport(response.data.report);
@@ -147,7 +181,7 @@ export default function ScreeningPage() {
         }));
         setReport({
           position_name: "高级产品经理",
-          jd_source: jdUrl || "模拟JD",
+          jd_source: jdUrlRef.current || "模拟JD",
           total_resumes: resumes.length,
           screened_resumes: Math.floor(resumes.length * 0.6),
           strong_recommendations: strongRecs,
@@ -213,16 +247,7 @@ export default function ScreeningPage() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleReset = () => {
-    setStep("input");
-    setCurrentStep("init");
-    setJdUrl("");
-    setReport(null);
-    setViewMode("list");
-    setCandidates([]);
-  };
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#111827] text-gray-100">

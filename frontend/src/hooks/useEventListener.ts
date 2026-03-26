@@ -32,25 +32,25 @@ export function useEventListener(
   options?: AddEventListenerOptions
 ) {
   const savedHandler = useRef(handler);
-  const elementRef = element ?? (typeof window !== "undefined" ? window : null);
 
   useEffect(() => {
     savedHandler.current = handler;
   }, [handler]);
 
   useEffect(() => {
-    if (!elementRef) return;
+    const elementOrWindow = element ?? (typeof window !== "undefined" ? window : null);
+    if (!elementOrWindow) return;
 
     const listener = (event: Event) => {
       savedHandler.current(event);
     };
 
-    elementRef.addEventListener(event, listener, options);
+    elementOrWindow.addEventListener(event, listener, options);
 
     return () => {
-      elementRef.removeEventListener(event, listener, options);
+      elementOrWindow.removeEventListener(event, listener, options);
     };
-  }, [event, elementRef, options]);
+  }, [event, element, options]);
 }
 
 export default useEventListener;

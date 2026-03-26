@@ -141,18 +141,29 @@ class LRUCache:
         with self._lock:
             if key not in self._cache:
                 return None
-            self._access_order.remove(key)
-            self._access_order.append(key)
+            # Move to end to update LRU order
+            try:
+                self._access_order.remove(key)
+                self._access_order.append(key)
+            except ValueError:
+                # Key was removed by another thread, return None
+                return None
             return self._cache[key]
 
     def put(self, key: str, value: Any) -> None:
         """放入值"""
         with self._lock:
+            # Remove if exists first
             if key in self._cache:
-                self._access_order.remove(key)
+                try:
+                    self._access_order.remove(key)
+                except ValueError:
+                    pass
+            # Evict oldest if at capacity
             elif len(self._cache) >= self.capacity:
-                oldest = self._access_order.pop(0)
-                del self._cache[oldest]
+                if self._access_order:
+                    oldest = self._access_order.pop(0)
+                    self._cache.pop(oldest, None)
 
             self._cache[key] = value
             self._access_order.append(key)

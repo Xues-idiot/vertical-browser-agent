@@ -26,9 +26,9 @@ export function useHotkeys(
       for (const { key, handler, options = {} } of hotkeysRef.current) {
         if (options.enabled === false) continue;
 
-        const ctrlMatch = key.ctrl ? event.ctrlKey || event.metaKey : !event.ctrlKey && !event.metaKey;
-        const altMatch = key.alt ? event.altKey : !event.altKey;
-        const shiftMatch = key.shift ? event.shiftKey : !event.shiftKey;
+        const ctrlMatch = key.ctrl ? event.ctrlKey || event.metaKey : true;
+        const altMatch = key.alt ? event.altKey : true;
+        const shiftMatch = key.shift ? event.shiftKey : true;
         const keyMatch = event.key.toLowerCase() === key.key.toLowerCase();
 
         if (ctrlMatch && altMatch && shiftMatch && keyMatch) {

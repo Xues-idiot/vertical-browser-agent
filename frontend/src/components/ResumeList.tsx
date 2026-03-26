@@ -1,44 +1,107 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { validateResumeText } from "@/lib/validation";
 
 interface ResumeListProps {
   onSubmit: (resumes: string[]) => void;
   loading?: boolean;
 }
 
+// Extract key info from resume text
+function extractResumePreview(text: string): { name?: string; email?: string; phone?: string; education?: string; experience?: string } {
+  const result: { name?: string; email?: string; phone?: string; education?: string; experience?: string } = {};
+
+  // Extract email
+  const emailMatch = text.match(/[\w.-]+@[\w.-]+\.\w+/);
+  if (emailMatch) result.email = emailMatch[0];
+
+  // Extract phone
+  const phoneMatch = text.match(/1[3-9]\d{9}/);
+  if (phoneMatch) result.phone = phoneMatch[0];
+
+  // Extract education
+  const eduKeywords = ["本科", "硕士", "博士", "大专", "高中", "985", "211", "研究生"];
+  for (const kw of eduKeywords) {
+    if (text.includes(kw)) {
+      result.education = kw;
+      break;
+    }
+  }
+
+  // Extract years of experience
+  const expMatch = text.match(/(\d+)\s*年/);
+  if (expMatch) result.experience = `${expMatch[1]}年`;
+
+  return result;
+}
+
 export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
   const [resumes, setResumes] = useState<string[]>([""]);
   const [candidateNames, setCandidateNames] = useState<string[]>([""]);
+  const [errors, setErrors] = useState<(string | null)[]>([]);
 
-  const addResume = () => {
-    setResumes([...resumes, ""]);
-    setCandidateNames([...candidateNames, ""]);
-  };
+  const addResume = useCallback(() => {
+    setResumes((prev) => [...prev, ""]);
+    setCandidateNames((prev) => [...prev, ""]);
+    setErrors((prev) => [...prev, null]);
+  }, []);
 
-  const removeResume = (index: number) => {
+  const removeResume = useCallback((index: number) => {
     if (resumes.length > 1) {
-      const newResumes = resumes.filter((_, i) => i !== index);
-      const newNames = candidateNames.filter((_, i) => i !== index);
-      setResumes(newResumes);
-      setCandidateNames(newNames);
+      setResumes((prev) => prev.filter((_, i) => i !== index));
+      setCandidateNames((prev) => prev.filter((_, i) => i !== index));
+      setErrors((prev) => prev.filter((_, i) => i !== index));
     }
-  };
+  }, [resumes.length]);
 
-  const updateResume = (index: number, value: string) => {
-    const newResumes = [...resumes];
-    newResumes[index] = value;
-    setResumes(newResumes);
-  };
+  const updateResume = useCallback((index: number, value: string) => {
+    setResumes((prev) => {
+      const newResumes = [...prev];
+      newResumes[index] = value;
+      return newResumes;
+    });
+    setErrors((prev) => {
+      const newErrors = [...prev];
+      newErrors[index] = null;
+      return newErrors;
+    });
+  }, []);
 
-  const updateName = (index: number, value: string) => {
-    const newNames = [...candidateNames];
-    newNames[index] = value;
-    setCandidateNames(newNames);
-  };
+  const updateName = useCallback((index: number, value: string) => {
+    setCandidateNames((prev) => {
+      const newNames = [...prev];
+      newNames[index] = value;
+      return newNames;
+    });
+  }, []);
 
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
+    // Validate all resumes
+    const newErrors: (string | null)[] = [];
+    let hasError = false;
+
+    resumes.forEach((resume, i) => {
+      if (resume.trim()) {
+        const validation = validateResumeText(resume);
+        if (!validation.valid) {
+          newErrors[i] = validation.error || "简历验证失败";
+          hasError = true;
+        } else {
+          newErrors[i] = null;
+        }
+      } else {
+        newErrors[i] = null;
+      }
+    });
+
+    setErrors(newErrors);
+
+    if (hasError) {
+      return;
+    }
+
     const validResumes = resumes.filter((r) => r.trim());
     if (validResumes.length > 0) {
       // 将候选人姓名嵌入简历文本中传递给后端
@@ -51,7 +114,7 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
       }).filter((r) => r.trim());
       onSubmit(resumesWithNames);
     }
-  };
+  }, [resumes, candidateNames, onSubmit]);
 
   const validCount = resumes.filter((r) => r.trim()).length;
 
@@ -117,6 +180,25 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
                 rows={5}
                 className="w-full px-3 py-2 border border-gray-600 rounded focus:ring-2 focus:ring-emerald-500 outline-none resize-none bg-[#1F2937] text-white placeholder-gray-500 transition"
               />
+              {/* Resume Preview */}
+              {resumes[index] && resumes[index].length > 30 && (() => {
+                const preview = extractResumePreview(resumes[index]);
+                return preview.name || preview.email || preview.phone || preview.education || preview.experience ? (
+                  <div className="mt-2 bg-[#1F2937] rounded p-2 border border-gray-700">
+                    <div className="text-xs text-gray-400 mb-1">📋 智能提取:</div>
+                    <div className="flex flex-wrap gap-2">
+                      {preview.name && <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded">姓名: {preview.name}</span>}
+                      {preview.email && <span className="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded">📧 {preview.email}</span>}
+                      {preview.phone && <span className="text-xs bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded">📱 {preview.phone}</span>}
+                      {preview.education && <span className="text-xs bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded">🎓 {preview.education}</span>}
+                      {preview.experience && <span className="text-xs bg-cyan-500/20 text-cyan-400 px-2 py-0.5 rounded">💼 {preview.experience}</span>}
+                    </div>
+                  </div>
+                ) : null;
+              })()}
+              {errors[index] && (
+                <p className="mt-1 text-xs text-red-400">{errors[index]}</p>
+              )}
             </motion.div>
           ))}
         </AnimatePresence>

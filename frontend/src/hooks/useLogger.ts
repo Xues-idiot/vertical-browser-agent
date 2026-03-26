@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 
-export function useLogger(name: string, ...args: unknown[]) {
+export function useLogger(name: string) {
   const isMounted = useRef(true);
 
   useEffect(() => {
@@ -18,23 +18,23 @@ export function useLogger(name: string, ...args: unknown[]) {
     }
   }, [name]);
 
-  const log = (...logs: unknown[]) => {
+  const log = useCallback((...logs: unknown[]) => {
     if (process.env.NODE_ENV === "development") {
       console.log(`[${name}]`, ...logs);
     }
-  };
+  }, [name]);
 
-  const warn = (...warnings: unknown[]) => {
+  const warn = useCallback((...warnings: unknown[]) => {
     if (process.env.NODE_ENV === "development") {
       console.warn(`[${name}]`, ...warnings);
     }
-  };
+  }, [name]);
 
-  const error = (...errors: unknown[]) => {
+  const error = useCallback((...errors: unknown[]) => {
     if (process.env.NODE_ENV === "development") {
       console.error(`[${name}]`, ...errors);
     }
-  };
+  }, [name]);
 
   return { log, warn, error };
 }

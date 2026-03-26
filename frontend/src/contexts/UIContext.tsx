@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useMemo, ReactNode } from "react";
 
 interface UIState {
   sidebarCollapsed: boolean;
@@ -29,34 +29,34 @@ const UIContext = createContext<UIContextValue | null>(null);
 export function UIProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<UIState>(initialState);
 
-  const toggleSidebar = () => {
+  const toggleSidebar = useCallback(() => {
     setState((prev) => ({ ...prev, sidebarCollapsed: !prev.sidebarCollapsed }));
-  };
+  }, []);
 
-  const setSidebarCollapsed = (collapsed: boolean) => {
+  const setSidebarCollapsed = useCallback((collapsed: boolean) => {
     setState((prev) => ({ ...prev, sidebarCollapsed: collapsed }));
-  };
+  }, []);
 
-  const setSidebarOpen = (open: boolean) => {
+  const setSidebarOpen = useCallback((open: boolean) => {
     setState((prev) => ({ ...prev, sidebarOpen: open }));
-  };
+  }, []);
 
-  const openModal = (modalId: string) => {
+  const openModal = useCallback((modalId: string) => {
     setState((prev) => ({ ...prev, modalOpen: modalId, activeModal: modalId }));
-  };
+  }, []);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setState((prev) => ({ ...prev, modalOpen: null, activeModal: null }));
-  };
+  }, []);
 
-  const value: UIContextValue = {
+  const value = useMemo<UIContextValue>(() => ({
     ...state,
     toggleSidebar,
     setSidebarCollapsed,
     setSidebarOpen,
     openModal,
     closeModal,
-  };
+  }), [state, toggleSidebar, setSidebarCollapsed, setSidebarOpen, openModal, closeModal]);
 
   return <UIContext.Provider value={value}>{children}</UIContext.Provider>;
 }

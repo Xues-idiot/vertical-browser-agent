@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 export function useFetch<T>(
   url: string,
@@ -16,7 +16,7 @@ export function useFetch<T>(
   const [error, setError] = useState<Error | null>(null);
   const [refetchIndex, setRefetchIndex] = useState(0);
 
-  const refetch = () => setRefetchIndex((i) => i + 1);
+  const refetch = useCallback(() => setRefetchIndex((i) => i + 1), []);
 
   useEffect(() => {
     let cancelled = false;
@@ -50,7 +50,7 @@ export function useFetch<T>(
     return () => {
       cancelled = true;
     };
-  }, [url, refetchIndex]);
+  }, [url, options, refetchIndex]);
 
   return { data, loading, error, refetch };
 }

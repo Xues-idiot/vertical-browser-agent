@@ -1,5 +1,45 @@
 # Spider 进度记录
 
+## 第1轮循环复盘 (2026-03-26)
+
+### 复盘审查结果
+
+#### 组件使用审查
+| 状态 | 数量 | 组件 |
+|------|------|------|
+| ✅ 正在使用 | 8个 | JDInput, ResumeList, MatchResult, ReportView, BrowserPreview, PipelineFunnel, CandidateComparison, JDComparison |
+| ❌ 已删除 | 5个 | CandidateRadarChart, InterviewTimeline, InterviewSchedule, RecruitmentDashboard, JDTemplates |
+| ⚠️ 未使用 | 10个 | TagManager, CandidateSearchFilter, CandidateExporter, CandidateSorter, ScreeningResultShare, CandidateNoteHistory, ScreeningProgressTracker, BatchOperationHistory, EmailTemplateGenerator, ReportGenerator |
+
+#### Hooks使用审查
+- **所有54个hooks均未被页面使用** - 需要整合到组件中
+
+### 优化执行
+
+#### 删除的死代码
+- `CandidateRadarChart.tsx` - 从未被引用
+- `InterviewTimeline.tsx` - 从未被引用
+- `InterviewSchedule.tsx` - 从未被引用
+- `RecruitmentDashboard.tsx` - 从未被引用
+- `JDTemplates.tsx` - JDInput未集成
+
+#### 修复的Bug
+| 文件 | 问题 | 修复方式 |
+|------|------|----------|
+| JDInput.tsx | 正则表达式缺少右括号导致构建失败 | 修复为 `/i` 结尾 |
+| MatchResult.tsx | 引用已删除的CandidateRadarChart | 移除雷达图功能 |
+| JDInput.tsx | 引用已删除的JDTemplates | 移除模板库功能 |
+| screening/page.tsx | handleReset在定义前被useEffect引用 | 移到useEffect之前定义 |
+| CandidateExporter.tsx | 缺少AnimatePresence导入 | 添加到framer-motion导入 |
+| CandidateSearchFilter.tsx | 缺少AnimatePresence导入 | 添加到framer-motion导入 |
+
+### 结论
+- 构建成功通过 (`npm run build`)
+- 代码审查未发现其他明显bug
+- 未使用的组件可后续按需集成
+
+---
+
 ## 第491-500轮完成 (2026-03-24)
 
 ### 前端文本组件

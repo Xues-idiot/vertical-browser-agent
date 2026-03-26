@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Candidate {
@@ -153,13 +153,13 @@ export default function JDComparison({
   ]);
   const [newJDName, setNewJDName] = useState("");
 
-  const getScoreColor = (score: number) => {
+  const getScoreColor = useCallback((score: number) => {
     if (score >= 80) return "text-emerald-400";
     if (score >= 60) return "text-amber-400";
     return "text-red-400";
-  };
+  }, []);
 
-  const addJD = () => {
+  const addJD = useCallback(() => {
     if (!newJDName.trim()) return;
     setJDs((prev) => [
       ...prev,
@@ -170,12 +170,12 @@ export default function JDComparison({
       },
     ]);
     setNewJDName("");
-  };
+  }, [newJDName]);
 
-  const removeJD = (id: string) => {
+  const removeJD = useCallback((id: string) => {
     if (jds.length <= 1) return;
     setJDs((prev) => prev.filter((jd) => jd.id !== id));
-  };
+  }, [jds.length]);
 
   return (
     <motion.div

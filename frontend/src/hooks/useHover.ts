@@ -6,6 +6,9 @@ export function useHover(): [boolean, (node?: HTMLElement | null) => void] {
   const [isHovered, setIsHovered] = useState(false);
   const ref = useRef<HTMLElement | null>(null);
 
+  const handleMouseEnter = useCallback(() => setIsHovered(true), []);
+  const handleMouseLeave = useCallback(() => setIsHovered(false), []);
+
   const attachRef = useCallback((node?: HTMLElement | null) => {
     if (ref.current) {
       ref.current.removeEventListener("mouseenter", handleMouseEnter);
@@ -18,10 +21,7 @@ export function useHover(): [boolean, (node?: HTMLElement | null) => void] {
       ref.current.addEventListener("mouseenter", handleMouseEnter);
       ref.current.addEventListener("mouseleave", handleMouseLeave);
     }
-  }, []);
-
-  const handleMouseEnter = () => setIsHovered(true);
-  const handleMouseLeave = () => setIsHovered(false);
+  }, [handleMouseEnter, handleMouseLeave]);
 
   return [isHovered, attachRef];
 }

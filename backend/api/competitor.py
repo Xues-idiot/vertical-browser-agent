@@ -5,10 +5,10 @@ Spider - 竞品监控API
 from fastapi import APIRouter
 from typing import Optional
 
-from backend.api.responses import APIResponse
+from backend.api.responses import APIResponse, ErrorCode
 from backend.agents.competitor_monitor import CompetitorMonitor, create_competitor_monitor
 
-router = APIRouter(prefix="/api/competitor", tags=["竞品监控"])
+router = APIRouter(prefix="/api/competitors", tags=["竞品监控"])
 
 # 全局竞品监控器实例
 _monitor: Optional[CompetitorMonitor] = None
@@ -40,7 +40,7 @@ async def remove_competitor(name: str):
     removed = monitor.remove_competitor(name)
 
     if not removed:
-        return APIResponse.error(message="竞品不存在", error_code="NOT_FOUND")
+        return APIResponse.error(message="竞品不存在", code=ErrorCode.NOT_FOUND)
 
     return APIResponse.success(message=f"竞品 {name} 已移除")
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Candidate {
@@ -180,7 +180,7 @@ export default function CandidateComparison({
 }: CandidateComparisonProps) {
   const [selectedCandidates, setSelectedCandidates] = useState<Candidate[]>([]);
 
-  const toggleCandidate = (candidate: Candidate) => {
+  const toggleCandidate = useCallback((candidate: Candidate) => {
     setSelectedCandidates((prev) => {
       const exists = prev.find((c) => c.candidate_name === candidate.candidate_name);
       if (exists) {
@@ -191,7 +191,59 @@ export default function CandidateComparison({
       }
       return [...prev, candidate];
     });
-  };
+  }, []);
+
+  const handleShareLink = useCallback(() => {
+    const ids = selectedCandidates.map(c => c.candidate_name).join(",");
+    const url = `${window.location.origin}${window.location.pathname}?compare=${encodeURIComponent(ids)}`;
+    navigator.clipboard.writeText(url);
+  }, [selectedCandidates]);
+
+  const handleExportCSV = useCallback(() => {
+    const headers = ["姓名", "匹配分", "等级", "公司", "经验", "硬性条件", "技能匹配", "行业经验", "发展潜力", "标签", "匹配标准"];
+    const rows = selectedCandidates.map(c => [
+      c.candidate_name,
+      c.match_score,
+      c.level === "strong_recommend" ? "强烈推荐" : "可备选",
+      c.current_company || "",
+      c.years_experience || "",
+      c.score_breakdown?.hard_conditions || "",
+      c.score_breakdown?.skill_match || "",
+      c.score_breakdown?.industry_exp || "",
+      c.score_breakdown?.potential || "",
+      (c.tags || []).join(";"),
+      (c.matched_criteria || []).join(";")
+    ]);
+    const csv = [headers.join(","), ...rows.map(r => r.map(v => `"${v}"`).join(","))].join("\n");
+    const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `candidate-comparison-${Date.now()}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [selectedCandidates]);
+
+  const handleExportJSON = useCallback(() => {
+    const exportData = {
+      exported_at: new Date().toISOString(),
+      candidates_count: selectedCandidates.length,
+      criteria: criteria,
+      candidates: selectedCandidates.map((c, i) => ({
+        rank: i + 1,
+        ...c,
+        level_label: c.level === "strong_recommend" ? "强烈推荐" : "可备选"
+      }))
+    };
+    const json = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `candidate-comparison-${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [selectedCandidates, criteria]);
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return "text-emerald-400";
@@ -226,67 +278,19 @@ export default function CandidateComparison({
             {selectedCandidates.length >= 2 && (
               <>
                 <button
-                  onClick={() => {
-                    const ids = selectedCandidates.map(c => c.candidate_name).join(",");
-                    const url = `${window.location.origin}${window.location.pathname}?compare=${encodeURIComponent(ids)}`;
-                    navigator.clipboard.writeText(url);
-                  }}
+                  onClick={handleShareLink}
                   className="px-3 py-1.5 bg-white/20 text-white text-sm rounded-lg hover:bg-white/30 transition-colors flex items-center gap-1"
                 >
                   🔗 分享链接
                 </button>
                 <button
-                  onClick={() => {
-                    // Enhanced CSV with more fields
-                    const headers = ["姓名", "匹配分", "等级", "公司", "经验", "硬性条件", "技能匹配", "行业经验", "发展潜力", "标签", "匹配标准"];
-                    const rows = selectedCandidates.map(c => [
-                      c.candidate_name,
-                      c.match_score,
-                      c.level === "strong_recommend" ? "强烈推荐" : "可备选",
-                      c.current_company || "",
-                      c.years_experience || "",
-                      c.score_breakdown?.hard_conditions || "",
-                      c.score_breakdown?.skill_match || "",
-                      c.score_breakdown?.industry_exp || "",
-                      c.score_breakdown?.potential || "",
-                      (c.tags || []).join(";"),
-                      (c.matched_criteria || []).join(";")
-                    ]);
-                    const csv = [headers.join(","), ...rows.map(r => r.map(v => `"${v}"`).join(","))].join("\n");
-                    const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement("a");
-                    a.href = url;
-                    a.download = `candidate-comparison-${Date.now()}.csv`;
-                    a.click();
-                    URL.revokeObjectURL(url);
-                  }}
+                  onClick={handleExportCSV}
                   className="px-3 py-1.5 bg-amber-500/40 text-white text-sm rounded-lg hover:bg-amber-500/50 transition-colors flex items-center gap-1"
                 >
                   📊 详细CSV
                 </button>
                 <button
-                  onClick={() => {
-                    // JSON export with full details
-                    const exportData = {
-                      exported_at: new Date().toISOString(),
-                      candidates_count: selectedCandidates.length,
-                      criteria: criteria,
-                      candidates: selectedCandidates.map((c, i) => ({
-                        rank: i + 1,
-                        ...c,
-                        level_label: c.level === "strong_recommend" ? "强烈推荐" : "可备选"
-                      }))
-                    };
-                    const json = JSON.stringify(exportData, null, 2);
-                    const blob = new Blob([json], { type: "application/json" });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement("a");
-                    a.href = url;
-                    a.download = `candidate-comparison-${Date.now()}.json`;
-                    a.click();
-                    URL.revokeObjectURL(url);
-                  }}
+                  onClick={handleExportJSON}
                   className="px-3 py-1.5 bg-emerald-500/40 text-white text-sm rounded-lg hover:bg-emerald-500/50 transition-colors flex items-center gap-1"
                 >
                   📋 JSON

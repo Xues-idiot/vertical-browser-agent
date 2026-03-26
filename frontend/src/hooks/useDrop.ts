@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 interface DropOptions {
   onDrop?: (files: File[]) => void;
@@ -15,22 +15,30 @@ interface UseDropReturn {
 
 export function useDrop(options: DropOptions = {}): UseDropReturn {
   const [isDragging, setIsDragging] = useState(false);
+  const optionsRef = useRef(options);
+  const nodeRef = useRef<HTMLElement | null>(null);
 
-  const dropRef = useCallback((node: HTMLElement | null) => {
+  // Keep options ref in sync
+  useEffect(() => {
+    optionsRef.current = options;
+  }, [options]);
+
+  useEffect(() => {
+    const node = nodeRef.current;
     if (!node) return;
 
     const handleDragOver = (e: DragEvent) => {
       e.preventDefault();
       e.stopPropagation();
       setIsDragging(true);
-      options.onDragOver?.();
+      optionsRef.current.onDragOver?.();
     };
 
     const handleDragLeave = (e: DragEvent) => {
       e.preventDefault();
       e.stopPropagation();
       setIsDragging(false);
-      options.onDragLeave?.();
+      optionsRef.current.onDragLeave?.();
     };
 
     const handleDrop = (e: DragEvent) => {
@@ -40,7 +48,7 @@ export function useDrop(options: DropOptions = {}): UseDropReturn {
 
       const files = Array.from(e.dataTransfer?.files || []);
       if (files.length > 0) {
-        options.onDrop?.(files);
+        optionsRef.current.onDrop?.(files);
       }
     };
 
@@ -53,7 +61,11 @@ export function useDrop(options: DropOptions = {}): UseDropReturn {
       node.removeEventListener("dragleave", handleDragLeave);
       node.removeEventListener("drop", handleDrop);
     };
-  }, [options]);
+  }, []); // Only run once on mount, nodeRef is managed via ref callback
+
+  const dropRef = useCallback((node: HTMLElement | null) => {
+    nodeRef.current = node;
+  }, []);
 
   return { isDragging, dropRef };
 }

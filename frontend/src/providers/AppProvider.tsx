@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback } from "react";
+import { createContext, useContext, useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AppProvider as OriginalAppProvider, useApp } from "@/contexts/AppContext";
 
@@ -64,19 +64,35 @@ function ToastContainer() {
 
 function ToastProvider({ children }: { children: React.ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
+  const timeoutRefs = useRef<Map<string, NodeJS.Timeout>>(new Map());
+
+  useEffect(() => {
+    return () => {
+      // Cleanup all timeouts on unmount
+      timeoutRefs.current.forEach((timeout) => clearTimeout(timeout));
+      timeoutRefs.current.clear();
+    };
+  }, []);
 
   const addToast = useCallback(
     (message: string, type: "success" | "error" | "info" = "info") => {
       const id = Math.random().toString(36).slice(2);
       setToasts((prev) => [...prev, { id, message, type }]);
-      setTimeout(() => {
+      const timeout = setTimeout(() => {
         setToasts((prev) => prev.filter((t) => t.id !== id));
+        timeoutRefs.current.delete(id);
       }, 3000);
+      timeoutRefs.current.set(id, timeout);
     },
     []
   );
 
   const removeToast = useCallback((id: string) => {
+    const timeout = timeoutRefs.current.get(id);
+    if (timeout) {
+      clearTimeout(timeout);
+      timeoutRefs.current.delete(id);
+    }
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 

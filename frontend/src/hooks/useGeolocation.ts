@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 interface GeolocationState {
   latitude: number | null;
@@ -21,7 +21,7 @@ export function useGeolocation(options?: PositionOptions): UseGeolocationReturn 
     loading: true,
   });
 
-  const refresh = () => {
+  const refresh = useCallback(() => {
     if (!navigator.geolocation) {
       setState((prev) => ({
         ...prev,
@@ -58,11 +58,11 @@ export function useGeolocation(options?: PositionOptions): UseGeolocationReturn 
       },
       options
     );
-  };
+  }, [options]);
 
   useEffect(() => {
     refresh();
-  }, []);
+  }, [refresh]);
 
   return { ...state, refresh };
 }

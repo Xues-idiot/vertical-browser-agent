@@ -68,16 +68,32 @@ class MatchRequest(BaseModel):
     resume_info: dict
 
 
+class SimilarityRequest(BaseModel):
+    """简历相似度检测请求"""
+    resumes: list[dict]  # 每份简历包含 id, text, name 等信息
+
+
+class SimilarityResponse(BaseModel):
+    """简历相似度检测响应"""
+    success: bool
+    data: Optional[dict] = None
+    error: Optional[str] = None
+
+
 @router.post("/screening", response_model=ScreeningResponse)
 async def screening(request: ScreeningRequest):
     """
     简历筛选接口
 
     输入JD和简历列表，返回筛选报告
+    支持jd_content字段：如果提供，则使用该文本内容而非从URL抓取
     """
     try:
+        # 如果提供了jd_content，使用文本内容；否则使用URL
+        jd_source = request.jd_content if request.jd_content else request.jd_url
+
         # 使用graph运行筛选
-        report = await run_screening(request.jd_url, request.resume_list)
+        report = await run_screening(jd_source, request.resume_list, jd_content=request.jd_content)
 
         # 转换为dict
         generator = ReportGenerator()
@@ -203,3 +219,55 @@ async def match_resume(request: MatchRequest):
 def run_sync(jd_url: str, resume_list: list):
     """同步运行筛选（用于测试）"""
     return asyncio.run(run_screening(jd_url, resume_list))
+
+
+@router.post("/resume/similarity", response_model=SimilarityResponse)
+async def detect_resume_similarity(request: SimilarityRequest):
+    """
+    简历相似度检测接口
+
+    检测多份简历之间的相似度，帮助识别重复或造假的简历
+    """
+    try:
+        from backend.text_utils import text_similarity
+
+        resumes = request.resumes
+        n = len(resumes)
+        similarity_matrix = []
+
+        for i, resume_a in enumerate(resumes):
+            row = []
+            for j, resume_b in enumerate(resumes):
+                if i == j:
+                    row.append(1.0)
+                elif j < i:
+                    row.append(similarity_matrix[j][i])
+                else:
+                    text_a = resume_a.get("text", "")
+                    text_b = resume_b.get("text", "")
+                    similarity = text_similarity(text_a, text_b)
+                    row.append(round(similarity, 3))
+            similarity_matrix.append(row)
+
+        # 找出高相似度的简历对
+        high_similarity_pairs = []
+        for i in range(n):
+            for j in range(i + 1, n):
+                if similarity_matrix[i][j] >= 0.85:  # 85%以上相似度
+                    high_similarity_pairs.append({
+                        "resume_a": resumes[i].get("name", resumes[i].get("id", f"简历{i+1}")),
+                        "resume_b": resumes[j].get("name", resumes[j].get("id", f"简历{j+1}")),
+                        "similarity": similarity_matrix[i][j],
+                    })
+
+        return SimilarityResponse(
+            success=True,
+            data={
+                "total_resumes": n,
+                "similarity_matrix": similarity_matrix,
+                "high_similarity_pairs": high_similarity_pairs,
+                "duplicate_candidates": [pair for pair in high_similarity_pairs if pair["similarity"] >= 0.95],
+            }
+        )
+    except Exception as e:
+        return SimilarityResponse(success=False, error=str(e))

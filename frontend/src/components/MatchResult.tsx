@@ -1,9 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import CandidateRadarChart from "./CandidateRadarChart";
-
 interface ScoreBreakdown {
   hard_conditions?: number;    // 硬性条件
   skill_match?: number;        // 技能匹配
@@ -152,20 +150,26 @@ function CandidateDetailModal({
   criteria,
   allCandidates,
   customTags,
+  notes,
   onClose,
   onStatusChange,
   onAddTag,
+  onSaveNote,
+  onSelectSimilar,
 }: {
   candidate: Candidate;
   criteria: string[];
   allCandidates: Candidate[];
   customTags: Map<string, string[]>;
+  notes: Map<string, string>;
   onClose: () => void;
   onStatusChange: (status: CandidateStatus) => void;
   onAddTag?: (candidateName: string, tag: string) => void;
+  onSaveNote?: (candidateName: string, note: string) => void;
+  onSelectSimilar?: (candidate: Candidate) => void;
 }) {
   const [status, setStatus] = useState<CandidateStatus>("pending");
-  const [note, setNote] = useState("");
+  const [note, setNote] = useState(notes.get(candidate.candidate_name) || "");
 
   // 计算百分位排名
   const percentile = calculatePercentile(allCandidates, candidate.candidate_name);
@@ -410,14 +414,6 @@ function CandidateDetailModal({
             </div>
           </div>
 
-          {/* 竞争力雷达图 */}
-          <div className="mb-6">
-            <CandidateRadarChart
-              scoreBreakdown={candidate.score_breakdown}
-              candidateName={candidate.candidate_name}
-            />
-          </div>
-
           {/* Matched Criteria */}
           {candidate.matched_criteria && candidate.matched_criteria.length > 0 && (
             <div className="mb-6">
@@ -601,9 +597,7 @@ function CandidateDetailModal({
                   <button
                     key={i}
                     onClick={() => {
-                      // Switch to this similar candidate
-                      onClose();
-                      // The parent would need to handle this
+                      onSelectSimilar?.(similar);
                     }}
                     className="w-full flex items-center justify-between bg-[#111827] rounded-lg p-3 border border-gray-700 hover:border-cyan-500/50 transition-colors text-left"
                   >
@@ -652,9 +646,17 @@ function CandidateDetailModal({
 
           {/* Notes */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
-              备注
-            </h3>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
+                备注
+              </h3>
+              <button
+                onClick={() => onSaveNote?.(candidate.candidate_name, note)}
+                className="px-3 py-1 bg-cyan-600/20 text-cyan-400 border border-cyan-500/30 rounded-lg hover:bg-cyan-600/30 transition-colors text-xs flex items-center gap-1"
+              >
+                💾 保存备注
+              </button>
+            </div>
             <textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
@@ -738,9 +740,11 @@ export default function MatchResult({
   const [sortBy, setSortBy] = useState<"score" | "name" | "experience">("score");
   const [customTags, setCustomTags] = useState<Map<string, string[]>>(new Map());
   const [activityLog, setActivityLog] = useState<{ time: string; action: string; candidate: string }[]>([]);
+  const [recentlyViewed, setRecentlyViewed] = useState<Candidate[]>([]);
+  const [showQuickActions, setShowQuickActions] = useState<string | null>(null);
 
   // Add custom tag to candidate
-  const addTagToCandidate = (candidateName: string, tag: string) => {
+  const addTagToCandidate = useCallback((candidateName: string, tag: string) => {
     setCustomTags(prev => {
       const next = new Map(prev);
       const existing = next.get(candidateName) || [];
@@ -749,26 +753,29 @@ export default function MatchResult({
       }
       return next;
     });
-  };
+  }, []);
 
   // Get all tags for a candidate (built-in + custom)
-  const getAllTags = (candidate: Candidate) => {
+  const getAllTags = useCallback((candidate: Candidate) => {
     return [...(candidate.tags || []), ...(customTags.get(candidate.candidate_name) || [])];
-  };
+  }, [customTags]);
 
   // Combine all candidates
-  const allCandidates = [...strongRecommendations, ...backupCandidates];
+  const allCandidates = useMemo(
+    () => [...strongRecommendations, ...backupCandidates],
+    [strongRecommendations, backupCandidates]
+  );
 
   // Extract all unique tags (including custom tags)
-  const allTags = Array.from(
+  const allTags = useMemo(() => Array.from(
     new Set([
       ...allCandidates.flatMap((c) => c.tags || []),
       ...Array.from(customTags.values()).flat()
     ])
-  );
+  ), [allCandidates, customTags]);
 
   // Filter candidates
-  const filteredStrong = strongRecommendations.filter((c) => {
+  const filteredStrong = useMemo(() => strongRecommendations.filter((c) => {
     const matchesSearch =
       !searchQuery ||
       c.candidate_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -781,9 +788,9 @@ export default function MatchResult({
     const matchesNotes = !showOnlyWithNotes || notes.has(c.candidate_name);
     const matchesScore = c.match_score >= minScore;
     return matchesSearch && matchesTags && matchesStarred && matchesNotes && matchesScore;
-  });
+  }), [strongRecommendations, searchQuery, selectedTags, showOnlyStarred, showOnlyWithNotes, minScore, getAllTags, starred, notes]);
 
-  const filteredBackup = backupCandidates.filter((c) => {
+  const filteredBackup = useMemo(() => backupCandidates.filter((c) => {
     const matchesSearch =
       !searchQuery ||
       c.candidate_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -796,28 +803,34 @@ export default function MatchResult({
     const matchesNotes = !showOnlyWithNotes || notes.has(c.candidate_name);
     const matchesScore = c.match_score >= minScore;
     return matchesSearch && matchesTags && matchesStarred && matchesNotes && matchesScore;
-  });
+  }), [backupCandidates, searchQuery, selectedTags, showOnlyStarred, showOnlyWithNotes, minScore, getAllTags, starred, notes]);
 
   // Sort candidates
-  const sortCandidates = (candidates: Candidate[]) => {
-    return [...candidates].sort((a, b) => {
+  const sortedFilteredStrong = useMemo(() => {
+    return [...filteredStrong].sort((a, b) => {
       if (sortBy === "score") return b.match_score - a.match_score;
       if (sortBy === "name") return a.candidate_name.localeCompare(b.candidate_name, "zh-CN");
       if (sortBy === "experience") return (b.years_experience || 0) - (a.years_experience || 0);
       return 0;
     });
-  };
+  }, [filteredStrong, sortBy]);
 
-  const sortedFilteredStrong = sortCandidates(filteredStrong);
-  const sortedFilteredBackup = sortCandidates(filteredBackup);
+  const sortedFilteredBackup = useMemo(() => {
+    return [...filteredBackup].sort((a, b) => {
+      if (sortBy === "score") return b.match_score - a.match_score;
+      if (sortBy === "name") return a.candidate_name.localeCompare(b.candidate_name, "zh-CN");
+      if (sortBy === "experience") return (b.years_experience || 0) - (a.years_experience || 0);
+      return 0;
+    });
+  }, [filteredBackup, sortBy]);
 
-  const toggleTag = (tag: string) => {
+  const toggleTag = useCallback((tag: string) => {
     setSelectedTags((prev) =>
       prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
     );
-  };
+  }, []);
 
-  const getLevelBadge = (level: string) => {
+  const getLevelBadge = useCallback((level: string) => {
     switch (level) {
       case "strong_recommend":
         return (
@@ -838,36 +851,88 @@ export default function MatchResult({
           </span>
         );
     }
-  };
+  }, []);
 
-  const getScoreColor = (score: number) => {
+  const getScoreColor = useCallback((score: number) => {
     if (score >= 80) return "text-emerald-400";
     if (score >= 60) return "text-amber-400";
     return "text-red-400";
-  };
+  }, []);
 
-  const getScoreBg = (score: number) => {
+  const getScoreBg = useCallback((score: number) => {
     if (score >= 80) return "from-emerald-500/20 to-emerald-600/10";
     if (score >= 60) return "from-amber-500/20 to-amber-600/10";
     return "from-red-500/20 to-red-600/10";
-  };
+  }, []);
 
-  const handleStatusChange = (candidate: Candidate, status: CandidateStatus) => {
+  const handleStatusChange = useCallback((candidate: Candidate, status: CandidateStatus) => {
     const statusLabels = { pending: "待沟通", interview: "面试中", offer: "Offer", rejected: "淘汰" };
     setActivityLog(prev => [{
       time: new Date().toLocaleTimeString(),
       action: `状态更新为"${statusLabels[status]}"`,
       candidate: candidate.candidate_name
     }, ...prev].slice(0, 50));
-  };
+  }, []);
 
-  const logActivity = (action: string, candidate: string) => {
+  const logActivity = useCallback((action: string, candidate: string) => {
     setActivityLog(prev => [{
       time: new Date().toLocaleTimeString(),
       action,
       candidate
     }, ...prev].slice(0, 50));
-  };
+  }, []);
+
+  // Track recently viewed candidates
+  const addToRecentlyViewed = useCallback((candidate: Candidate) => {
+    setRecentlyViewed(prev => {
+      const filtered = prev.filter(c => c.candidate_name !== candidate.candidate_name);
+      return [candidate, ...filtered].slice(0, 5);
+    });
+  }, []);
+
+  // Generate share link for a candidate
+  const generateShareLink = useCallback((candidate: Candidate) => {
+    const shareData = {
+      name: candidate.candidate_name,
+      score: candidate.match_score,
+      company: candidate.current_company,
+      level: candidate.level === "strong_recommend" ? "强烈推荐" : "可备选",
+      summary: candidate.summary,
+    };
+    const encoded = encodeURIComponent(btoa(JSON.stringify(shareData)));
+    return `${window.location.origin}${window.location.pathname}?candidate=${encoded}`;
+  }, []);
+
+  // Copy candidate info to clipboard
+  const copyCandidateInfo = useCallback((candidate: Candidate) => {
+    const info = `${candidate.candidate_name}
+匹配度: ${candidate.match_score}%
+${candidate.current_company ? `公司: ${candidate.current_company}` : ""}
+${candidate.years_experience ? `工作年限: ${candidate.years_experience}年` : ""}
+推荐等级: ${candidate.level === "strong_recommend" ? "强烈推荐" : "可备选"}
+${candidate.summary}
+${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criteria.join(", ")}` : ""}`;
+    navigator.clipboard.writeText(info);
+    logActivity("复制信息", candidate.candidate_name);
+  }, [logActivity]);
+
+  // Compute candidate statistics
+  const candidateStats = useMemo(() => {
+    const all = allCandidates;
+    const avgScore = all.length > 0 ? Math.round(all.reduce((sum, c) => sum + c.match_score, 0) / all.length) : 0;
+    const scoreDistribution = {
+      high: all.filter(c => c.match_score >= 80).length,
+      medium: all.filter(c => c.match_score >= 60 && c.match_score < 80).length,
+      low: all.filter(c => c.match_score < 60).length,
+    };
+    const companies = [...new Set(all.map(c => c.current_company).filter(Boolean))];
+    const topTags = all.flatMap(c => c.tags || []).reduce((acc, tag) => {
+      acc[tag] = (acc[tag] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+    const topTagsArray = Object.entries(topTags).sort((a, b) => b[1] - a[1]).slice(0, 5);
+    return { avgScore, scoreDistribution, companies: companies.length, topTags: topTagsArray };
+  }, [allCandidates]);
 
   return (
     <div className="space-y-6">
@@ -879,9 +944,25 @@ export default function MatchResult({
             criteria={criteria}
             allCandidates={allCandidates}
             customTags={customTags}
+            notes={notes}
             onClose={() => setSelectedCandidate(null)}
             onStatusChange={(status) => handleStatusChange(selectedCandidate, status)}
             onAddTag={addTagToCandidate}
+            onSaveNote={(name, noteText) => {
+              setNotes(prev => {
+                const next = new Map(prev);
+                if (noteText.trim()) {
+                  next.set(name, noteText);
+                } else {
+                  next.delete(name);
+                }
+                return next;
+              });
+              logActivity("保存备注", name);
+            }}
+            onSelectSimilar={(similar) => {
+              setSelectedCandidate(similar);
+            }}
           />
         )}
       </AnimatePresence>
@@ -1064,6 +1145,81 @@ export default function MatchResult({
         </motion.div>
       )}
 
+      {/* Recently Viewed */}
+      {recentlyViewed.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-[#1F2937] rounded-xl p-4 border border-gray-700"
+        >
+          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+            <span>🕒</span> 最近查看
+          </h3>
+          <div className="flex gap-3 overflow-x-auto pb-2">
+            {recentlyViewed.map((candidate, i) => (
+              <button
+                key={`${candidate.candidate_name}-${i}`}
+                onClick={() => {
+                  setSelectedCandidate(candidate);
+                  addToRecentlyViewed(candidate);
+                }}
+                className="flex-shrink-0 bg-[#111827] rounded-lg p-3 border border-gray-700 hover:border-cyan-500/50 transition-colors flex items-center gap-3 min-w-[200px]"
+              >
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${
+                  candidate.match_score >= 80 ? "bg-emerald-500/20 text-emerald-400" :
+                  candidate.match_score >= 60 ? "bg-amber-500/20 text-amber-400" :
+                  "bg-red-500/20 text-red-400"
+                }`}>
+                  {candidate.match_score}
+                </div>
+                <div className="text-left">
+                  <p className="text-sm text-white font-medium truncate max-w-[120px]">{candidate.candidate_name}</p>
+                  <p className="text-xs text-gray-500 truncate max-w-[120px]">{candidate.current_company || "未填写公司"}</p>
+                </div>
+              </button>
+            ))}
+          </div>
+        </motion.div>
+      )}
+
+      {/* Statistics Panel */}
+      <div className="bg-[#1F2937] rounded-xl p-4 border border-gray-700">
+        <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+          <span>📊</span> 候选人统计
+        </h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="bg-[#111827] rounded-lg p-3 text-center">
+            <div className="text-2xl font-bold text-cyan-400">{candidateStats.avgScore}%</div>
+            <div className="text-xs text-gray-400 mt-1">平均匹配度</div>
+          </div>
+          <div className="bg-[#111827] rounded-lg p-3 text-center">
+            <div className="text-2xl font-bold text-emerald-400">{candidateStats.scoreDistribution.high}</div>
+            <div className="text-xs text-gray-400 mt-1">高分候选人(≥80)</div>
+          </div>
+          <div className="bg-[#111827] rounded-lg p-3 text-center">
+            <div className="text-2xl font-bold text-amber-400">{candidateStats.scoreDistribution.medium}</div>
+            <div className="text-xs text-gray-400 mt-1">中等候选人(60-79)</div>
+          </div>
+          <div className="bg-[#111827] rounded-lg p-3 text-center">
+            <div className="text-2xl font-bold text-gray-400">{candidateStats.companies}</div>
+            <div className="text-xs text-gray-400 mt-1">涉及公司数</div>
+          </div>
+        </div>
+        {candidateStats.topTags.length > 0 && (
+          <div className="mt-4">
+            <div className="text-xs text-gray-400 mb-2">热门标签:</div>
+            <div className="flex flex-wrap gap-2">
+              {candidateStats.topTags.map(([tag, count]) => (
+                <span key={tag} className="bg-cyan-500/20 text-cyan-400 px-2 py-1 rounded-full text-xs flex items-center gap-1">
+                  {tag}
+                  <span className="bg-cyan-500/40 px-1 rounded text-[10px]">{count}</span>
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* 强烈推荐 */}
       {sortedFilteredStrong.length > 0 && (
         <motion.div
@@ -1094,6 +1250,7 @@ export default function MatchResult({
                     );
                   } else {
                     setSelectedCandidate(candidate);
+                    addToRecentlyViewed(candidate);
                   }
                 }}
                 className={`border rounded-lg p-5 hover:shadow-lg transition-all bg-[#111827] cursor-pointer ${
@@ -1201,6 +1358,35 @@ export default function MatchResult({
                       {candidate.match_score}%
                     </div>
                     <div className="mt-2">{getLevelBadge(candidate.level)}</div>
+                    {/* Quick Action Buttons */}
+                    <div className="flex gap-1 mt-2">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          copyCandidateInfo(candidate);
+                        }}
+                        className="p-1.5 text-gray-500 hover:text-cyan-400 transition-colors rounded hover:bg-gray-700"
+                        title="复制信息"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const link = generateShareLink(candidate);
+                          navigator.clipboard.writeText(link);
+                          logActivity("生成分享链接", candidate.candidate_name);
+                        }}
+                        className="p-1.5 text-gray-500 hover:text-purple-400 transition-colors rounded hover:bg-gray-700"
+                        title="生成分享链接"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                        </svg>
+                      </button>
+                    </div>
                   </motion.div>
                 </div>
               </motion.div>
@@ -1239,6 +1425,7 @@ export default function MatchResult({
                     );
                   } else {
                     setSelectedCandidate(candidate);
+                    addToRecentlyViewed(candidate);
                   }
                 }}
                 className={`border rounded-lg p-5 hover:shadow-lg transition-all bg-[#111827] cursor-pointer ${
@@ -1340,6 +1527,35 @@ export default function MatchResult({
                       {candidate.match_score}%
                     </div>
                     <div className="mt-2">{getLevelBadge(candidate.level)}</div>
+                    {/* Quick Action Buttons */}
+                    <div className="flex gap-1 mt-2">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          copyCandidateInfo(candidate);
+                        }}
+                        className="p-1.5 text-gray-500 hover:text-cyan-400 transition-colors rounded hover:bg-gray-700"
+                        title="复制信息"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const link = generateShareLink(candidate);
+                          navigator.clipboard.writeText(link);
+                          logActivity("生成分享链接", candidate.candidate_name);
+                        }}
+                        className="p-1.5 text-gray-500 hover:text-purple-400 transition-colors rounded hover:bg-gray-700"
+                        title="生成分享链接"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                        </svg>
+                      </button>
+                    </div>
                   </motion.div>
                 </div>
               </motion.div>

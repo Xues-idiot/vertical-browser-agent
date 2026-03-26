@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { historyAPI, HistoryReport } from "@/lib/api";
 
@@ -81,9 +81,11 @@ export default function HistoryPage() {
 
   useEffect(() => {
     loadHistory();
+    // loadHistory uses useCallback with empty deps, so it's stable
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const loadHistory = async () => {
+  const loadHistory = useCallback(async () => {
     setLoading(true);
     try {
       const response = await historyAPI.list();
@@ -97,21 +99,26 @@ export default function HistoryPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const filteredHistory = history.filter((item) => {
+  const filteredHistory = useMemo(() => history.filter((item) => {
     const matchesSearch =
       item.position_name.toLowerCase().includes(search.toLowerCase()) ||
       item.jd_source.toLowerCase().includes(search.toLowerCase());
     const matchesFilter = filter === "all" || item.status === filter;
     return matchesSearch && matchesFilter;
-  });
+  }), [history, search, filter]);
 
-  const handleDelete = (id: string) => {
-    setHistory(history.filter((item) => item.id !== id));
-  };
+  const handleDelete = useCallback(async (id: string) => {
+    try {
+      await historyAPI.delete(id);
+    } catch {
+      // Ignore delete error, still remove locally
+    }
+    setHistory((prevHistory) => prevHistory.filter((item) => item.id !== id));
+  }, []);
 
-  const handleExport = (item: HistoryReport) => {
+  const handleExport = useCallback((item: HistoryReport) => {
     const data = JSON.stringify(item, null, 2);
     const blob = new Blob([data], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -120,9 +127,9 @@ export default function HistoryPage() {
     a.download = `screening-${item.id}.json`;
     a.click();
     URL.revokeObjectURL(url);
-  };
+  }, []);
 
-  const getStatusBadge = (status?: string) => {
+  const getStatusBadge = useCallback((status?: string) => {
     const styles: Record<string, string> = {
       completed: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
       failed: "bg-red-500/20 text-red-400 border-red-500/30",
@@ -139,7 +146,7 @@ export default function HistoryPage() {
         {labels[s] || "处理中"}
       </span>
     );
-  };
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#111827] text-gray-100">

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 interface Candidate {
   candidate_name: string;
@@ -69,10 +69,26 @@ function getStatusCounts(candidates: Candidate[], total: number) {
 
 export default function PipelineFunnel({ candidates, totalResumes }: PipelineFunnelProps) {
   const [expandedStage, setExpandedStage] = useState<string | null>(null);
-  const counts = getStatusCounts(candidates, totalResumes);
+  const counts = useMemo(() => getStatusCounts(candidates, totalResumes), [candidates, totalResumes]);
 
   // Calculate percentages for funnel width
   const maxCount = Math.max(...Object.values(counts), 1);
+
+  // Pre-calculate stage candidates for each stage
+  const stageCandidatesMap = useMemo(() => {
+    const map: Record<string, typeof candidates> = {};
+    stages.forEach((stage) => {
+      map[stage.key] = candidates.filter(c => {
+        if (stage.key === "total") return true;
+        if (stage.key === "screened") return c.level === "strong_recommend" || c.level === "backup";
+        if (stage.key === "interview") return c.status === "interview" || c.status === "offer" || c.status === "hired";
+        if (stage.key === "offer") return c.status === "offer" || c.status === "hired";
+        if (stage.key === "hired") return c.status === "hired";
+        return false;
+      });
+    });
+    return map;
+  }, [candidates]);
 
   return (
     <motion.div
@@ -97,16 +113,7 @@ export default function PipelineFunnel({ candidates, totalResumes }: PipelineFun
               const percentage = (count / maxCount) * 100;
               const isLast = index === stages.length - 1;
               const isExpanded = expandedStage === stage.key;
-
-              // 获取该阶段的候选人
-              const stageCandidates = candidates.filter(c => {
-                if (stage.key === "total") return true;
-                if (stage.key === "screened") return c.level === "strong_recommend" || c.level === "backup";
-                if (stage.key === "interview") return c.status === "interview" || c.status === "offer" || c.status === "hired";
-                if (stage.key === "offer") return c.status === "offer" || c.status === "hired";
-                if (stage.key === "hired") return c.status === "hired";
-                return false;
-              });
+              const stageCandidates = stageCandidatesMap[stage.key] || [];
 
               return (
                 <motion.div

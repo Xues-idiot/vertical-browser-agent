@@ -13,16 +13,22 @@ export function useInterval(
 ) {
   const { enabled = true } = options;
   const savedCallback = useRef(callback);
+  const delayRef = useRef(delay);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Keep refs in sync
   useEffect(() => {
     savedCallback.current = callback;
   }, [callback]);
 
+  useEffect(() => {
+    delayRef.current = delay;
+  }, [delay]);
+
   const start = useCallback(() => {
     if (intervalRef.current) return;
-    intervalRef.current = setInterval(() => savedCallback.current(), delay!);
-  }, [delay]);
+    intervalRef.current = setInterval(() => savedCallback.current(), delayRef.current!);
+  }, []); // No dependencies - uses refs
 
   const stop = useCallback(() => {
     if (intervalRef.current) {

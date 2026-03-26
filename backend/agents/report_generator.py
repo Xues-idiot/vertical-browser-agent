@@ -52,7 +52,7 @@ class ReportGenerator:
 
         return ScreeningReport(
             position_name=jd.position_name or "未知岗位",
-            jd_source=jd.salary_range or "未知来源",
+            jd_source=jd.source_url or jd.location or "未知来源",
             total_resumes=total,
             screened_resumes=passed,
             strong_recommendations=strong_recommend,
@@ -75,9 +75,11 @@ class ReportGenerator:
         summary_parts = []
 
         if result.score.total_score >= 80:
-            summary_parts.append(f"匹配度 {result.score.total_score}%")
+            summary_parts.append(f"匹配度 {result.score.total_score}% (优秀)")
+        elif result.score.total_score >= 60:
+            summary_parts.append(f"匹配度 {result.score.total_score}% (良好)")
         else:
-            summary_parts.append(f"匹配度 {result.score.total_score}%")
+            summary_parts.append(f"匹配度 {result.score.total_score}% (一般)")
 
         if result.resume.years_experience > 0:
             summary_parts.append(f"{result.resume.years_experience}年经验")

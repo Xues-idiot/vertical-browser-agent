@@ -67,6 +67,7 @@ class JDParser:
             responsibilities=self._extract_responsibilities(text),
             salary_range=self._extract_salary(text),
             location=self._extract_location(text),
+            source_url=jd_text.source_url or "",
         )
 
     def _extract_position_name(self, text: str) -> str:

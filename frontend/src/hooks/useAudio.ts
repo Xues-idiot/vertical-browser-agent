@@ -37,6 +37,25 @@ export function useAudio(
   const [currentTime, setCurrentTime] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  // Stable callbacks defined outside useEffect
+  const handleLoadedMetadata = useCallback(() => {
+    setDuration(audioRef.current?.duration || 0);
+  }, []);
+
+  const handleTimeUpdate = useCallback(() => {
+    setCurrentTime(audioRef.current?.currentTime || 0);
+  }, []);
+
+  const handleEnded = useCallback(() => {
+    setIsPlaying(false);
+    if (!loop) {
+      setCurrentTime(0);
+    }
+  }, [loop]);
+
+  const handlePlay = useCallback(() => setIsPlaying(true), []);
+  const handlePause = useCallback(() => setIsPlaying(false), []);
+
   useEffect(() => {
     if (!src) return;
 
@@ -45,24 +64,6 @@ export function useAudio(
     audioEl.muted = isMuted;
     audioEl.loop = loop;
     audioEl.playbackRate = playbackRate;
-
-    const handleLoadedMetadata = () => {
-      setDuration(audioEl.duration);
-    };
-
-    const handleTimeUpdate = () => {
-      setCurrentTime(audioEl.currentTime);
-    };
-
-    const handleEnded = () => {
-      setIsPlaying(false);
-      if (!loop) {
-        setCurrentTime(0);
-      }
-    };
-
-    const handlePlay = () => setIsPlaying(true);
-    const handlePause = () => setIsPlaying(false);
 
     audioEl.addEventListener("loadedmetadata", handleLoadedMetadata);
     audioEl.addEventListener("timeupdate", handleTimeUpdate);
@@ -82,7 +83,7 @@ export function useAudio(
       audioEl.pause();
       audioEl.src = "";
     };
-  }, [src, loop, playbackRate, volume, isMuted]);
+  }, [src, loop, playbackRate, volume, isMuted, handleLoadedMetadata, handleTimeUpdate, handleEnded, handlePlay, handlePause]);
 
   const play = useCallback(async () => {
     if (audioRef.current) {

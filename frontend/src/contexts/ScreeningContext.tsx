@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useMemo, ReactNode } from "react";
 
 interface JDInfo {
   position_name: string;
@@ -95,7 +95,7 @@ export function ScreeningProvider({ children }: { children: ReactNode }) {
     setState(initialState);
   }, []);
 
-  const value: ScreeningContextValue = {
+  const value = useMemo<ScreeningContextValue>(() => ({
     ...state,
     setJdUrl,
     setJdInfo,
@@ -106,7 +106,7 @@ export function ScreeningProvider({ children }: { children: ReactNode }) {
     setProgress,
     setError,
     reset,
-  };
+  }), [state, setJdUrl, setJdInfo, addResume, removeResume, setResumeInfos, setStep, setProgress, setError, reset]);
 
   return (
     <ScreeningContext.Provider value={value}>

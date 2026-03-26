@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 
 interface UseFocusReturn {
   isFocused: boolean;
@@ -23,10 +23,10 @@ export function useFocus(): UseFocusReturn {
     setIsFocused(false);
   }, []);
 
-  const bind = {
+  const bind = useMemo(() => ({
     onFocus: () => setIsFocused(true),
     onBlur: () => setIsFocused(false),
-  };
+  }), [setIsFocused]);
 
   return { isFocused, focus, blur, bind };
 }

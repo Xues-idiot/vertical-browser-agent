@@ -1,14 +1,11 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 
 export function useRendered(): number {
   const countRef = useRef(0);
-
-  useEffect(() => {
-    countRef.current += 1;
-  });
-
+  // 直接在渲染期间递增，这样更准确
+  countRef.current += 1;
   return countRef.current;
 }
 

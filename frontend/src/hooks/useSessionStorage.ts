@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 export function useSessionStorage<T>(
   key: string,
@@ -19,9 +19,16 @@ export function useSessionStorage<T>(
     }
   });
 
-  const setValue = (value: T | ((val: T) => T)) => {
+  const storedValueRef = useRef(storedValue);
+
+  // Keep ref in sync with state
+  useEffect(() => {
+    storedValueRef.current = storedValue;
+  }, [storedValue]);
+
+  const setValue = useCallback((value: T | ((val: T) => T)) => {
     try {
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
+      const valueToStore = value instanceof Function ? value(storedValueRef.current) : value;
       setStoredValue(valueToStore);
       if (typeof window !== "undefined") {
         window.sessionStorage.setItem(key, JSON.stringify(valueToStore));
@@ -29,7 +36,7 @@ export function useSessionStorage<T>(
     } catch (error) {
       console.error(`Error setting sessionStorage key "${key}":`, error);
     }
-  };
+  }, [key]);
 
   return [storedValue, setValue];
 }

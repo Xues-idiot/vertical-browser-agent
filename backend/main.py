@@ -18,7 +18,7 @@ from backend.api.history import router as history_router
 from backend.api.competitor import router as competitor_router
 from backend.api.middleware import LoggingMiddleware, ErrorHandlingMiddleware
 from backend.logging_config import setup_logger
-from backend.config import APP_NAME, APP_DESCRIPTION, VERSION, API_PORT, API_HOST
+from backend.config import APP_NAME, APP_DESCRIPTION, VERSION, API_PORT, API_HOST, CORS_ORIGINS
 
 logger = setup_logger("spider.main")
 
@@ -34,7 +34,7 @@ app.add_middleware(ErrorHandlingMiddleware)
 app.add_middleware(LoggingMiddleware)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 生产环境应该限制
+    allow_origins=CORS_ORIGINS,  # 已限制为本地开发 origins
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useMemo, ReactNode } from "react";
 import { type Report, type JDInfo, type ResumeInfo } from "@/lib/api";
 
 type ScreeningStep = "init" | "parsing_jd" | "parsing_resumes" | "matching" | "generating_report" | "completed";
@@ -51,7 +51,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [jdInfo, setJdInfo] = useState<JDInfo | null>(null);
   const [resumeInfos, setResumeInfos] = useState<ResumeInfo[]>([]);
 
-  const value: AppState = {
+  const value = useMemo<AppState>(() => ({
     jdUrl,
     setJdUrl,
     resumes,
@@ -68,7 +68,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setJdInfo,
     resumeInfos,
     setResumeInfos,
-  };
+  }), [jdUrl, resumes, report, currentStep, isLoading, error, jdInfo, resumeInfos]);
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }

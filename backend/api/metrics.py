@@ -51,12 +51,21 @@ async def application_metrics():
 @router.get("/api")
 async def api_metrics():
     """API指标"""
-    # 可以添加请求计数、延迟等
+    metrics = get_metrics()
+
+    total = metrics.get_counter("api.requests.total")
+    success = metrics.get_counter("api.requests.success")
+    failed = metrics.get_counter("api.requests.failed")
+    duration_stats = metrics.get_histogram_stats("api.request.duration")
+
     return APIResponse.success(data={
-        "requests_total": 0,
-        "requests_success": 0,
-        "requests_failed": 0,
-        "avg_response_time": 0,
+        "requests_total": total,
+        "requests_success": success,
+        "requests_failed": failed,
+        "avg_response_time": duration_stats.get("avg", 0),
+        "min_response_time": duration_stats.get("min", 0),
+        "max_response_time": duration_stats.get("max", 0),
+        "p95_response_time": duration_stats.get("p95", 0),
         "timestamp": datetime.now().isoformat(),
     })
 

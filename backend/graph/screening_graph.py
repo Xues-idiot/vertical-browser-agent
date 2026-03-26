@@ -58,11 +58,14 @@ class ScreeningGraph:
         state.current_step = "parsing_jd"
 
         try:
-            # 使用browser_controller获取JD内容
-            # 这里简化处理，直接用state中的内容
+            # 如果有jd_content，直接使用；否则使用jd_url（需要浏览器抓取）
+            raw_text = state.jd_content if state.jd_content else state.jd_url
+            # 始终保留jd_url作为来源参考
+            source_url = state.jd_url if state.jd_url else None
+
             jd_text = JDText(
-                raw_text=state.jd_url,  # 实际上应该是从浏览器获取的内容
-                source_url=state.jd_url,
+                raw_text=raw_text,
+                source_url=source_url,
             )
 
             jd_info = self.jd_parser.parse_jd(jd_text)
@@ -163,6 +166,7 @@ class ScreeningGraph:
         self,
         jd_url: str,
         resume_list: list,
+        jd_content: Optional[str] = None,
     ) -> ScreeningReport:
         """
         运行完整筛选流程
@@ -170,6 +174,7 @@ class ScreeningGraph:
         Args:
             jd_url: JD链接
             resume_list: 简历列表
+            jd_content: JD文本内容（可选，如果提供则直接使用而非抓取URL）
 
         Returns:
             ScreeningReport: 筛选报告
@@ -177,6 +182,7 @@ class ScreeningGraph:
         # 初始化状态
         state = ScreeningState(
             jd_url=jd_url,
+            jd_content=jd_content,
             resume_list=resume_list,
         )
 
@@ -206,6 +212,7 @@ class ScreeningGraph:
         self,
         jd_url: str,
         resume_list: list,
+        jd_content: Optional[str] = None,
     ):
         """
         运行筛选流程（带进度回调）
@@ -213,12 +220,14 @@ class ScreeningGraph:
         Args:
             jd_url: JD链接
             resume_list: 简历列表
+            jd_content: JD文本内容（可选）
 
         Yields:
             ScreeningState: 每一步的状态
         """
         state = ScreeningState(
             jd_url=jd_url,
+            jd_content=jd_content,
             resume_list=resume_list,
         )
 
@@ -253,7 +262,8 @@ def create_screening_graph() -> ScreeningGraph:
 async def run_screening(
     jd_url: str,
     resume_list: list,
+    jd_content: Optional[str] = None,
 ) -> ScreeningReport:
     """运行筛选的便捷函数"""
     graph = create_screening_graph()
-    return await graph.run_screening(jd_url, resume_list)
+    return await graph.run_screening(jd_url, resume_list, jd_content)

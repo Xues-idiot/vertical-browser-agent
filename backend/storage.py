@@ -238,6 +238,18 @@ def get_storage(storage_type: str = "memory") -> BaseStorage:
         logger.info(f"Storage initialized: {storage_type}")
     return _storage
 
+def set_storage(storage_type: str) -> BaseStorage:
+    """显式设置存储类型
+
+    Args:
+        storage_type: 存储类型，"memory" 或 "file"
+    """
+    global _storage
+    storage_class = STORAGE_TYPES.get(storage_type, MemoryStorage)
+    _storage = storage_class()
+    logger.info(f"Storage reset to: {storage_type}")
+    return _storage
+
 
 def reset_storage() -> None:
     """重置存储实例"""

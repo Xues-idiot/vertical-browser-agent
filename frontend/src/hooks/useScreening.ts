@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { screeningAPI, type Report, type JDInfo, type ResumeInfo } from "@/lib/api";
 
 interface UseScreeningReturn {
@@ -19,20 +19,27 @@ export function useScreening(): UseScreeningReturn {
   const [error, setError] = useState<Error | null>(null);
   const [data, setData] = useState<Report | null>(null);
   const [currentStep, setCurrentStep] = useState("init");
+  const cancelledRef = useRef(false);
 
   const submit = useCallback(async (jdUrl: string, resumes: string[]): Promise<Report | null> => {
     setLoading(true);
     setError(null);
     setCurrentStep("parsing_jd");
+    cancelledRef.current = false;
 
     try {
       // Simulate step progression
       const steps = ["parsing_jd", "parsing_resumes", "matching", "generating_report", "completed"];
 
       for (const step of steps) {
+        if (cancelledRef.current) {
+          return null;
+        }
         setCurrentStep(step);
         await new Promise((resolve) => setTimeout(resolve, 500));
       }
+
+      if (cancelledRef.current) return null;
 
       const result = await screeningAPI.submit({ jd_url: jdUrl, resume_list: resumes });
 

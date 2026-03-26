@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useRef } from "react";
 
 type KeyHandler = (event: KeyboardEvent) => void;
 
@@ -12,8 +12,17 @@ interface UseKeyboardOptions {
 
 export function useKeyboard(options: UseKeyboardOptions) {
   const { onKeyDown, onKeyUp, onKeyPress } = options;
+  const optionsRef = useRef(options);
 
   useEffect(() => {
+    optionsRef.current = options;
+  }, [options]);
+
+  useEffect(() => {
+    const onKeyDown = optionsRef.current.onKeyDown;
+    const onKeyUp = optionsRef.current.onKeyUp;
+    const onKeyPress = optionsRef.current.onKeyPress;
+
     if (onKeyDown) {
       window.addEventListener("keydown", onKeyDown);
     }
@@ -35,40 +44,46 @@ export function useKeyboard(options: UseKeyboardOptions) {
         window.removeEventListener("keypress", onKeyPress);
       }
     };
-  }, [onKeyDown, onKeyUp, onKeyPress]);
+  }, []);
 }
 
 export function useEscapeKey(onEscape: () => void) {
-  const callbackRef = useCallback(onEscape, [onEscape]);
+  const callbackRef = useRef(onEscape);
+
+  useEffect(() => {
+    callbackRef.current = onEscape;
+  }, [onEscape]);
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        callbackRef();
+        callbackRef.current();
       }
     };
 
     window.addEventListener("keydown", handleEscape);
     return () => window.removeEventListener("keydown", handleEscape);
-  }, [callbackRef]);
+  }, []);
 }
 
 export function useEnterKey(onEnter: () => void) {
-  const callbackRef = useCallback(onEnter, [onEnter]);
+  const callbackRef = useRef(onEnter);
+
+  useEffect(() => {
+    callbackRef.current = onEnter;
+  }, [onEnter]);
 
   useEffect(() => {
     const handleEnter = (event: KeyboardEvent) => {
       if (event.key === "Enter" && !event.repeat) {
-        callbackRef();
+        callbackRef.current();
       }
     };
 
     window.addEventListener("keydown", handleEnter);
     return () => window.removeEventListener("keydown", handleEnter);
-  }, [callbackRef]);
+  }, []);
 }
-
-import { useRef } from "react";
 
 export function useShortcut(
   key: string,
@@ -85,10 +100,10 @@ export function useShortcut(
     const handler = (event: KeyboardEvent) => {
       const { ctrl, shift, alt, meta } = modifiers;
 
-      const ctrlMatch = ctrl ? event.ctrlKey : !event.ctrlKey;
-      const shiftMatch = shift ? event.shiftKey : !event.shiftKey;
-      const altMatch = alt ? event.altKey : !event.altKey;
-      const metaMatch = meta ? event.metaKey : !event.metaKey;
+      const ctrlMatch = ctrl ? event.ctrlKey || event.metaKey : true;
+      const shiftMatch = shift ? event.shiftKey : true;
+      const altMatch = alt ? event.altKey : true;
+      const metaMatch = meta ? event.metaKey : true;
 
       if (
         event.key.toLowerCase() === key.toLowerCase() &&
@@ -104,7 +119,7 @@ export function useShortcut(
 
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [key, modifiers]);
+  }, [key, modifiers?.ctrl, modifiers?.shift, modifiers?.alt, modifiers?.meta]);
 }
 
 export default useKeyboard;

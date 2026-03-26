@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 type ScriptStatus = "idle" | "loading" | "ready" | "error";
 
@@ -55,6 +55,9 @@ export function useScript(
     return () => {
       script.removeEventListener("load", handleLoad);
       script.removeEventListener("error", handleError);
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
     };
   }, [src, shouldLoad]);
 

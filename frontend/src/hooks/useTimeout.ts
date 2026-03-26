@@ -1,9 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 export function useTimeout(callback: () => void, delay: number | null) {
   const [ready, setReady] = useState(false);
+  const callbackRef = useRef(callback);
+
+  // Keep callback ref in sync
+  useEffect(() => {
+    callbackRef.current = callback;
+  }, [callback]);
+
+  const handleTimeout = useCallback(() => {
+    callbackRef.current();
+    setReady(true);
+  }, []);
 
   useEffect(() => {
     if (delay === null) {
@@ -12,9 +23,9 @@ export function useTimeout(callback: () => void, delay: number | null) {
     }
 
     setReady(false);
-    const timer = setTimeout(() => setReady(true), delay);
+    const timer = setTimeout(handleTimeout, delay);
     return () => clearTimeout(timer);
-  }, [delay]);
+  }, [delay, handleTimeout]);
 
   return ready;
 }

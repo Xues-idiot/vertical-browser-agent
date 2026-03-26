@@ -7,7 +7,7 @@ from typing import Final
 
 
 # 版本信息
-VERSION: Final[str] = "1.0.0"
+VERSION: Final[str] = "1.34.2"
 APP_NAME: Final[str] = "Spider"
 APP_DESCRIPTION: Final[str] = "垂直浏览器Agent - 简历筛选"
 
@@ -128,3 +128,12 @@ FRONTEND_CONFIG: Final[dict] = {
     "description": "简历筛选自动化 - 垂直场景应用",
     "theme_color": "#3B82F6",
 }
+
+
+# CORS配置
+CORS_ORIGINS: Final[list] = [
+    "http://localhost:3777",
+    "http://localhost:3000",
+    "http://127.0.0.1:3777",
+    "http://127.0.0.1:3000",
+]

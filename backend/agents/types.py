@@ -35,6 +35,7 @@ class JDInfo:
     responsibilities: list[str] = field(default_factory=list)  # 核心职责
     salary_range: str = ""  # 薪资范围
     location: str = ""  # 工作地点
+    source_url: str = ""  # JD来源URL
 
 
 @dataclass
@@ -107,6 +108,7 @@ class ScreeningReport:
 class ScreeningState:
     """筛选状态（用于LangGraph）"""
     jd_url: str = ""
+    jd_content: Optional[str] = None  # JD文本内容（直接输入时使用）
     resume_list: list = field(default_factory=list)
     jd_info: Optional[JDInfo] = None
     resume_infos: list[ResumeInfo] = field(default_factory=list)

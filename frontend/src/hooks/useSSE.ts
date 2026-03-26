@@ -60,11 +60,14 @@ export function useSSE(options: SSEOptions): SSEReturn {
     eventSourceRef.current = eventSource;
   }, [url]);
 
-  const disconnect = useCallback(() => {
-    eventSourceRef.current?.close();
-    eventSourceRef.current = null;
-    setConnected(false);
-  }, []);
+  // Use ref for disconnect to avoid stale closure
+  const disconnectRef = useRef(() => {
+    if (eventSourceRef.current) {
+      eventSourceRef.current.close();
+      eventSourceRef.current = null;
+      setConnected(false);
+    }
+  });
 
   useEffect(() => {
     if (autoConnect) {
@@ -72,16 +75,15 @@ export function useSSE(options: SSEOptions): SSEReturn {
     }
 
     return () => {
-      disconnect();
+      disconnectRef.current();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url, autoConnect]);
+  }, [url, autoConnect, connect]);
 
   return {
     connected,
     data,
     error,
     connect,
-    disconnect,
+    disconnect: disconnectRef.current,
   };
 }

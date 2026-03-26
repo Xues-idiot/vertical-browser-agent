@@ -34,11 +34,22 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const optionsRef = useRef(options);
-  optionsRef.current = options;
+  const connectRef = useRef<() => void>(() => {});
+
+  // Keep options ref in sync
+  useEffect(() => {
+    optionsRef.current = options;
+  }, [options]);
 
   const connect = useCallback(() => {
     if (wsRef.current?.readyState === WebSocket.OPEN) {
       return;
+    }
+
+    // Clear any existing reconnect timeout
+    if (reconnectTimeoutRef.current) {
+      clearTimeout(reconnectTimeoutRef.current);
+      reconnectTimeoutRef.current = null;
     }
 
     const currentOptions = optionsRef.current;
@@ -55,7 +66,7 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
 
       if (currentOptions.reconnect) {
         reconnectTimeoutRef.current = setTimeout(() => {
-          connect();
+          connectRef.current();
         }, currentOptions.reconnectInterval);
       }
     };
@@ -75,6 +86,11 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
 
     wsRef.current = ws;
   }, [url]);
+
+  // Keep connect ref in sync
+  useEffect(() => {
+    connectRef.current = connect;
+  }, [connect]);
 
   const disconnect = useCallback(() => {
     if (reconnectTimeoutRef.current) {
@@ -97,16 +113,15 @@ export function useWebSocket(options: UseWebSocketOptions): UseWebSocketReturn {
   const reconnectFn = useCallback(() => {
     disconnect();
     // Small delay to ensure cleanup is complete
-    setTimeout(connect, 100);
-  }, [disconnect, connect]);
+    setTimeout(() => connectRef.current(), 100);
+  }, [disconnect]);
 
   useEffect(() => {
     connect();
     return () => {
       disconnect();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url]);
+  }, [url, connect, disconnect]);
 
   return {
     connected,

@@ -67,8 +67,23 @@ async def websocket_endpoint(websocket: WebSocket, client_id: Optional[str] = No
 
         # 消息循环
         while True:
-            data = await websocket.receive_text()
-            message = json.loads(data)
+            try:
+                data = await websocket.receive_text()
+                message = json.loads(data)
+            except json.JSONDecodeError:
+                await manager.send_personal(websocket, {
+                    "type": "error",
+                    "event": "invalid_json",
+                    "data": {"message": "Invalid JSON format"}
+                })
+                continue
+            except Exception as e:
+                await manager.send_personal(websocket, {
+                    "type": "error",
+                    "event": "message_error",
+                    "data": {"message": str(e)}
+                })
+                continue
 
             # 处理消息
             msg_type = message.get("type")
