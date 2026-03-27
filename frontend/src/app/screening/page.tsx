@@ -10,6 +10,7 @@ import BrowserPreview from "@/components/BrowserPreview";
 import PipelineFunnel from "@/components/PipelineFunnel";
 import CandidateComparison from "@/components/CandidateComparison";
 import JDComparison from "@/components/JDComparison";
+import KeyboardShortcutsHelp from "@/components/KeyboardShortcutsHelp";
 import { screeningAPI } from "@/lib/api";
 
 interface Candidate {
@@ -581,6 +582,8 @@ export default function ScreeningPage() {
           </div>
         </div>
       </footer>
+
+      <KeyboardShortcutsHelp />
     </div>
   );
 }
