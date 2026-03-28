@@ -205,6 +205,14 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
                   </div>
                 )}
               </div>
+              {resumes[index] && (
+                <div className="flex justify-between items-center mt-1 px-1">
+                  <span className="text-xs text-gray-500">
+                    已输入 <span className={resumes[index].length >= 20 ? "text-emerald-400" : "text-amber-400"}>{resumes[index].length}</span> 字符
+                    {resumes[index].length < 20 && <span className="text-amber-400">（最少20字符）</span>}
+                  </span>
+                </div>
+              )}
               {/* Resume Preview */}
               {resumes[index] && resumes[index].length > 30 && (() => {
                 const preview = extractResumePreview(resumes[index]);
