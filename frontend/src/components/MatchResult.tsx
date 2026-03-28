@@ -836,15 +836,15 @@ export default function MatchResult({
     switch (level) {
       case "strong_recommend":
         return (
-          <span className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-xs px-3 py-1 rounded-full shadow-sm">
+          <motion.span whileHover={{ scale: 1.1 }} className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-xs px-3 py-1 rounded-full shadow-lg shadow-emerald-500/30">
             ⭐ 强烈推荐
-          </span>
+          </motion.span>
         );
       case "backup":
         return (
-          <span className="bg-gradient-to-r from-amber-400 to-amber-500 text-amber-900 text-xs px-3 py-1 rounded-full shadow-sm">
+          <motion.span whileHover={{ scale: 1.1 }} className="bg-gradient-to-r from-amber-400 to-amber-500 text-amber-900 text-xs px-3 py-1 rounded-full shadow-lg shadow-amber-500/30">
             🟡 可备选
-          </span>
+          </motion.span>
         );
       default:
         return (
