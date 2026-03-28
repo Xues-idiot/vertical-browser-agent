@@ -208,12 +208,16 @@ export default function PipelineFunnel({ candidates, totalResumes }: PipelineFun
                         className="mt-2 ml-28 space-y-2 overflow-hidden"
                       >
                         {stageCandidates.slice(0, 5).map((c, i) => (
-                          <div key={i} className="flex items-center gap-3 bg-[#111827] rounded-lg px-3 py-2">
+                          <motion.div
+                            key={i}
+                            whileHover={{ scale: 1.02, backgroundColor: "rgba(55, 65, 81, 0.5)" }}
+                            className="flex items-center gap-3 bg-[#111827] rounded-lg px-3 py-2 cursor-default"
+                          >
                             <span className={`w-2 h-2 rounded-full ${c.level === "strong_recommend" ? "bg-emerald-500" : "bg-amber-500"}`} />
                             <span className="text-sm text-gray-300 flex-1 truncate">{c.candidate_name}</span>
                             <span className="text-xs text-gray-500">{c.years_experience ? `${c.years_experience}年` : "-"}</span>
                             <span className="text-sm font-medium text-cyan-400">{c.match_score}%</span>
-                          </div>
+                          </motion.div>
                         ))}
                         {stageCandidates.length > 5 && (
                           <div className="text-xs text-gray-500 text-center py-1">
