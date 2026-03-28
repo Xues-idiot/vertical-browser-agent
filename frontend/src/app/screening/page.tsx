@@ -350,14 +350,14 @@ export default function ScreeningPage() {
                 transition={{ delay: 0.1 }}
                 className="flex justify-between items-center flex-wrap gap-4"
               >
-                <div>
+                <motion.div whileHover={{ scale: 1.01 }}>
                   <h2 className="text-2xl font-bold text-white">
                     筛选结果
                   </h2>
                   <p className="text-gray-400 text-sm mt-1">
                     共筛选 {report.total_resumes} 份简历，推荐 {report.screened_resumes} 份
                   </p>
-                </div>
+                </motion.div>
                 <div className="flex items-center gap-3 flex-wrap">
                   {/* View Mode Toggle */}
                   <div className="flex bg-[#1F2937] rounded-lg p-1 border border-gray-700">
