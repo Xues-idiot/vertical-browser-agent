@@ -248,12 +248,12 @@ export default function PipelineFunnel({ candidates, totalResumes }: PipelineFun
               </div>
               <div className="text-xs text-gray-400 mt-1">面试→Offer</div>
             </div>
-            <div className="bg-[#111827] rounded-lg p-3 text-center">
+            <motion.div whileHover={{ scale: 1.05 }} className="bg-[#111827] rounded-lg p-3 text-center shadow-lg hover:shadow-xl transition-shadow cursor-default">
               <div className="text-2xl font-bold text-purple-400">
                 {counts.offer > 0 ? Math.round((counts.hired / counts.offer) * 100) : 0}%
               </div>
               <div className="text-xs text-gray-400 mt-1">Offer→入职</div>
-            </div>
+            </motion.div>
           </div>
         </div>
 
