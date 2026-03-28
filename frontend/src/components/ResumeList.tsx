@@ -134,10 +134,10 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
           📄
         </motion.div>
         <div>
-          <h2 className="text-lg font-semibold text-white">
+          <motion.h2 whileHover={{ scale: 1.02 }} className="text-lg font-semibold text-white cursor-default">
             输入简历
-          </h2>
-          <p className="text-sm text-gray-400">粘贴候选人简历内容</p>
+          </motion.h2>
+          <motion.p whileHover={{ scale: 1.02 }} className="text-sm text-gray-400 cursor-default">粘贴候选人简历内容</motion.p>
         </div>
       </div>
 
@@ -153,9 +153,9 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
               className="border border-gray-600 rounded-lg p-4 bg-[#111827]"
             >
               <div className="flex justify-between items-center mb-3">
-                <span className="text-sm font-medium text-gray-300">
+                <motion.span whileHover={{ scale: 1.05 }} className="text-sm font-medium text-gray-300 cursor-default">
                   简历 {index + 1}
-                </span>
+                </motion.span>
                 {resumes.length > 1 && (
                   <motion.button
                     whileHover={{ scale: 1.1 }}
