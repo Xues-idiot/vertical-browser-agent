@@ -179,19 +179,30 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
                   onChange={(e) => updateResume(index, e.target.value)}
                   placeholder="粘贴简历内容..."
                   rows={5}
-                  className="w-full px-3 py-2 border border-gray-600 rounded focus:ring-2 focus:ring-emerald-500 outline-none resize-none bg-[#1F2937] text-white placeholder-gray-500 transition pr-16"
+                  className="w-full px-3 py-2 border border-gray-600 rounded focus:ring-2 focus:ring-emerald-500 outline-none resize-none bg-[#1F2937] text-white placeholder-gray-500 transition pr-20"
                 />
                 {resumes[index] && (
-                  <button
-                    type="button"
-                    onClick={() => navigator.clipboard.writeText(resumes[index])}
-                    className="absolute top-2 right-2 text-xs text-gray-400 hover:text-emerald-400 transition-colors flex items-center gap-1 bg-[#1F2937]/80 px-2 py-1 rounded"
-                  >
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                    </svg>
-                    复制
-                  </button>
+                  <div className="absolute top-2 right-2 flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => navigator.clipboard.writeText(resumes[index])}
+                      className="text-xs text-gray-400 hover:text-emerald-400 transition-colors flex items-center gap-1 bg-[#1F2937]/80 px-2 py-1 rounded"
+                    >
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                      复制
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => updateResume(index, "")}
+                      className="text-xs text-gray-400 hover:text-red-400 transition-colors flex items-center gap-1 bg-[#1F2937]/80 px-2 py-1 rounded"
+                    >
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
                 )}
               </div>
               {/* Resume Preview */}
