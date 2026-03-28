@@ -245,6 +245,21 @@ export default function CandidateComparison({
     URL.revokeObjectURL(url);
   }, [selectedCandidates, criteria]);
 
+  const handleCopyReport = useCallback(() => {
+    const report = selectedCandidates.map((c, i) => {
+      const scores = [];
+      if (c.score_breakdown) {
+        scores.push(`硬性条件:${c.score_breakdown.hard_conditions || 0}%`);
+        scores.push(`技能匹配:${c.score_breakdown.skill_match || 0}%`);
+        scores.push(`行业经验:${c.score_breakdown.industry_exp || 0}%`);
+        scores.push(`发展潜力:${c.score_breakdown.potential || 0}%`);
+      }
+      return `${i + 1}. ${c.candidate_name} (${c.match_score}%) ${c.level === "strong_recommend" ? "强烈推荐" : "可备选"}\n   公司:${c.current_company || "-"} | 经验:${c.years_experience ? `${c.years_experience}年` : "-"}\n   评分:${scores.join(" | ") || "无详细评分"}`;
+    }).join("\n\n");
+    const fullReport = `【候选人对比报告】\n生成时间:${new Date().toLocaleString()}\n\n${report}`;
+    navigator.clipboard.writeText(fullReport);
+  }, [selectedCandidates]);
+
   const getScoreColor = (score: number) => {
     if (score >= 80) return "text-emerald-400";
     if (score >= 60) return "text-amber-400";
@@ -278,6 +293,12 @@ export default function CandidateComparison({
             {selectedCandidates.length >= 2 && (
               <>
                 <button
+                  onClick={handleCopyReport}
+                  className="px-3 py-1.5 bg-cyan-500/40 text-white text-sm rounded-lg hover:bg-cyan-500/50 transition-colors flex items-center gap-1"
+                >
+                  📄 复制报告
+                </button>
+                <button
                   onClick={handleShareLink}
                   className="px-3 py-1.5 bg-white/20 text-white text-sm rounded-lg hover:bg-white/30 transition-colors flex items-center gap-1"
                 >
@@ -287,7 +308,7 @@ export default function CandidateComparison({
                   onClick={handleExportCSV}
                   className="px-3 py-1.5 bg-amber-500/40 text-white text-sm rounded-lg hover:bg-amber-500/50 transition-colors flex items-center gap-1"
                 >
-                  📊 详细CSV
+                  📊 CSV
                 </button>
                 <button
                   onClick={handleExportJSON}
