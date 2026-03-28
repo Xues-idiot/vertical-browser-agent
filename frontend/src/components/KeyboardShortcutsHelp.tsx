@@ -77,18 +77,21 @@ export default function KeyboardShortcutsHelp() {
                     className="flex items-center justify-between py-2 border-b border-gray-700 last:border-0 cursor-pointer rounded px-2 -mx-2"
                   >
                     <span className="text-gray-400 text-sm">{shortcut.description}</span>
-                    <kbd className="px-2 py-1 bg-[#111827] border border-gray-600 rounded text-xs text-gray-300 font-mono">
+                    <motion.kbd
+                      whileHover={{ scale: 1.1, borderColor: "rgba(34, 211, 238, 0.5)" }}
+                      className="px-2 py-1 bg-[#111827] border border-gray-600 rounded text-xs text-gray-300 font-mono"
+                    >
                       {shortcut.key}
-                    </kbd>
+                    </motion.kbd>
                   </motion.div>
                 ))}
               </div>
 
-              <p className="text-xs text-gray-500 mt-4 text-center">
+              <motion.p whileHover={{ scale: 1.02 }} className="text-xs text-gray-500 mt-4 text-center cursor-default">
                 在输入框外按下快捷键即可触发
-              </p>
+              </motion.p>
               <div className="mt-3 pt-3 border-t border-gray-700 text-center">
-                <span className="text-xs text-gray-600">Spider v1.34.2</span>
+                <motion.span whileHover={{ scale: 1.05 }} className="text-xs text-gray-600 cursor-default">Spider v1.34.2</motion.span>
               </div>
             </motion.div>
           </motion.div>
