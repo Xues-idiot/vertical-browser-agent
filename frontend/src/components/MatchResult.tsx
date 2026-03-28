@@ -1134,8 +1134,10 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
           {allTags.length > 0 && !batchMode && (
             <div className="flex flex-wrap gap-2">
               {allTags.map((tag) => (
-                <button
+                <motion.button
                   key={tag}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => toggleTag(tag)}
                   className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                     selectedTags.includes(tag)
@@ -1144,15 +1146,17 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
                   }`}
                 >
                   {tag}
-                </button>
+                </motion.button>
               ))}
               {selectedTags.length > 0 && (
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => setSelectedTags([])}
                   className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
                 >
                   清除
-                </button>
+                </motion.button>
               )}
             </div>
           )}
@@ -1172,7 +1176,9 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
             </span>
           </div>
           <div className="flex gap-2">
-            <button
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => {
                 batchSelected.forEach(name => {
                   const c = allCandidates.find(a => a.candidate_name === name);
@@ -1183,8 +1189,10 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
               className="px-4 py-2 bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 rounded-lg hover:bg-emerald-600/30 transition-colors text-sm"
             >
               📅 批量面试
-            </button>
-            <button
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => {
                 // Export selected candidates
                 const selected = allCandidates.filter(c => batchSelected.includes(c.candidate_name));
@@ -1201,13 +1209,15 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
               className="px-4 py-2 bg-cyan-600/20 text-cyan-400 border border-cyan-500/30 rounded-lg hover:bg-cyan-600/30 transition-colors text-sm"
             >
               📥 导出选中
-            </button>
-            <button
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setBatchSelected([])}
               className="px-4 py-2 bg-gray-600/20 text-gray-400 border border-gray-500/30 rounded-lg hover:bg-gray-600/30 transition-colors text-sm"
             >
               取消
-            </button>
+            </motion.button>
           </div>
         </motion.div>
       )}
