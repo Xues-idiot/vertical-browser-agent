@@ -56,9 +56,9 @@ export default function KeyboardShortcutsHelp() {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                <motion.h3 whileHover={{ scale: 1.02 }} className="text-lg font-semibold text-white flex items-center gap-2 cursor-default">
                   <span>⌨️</span> 键盘快捷键
-                </h3>
+                </motion.h3>
                 <motion.button
                   whileHover={{ scale: 1.2, rotate: 90 }}
                   whileTap={{ scale: 0.9 }}
@@ -76,7 +76,7 @@ export default function KeyboardShortcutsHelp() {
                     whileHover={{ x: 4, backgroundColor: "rgba(55, 65, 81, 0.3)" }}
                     className="flex items-center justify-between py-2 border-b border-gray-700 last:border-0 cursor-pointer rounded px-2 -mx-2"
                   >
-                    <span className="text-gray-400 text-sm">{shortcut.description}</span>
+                    <motion.span whileHover={{ scale: 1.05 }} className="text-gray-400 text-sm cursor-default">{shortcut.description}</motion.span>
                     <motion.kbd
                       whileHover={{ scale: 1.1, borderColor: "rgba(34, 211, 238, 0.5)" }}
                       className="px-2 py-1 bg-[#111827] border border-gray-600 rounded text-xs text-gray-300 font-mono"
