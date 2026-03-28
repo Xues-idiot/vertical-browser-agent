@@ -252,21 +252,24 @@ export default function JDComparison({
             </h3>
             <div className="flex flex-wrap gap-2 mb-3">
               {jds.map((jd) => (
-                <div
+                <motion.div
                   key={jd.id}
+                  whileHover={{ scale: 1.02, borderColor: "rgba(34, 211, 238, 0.5)" }}
                   className="flex items-center gap-2 bg-[#111827] border border-gray-700 rounded-lg px-3 py-2"
                 >
                   <span className="w-2 h-2 bg-cyan-500 rounded-full" />
                   <span className="text-sm text-white">{jd.name}</span>
                   {jds.length > 1 && (
-                    <button
+                    <motion.button
+                      whileHover={{ scale: 1.2 }}
+                      whileTap={{ scale: 0.9 }}
                       onClick={() => removeJD(jd.id)}
                       className="text-gray-500 hover:text-red-400 transition-colors ml-1"
                     >
                       ×
-                    </button>
+                    </motion.button>
                   )}
-                </div>
+                </motion.div>
               ))}
             </div>
             {jds.length < 5 ? (
