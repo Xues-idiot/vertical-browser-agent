@@ -184,13 +184,16 @@ export default function PipelineFunnel({ candidates, totalResumes }: PipelineFun
 
                     {/* Percentage */}
                     <div className="w-16 text-right flex items-center gap-2">
-                      <span className={`text-sm font-medium ${stage.color}`}>
+                      <motion.span whileHover={{ scale: 1.1 }} className={`text-sm font-medium ${stage.color} cursor-default`}>
                         {totalResumes > 0 ? Math.round((count / totalResumes) * 100) : 0}%
-                      </span>
+                      </motion.span>
                       {stageCandidates.length > 0 && (
-                        <span className="text-xs text-gray-500">
-                          {isExpanded ? "▲" : "▼"}
-                        </span>
+                        <motion.span
+                          animate={{ rotate: isExpanded ? 180 : 0 }}
+                          className="text-xs text-gray-500"
+                        >
+                          ▼
+                        </motion.span>
                       )}
                     </div>
                   </div>
