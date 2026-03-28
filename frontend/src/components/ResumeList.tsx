@@ -246,10 +246,10 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
 
       <div className="flex gap-3 mt-4">
         <motion.button
-          whileHover={{ scale: 1.02 }}
+          whileHover={{ scale: 1.02, boxShadow: "0 4px 12px rgba(0,0,0,0.3)" }}
           whileTap={{ scale: 0.98 }}
           onClick={addResume}
-          className="flex-1 bg-[#374151] text-gray-200 py-3 px-4 rounded-lg hover:bg-gray-600 transition flex items-center justify-center gap-2 border border-gray-600"
+          className="flex-1 bg-[#374151] text-gray-200 py-3 px-4 rounded-lg hover:bg-gray-600 transition flex items-center justify-center gap-2 border border-gray-600 shadow-lg"
         >
           <span>+</span> 添加简历
         </motion.button>
