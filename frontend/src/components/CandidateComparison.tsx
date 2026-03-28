@@ -179,6 +179,7 @@ export default function CandidateComparison({
   onClose,
 }: CandidateComparisonProps) {
   const [selectedCandidates, setSelectedCandidates] = useState<Candidate[]>([]);
+  const [copied, setCopied] = useState(false);
 
   const toggleCandidate = useCallback((candidate: Candidate) => {
     setSelectedCandidates((prev) => {
@@ -258,6 +259,8 @@ export default function CandidateComparison({
     }).join("\n\n");
     const fullReport = `【候选人对比报告】\n生成时间:${new Date().toLocaleString()}\n\n${report}`;
     navigator.clipboard.writeText(fullReport);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }, [selectedCandidates]);
 
   const getScoreColor = (score: number) => {
@@ -294,9 +297,11 @@ export default function CandidateComparison({
               <>
                 <button
                   onClick={handleCopyReport}
-                  className="px-3 py-1.5 bg-cyan-500/40 text-white text-sm rounded-lg hover:bg-cyan-500/50 transition-colors flex items-center gap-1"
+                  className={`px-3 py-1.5 text-white text-sm rounded-lg transition-colors flex items-center gap-1 ${
+                    copied ? "bg-emerald-500/40" : "bg-cyan-500/40 hover:bg-cyan-500/50"
+                  }`}
                 >
-                  📄 复制报告
+                  {copied ? "✅ 已复制" : "📄 复制报告"}
                 </button>
                 <button
                   onClick={handleShareLink}
