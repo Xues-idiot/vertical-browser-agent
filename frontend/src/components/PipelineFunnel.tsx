@@ -318,7 +318,11 @@ export default function PipelineFunnel({ candidates, totalResumes }: PipelineFun
               const count = candidates.filter(c => c.source === src).length;
               if (count === 0) return null;
               return (
-                <span key={src} className="px-3 py-1.5 bg-[#111827] rounded-lg text-xs flex items-center gap-2">
+                <motion.span
+                  key={src}
+                  whileHover={{ scale: 1.05, backgroundColor: "rgba(17, 24, 39, 0.8)" }}
+                  className="px-3 py-1.5 bg-[#111827] rounded-lg text-xs flex items-center gap-2 cursor-default shadow-sm hover:shadow-md transition-shadow"
+                >
                   <span className="w-2 h-2 bg-cyan-500 rounded-full" />
                   <span className="text-gray-400">
                     {src === "referral" && "👥 内推"}
@@ -328,7 +332,7 @@ export default function PipelineFunnel({ candidates, totalResumes }: PipelineFun
                     {src === "other" && "📋 其他"}
                   </span>
                   <span className="text-cyan-400 font-medium">{count}</span>
-                </span>
+                </motion.span>
               );
             })}
           </div>
