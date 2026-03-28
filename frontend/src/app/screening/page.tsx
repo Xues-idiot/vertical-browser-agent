@@ -300,14 +300,14 @@ export default function ScreeningPage() {
               exit={{ opacity: 0, scale: 0.95 }}
               className="space-y-8"
             >
-              <div className="text-center">
+              <motion.div whileHover={{ scale: 1.01 }} className="text-center cursor-default">
                 <h2 className="text-2xl font-bold text-white mb-2">
                   筛选进行中...
                 </h2>
                 <p className="text-gray-400">
                   AI正在分析简历与JD的匹配度
                 </p>
-              </div>
+              </motion.div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <BrowserPreview screenshot={undefined} currentStep={currentStep} />
                 <motion.div
