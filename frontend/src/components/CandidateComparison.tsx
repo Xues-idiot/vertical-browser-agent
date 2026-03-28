@@ -392,12 +392,12 @@ export default function CandidateComparison({
                             initial={{ width: 0 }}
                             animate={{ width: `${c.match_score}%` }}
                             transition={{ duration: 0.8, ease: "easeOut" }}
-                            className={`h-full rounded-full ${
+                            className={`h-full rounded-full shadow-lg ${
                               c.match_score >= 80
-                                ? "bg-emerald-500"
+                                ? "bg-emerald-500 shadow-emerald-500/30"
                                 : c.match_score >= 60
-                                ? "bg-amber-500"
-                                : "bg-red-500"
+                                ? "bg-amber-500 shadow-amber-500/30"
+                                : "bg-red-500 shadow-red-500/30"
                             }`}
                           />
                         </div>
