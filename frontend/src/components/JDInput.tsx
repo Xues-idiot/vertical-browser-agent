@@ -199,6 +199,16 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
               rows={6}
               disabled={loading}
             />
+            <div className="flex justify-between items-center mt-1">
+              <span className="text-xs text-gray-500">
+                {jdText.length > 0 && (
+                  <>
+                    已输入 <span className={jdText.length >= 50 ? "text-cyan-400" : "text-amber-400"}>{jdText.length}</span> 字符
+                    {jdText.length < 50 && <span className="text-amber-400">（最少50字符）</span>}
+                  </>
+                )}
+              </span>
+            </div>
             {/* JD Preview */}
             {jdPreview && (
               <motion.div
