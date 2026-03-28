@@ -560,16 +560,16 @@ function CandidateDetailModal({
                           whileHover={{ scaleY: 1.1, boxShadow: "0 0 10px rgba(34, 211, 238, 0.5)" }}
                           className={`w-full rounded-t-sm ${isLatest ? "bg-cyan-500" : "bg-gray-600"}`}
                         />
-                        <span className="text-xs text-gray-500">
+                        <motion.span whileHover={{ scale: 1.1 }} className="text-xs text-gray-500 cursor-default">
                           {new Date(entry.date).toLocaleDateString().slice(5)}
-                        </span>
+                        </motion.span>
                       </div>
                     );
                   })}
                 </div>
                 <div className="flex justify-between mt-2 text-xs text-gray-500">
-                  <span>早期评估</span>
-                  <span>最近评估: <span className="text-cyan-400">{candidate.match_score}%</span></span>
+                  <motion.span whileHover={{ scale: 1.05 }} className="cursor-default">早期评估</motion.span>
+                  <motion.span whileHover={{ scale: 1.05 }} className="cursor-default">最近评估: <span className="text-cyan-400">{candidate.match_score}%</span></motion.span>
                 </div>
               </div>
             </div>
