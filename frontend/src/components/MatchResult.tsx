@@ -54,7 +54,7 @@ interface MatchResultProps {
   criteria: string[];
 }
 
-type CandidateStatus = "pending" | "interview" | "offer" | "rejected";
+type CandidateStatus = "pending" | "interview" | "offer" | "hired" | "rejected";
 
 // AI推荐理由生成
 function generateAIRecommendation(candidate: Candidate): string {
@@ -265,6 +265,7 @@ function CandidateDetailModal({
     { value: "pending", label: "待沟通", color: "bg-gray-600" },
     { value: "interview", label: "面试中", color: "bg-amber-500" },
     { value: "offer", label: "Offer", color: "bg-emerald-500" },
+    { value: "hired", label: "已入职", color: "bg-purple-500" },
     { value: "rejected", label: "淘汰", color: "bg-red-500" },
   ];
 
@@ -866,7 +867,7 @@ export default function MatchResult({
   }, []);
 
   const handleStatusChange = useCallback((candidate: Candidate, status: CandidateStatus) => {
-    const statusLabels = { pending: "待沟通", interview: "面试中", offer: "Offer", rejected: "淘汰" };
+    const statusLabels = { pending: "待沟通", interview: "面试中", offer: "Offer", hired: "已入职", rejected: "淘汰" };
     setActivityLog(prev => [{
       time: new Date().toLocaleTimeString(),
       action: `状态更新为"${statusLabels[status]}"`,
