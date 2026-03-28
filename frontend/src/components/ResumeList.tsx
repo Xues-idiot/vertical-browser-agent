@@ -254,7 +254,7 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
           <span>+</span> 添加简历
         </motion.button>
         <motion.button
-          whileHover={{ scale: loading || validCount === 0 ? 1 : 1.02 }}
+          whileHover={{ scale: loading || validCount === 0 ? 1 : 1.02, boxShadow: "0 6px 20px rgba(16, 185, 129, 0.4)" }}
           whileTap={{ scale: loading || validCount === 0 ? 1 : 0.98 }}
           onClick={handleSubmit}
           disabled={loading || validCount === 0}
