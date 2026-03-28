@@ -229,9 +229,13 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
                     <span className="text-xs text-gray-500">识别技能: </span>
                     <div className="flex flex-wrap gap-1 mt-1">
                       {jdPreview.skills.map(skill => (
-                        <span key={skill} className="bg-cyan-500/20 text-cyan-400 px-2 py-0.5 rounded text-xs">
+                        <motion.span
+                          key={skill}
+                          whileHover={{ scale: 1.05 }}
+                          className="bg-cyan-500/20 text-cyan-400 px-2 py-0.5 rounded text-xs cursor-default"
+                        >
                           {skill}
-                        </span>
+                        </motion.span>
                       ))}
                     </div>
                   </div>
