@@ -633,7 +633,11 @@ function CandidateDetailModal({
               </h3>
               <div className="space-y-3">
                 {candidate.interviews?.map((interview, i) => (
-                  <div key={i} className="bg-[#111827] rounded-lg p-3 border border-gray-700">
+                  <motion.div
+                    key={i}
+                    whileHover={{ scale: 1.01 }}
+                    className="bg-[#111827] rounded-lg p-3 border border-gray-700 hover:border-gray-600 transition-colors"
+                  >
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm font-medium text-cyan-400">第{interview.round}轮面试</span>
                       <div className="flex items-center gap-1">
@@ -644,7 +648,7 @@ function CandidateDetailModal({
                     </div>
                     <p className="text-xs text-gray-400 mb-1">{interview.date}</p>
                     <p className="text-sm text-gray-300">{interview.feedback}</p>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </div>
