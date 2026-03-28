@@ -88,9 +88,13 @@ export default function BrowserPreview({ screenshot, currentStep }: BrowserPrevi
                   <p className="text-emerald-400 font-medium text-lg">
                     筛选完成!
                   </p>
-                  <p className="text-gray-500 text-sm mt-1">
+                  <motion.p
+                    animate={{ opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                    className="text-gray-500 text-sm mt-1"
+                  >
                     点击查看筛选结果
-                  </p>
+                  </motion.p>
                 </motion.div>
               ) : (
                 <>
