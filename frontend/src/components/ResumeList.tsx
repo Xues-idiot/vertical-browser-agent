@@ -41,6 +41,7 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
   const [resumes, setResumes] = useState<string[]>([""]);
   const [candidateNames, setCandidateNames] = useState<string[]>([""]);
   const [errors, setErrors] = useState<(string | null)[]>([]);
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   const addResume = useCallback(() => {
     setResumes((prev) => [...prev, ""]);
@@ -185,13 +186,19 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
                   <div className="absolute top-2 right-2 flex gap-2">
                     <button
                       type="button"
-                      onClick={() => navigator.clipboard.writeText(resumes[index])}
-                      className="text-xs text-gray-400 hover:text-emerald-400 transition-colors flex items-center gap-1 bg-[#1F2937]/80 px-2 py-1 rounded"
+                      onClick={() => {
+                        navigator.clipboard.writeText(resumes[index]);
+                        setCopiedIndex(index);
+                        setTimeout(() => setCopiedIndex(null), 2000);
+                      }}
+                      className={`text-xs transition-colors flex items-center gap-1 bg-[#1F2937]/80 px-2 py-1 rounded ${
+                        copiedIndex === index ? "text-emerald-400" : "text-gray-400 hover:text-emerald-400"
+                      }`}
                     >
                       <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                       </svg>
-                      复制
+                      {copiedIndex === index ? "已复制" : "复制"}
                     </button>
                     <button
                       type="button"
