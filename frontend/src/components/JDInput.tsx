@@ -253,10 +253,14 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
                     <span className="text-xs text-gray-500">关键要求: </span>
                     <ul className="mt-1 space-y-1">
                       {jdPreview.requirements.map((req, i) => (
-                        <li key={i} className="text-xs text-gray-300 flex items-center gap-1">
+                        <motion.li
+                          key={i}
+                          whileHover={{ x: 4, color: "#22d3ee" }}
+                          className="text-xs text-gray-300 flex items-center gap-1 cursor-default"
+                        >
                           <span className="w-1 h-1 bg-cyan-400 rounded-full" />
                           {req}
-                        </li>
+                        </motion.li>
                       ))}
                     </ul>
                   </div>
