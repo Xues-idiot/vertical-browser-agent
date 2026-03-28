@@ -999,6 +999,30 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
             {batchMode ? "✓ 退出批量" : "📋 批量操作"}
           </button>
 
+          {/* Batch Select All / Deselect */}
+          {batchMode && (
+            <div className="flex gap-2">
+              <button
+                onClick={() => setBatchSelected(sortedFilteredStrong.map(c => c.candidate_name))}
+                className="px-3 py-1.5 bg-[#111827] text-gray-400 border border-gray-700 hover:border-cyan-500 rounded-lg text-xs transition-colors"
+              >
+                全选强推
+              </button>
+              <button
+                onClick={() => setBatchSelected(sortedFilteredBackup.map(c => c.candidate_name))}
+                className="px-3 py-1.5 bg-[#111827] text-gray-400 border border-gray-700 hover:border-cyan-500 rounded-lg text-xs transition-colors"
+              >
+                全选备选
+              </button>
+              <button
+                onClick={() => setBatchSelected([])}
+                className="px-3 py-1.5 bg-[#111827] text-gray-400 border border-gray-700 hover:border-red-500 rounded-lg text-xs transition-colors"
+              >
+                取消全选
+              </button>
+            </div>
+          )}
+
           {/* Starred filter */}
           <button
             onClick={() => {
