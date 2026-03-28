@@ -1234,8 +1234,10 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
           </h3>
           <div className="flex gap-3 overflow-x-auto pb-2">
             {recentlyViewed.map((candidate, i) => (
-              <button
+              <motion.button
                 key={`${candidate.candidate_name}-${i}`}
+                whileHover={{ scale: 1.05, borderColor: "rgba(34, 211, 238, 0.5)" }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => {
                   setSelectedCandidate(candidate);
                   addToRecentlyViewed(candidate);
@@ -1253,7 +1255,7 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
                   <p className="text-sm text-white font-medium truncate max-w-[120px]">{candidate.candidate_name}</p>
                   <p className="text-xs text-gray-500 truncate max-w-[120px]">{candidate.current_company || "未填写公司"}</p>
                 </div>
-              </button>
+              </motion.button>
             ))}
           </div>
         </motion.div>
@@ -1265,32 +1267,36 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
           <span>📊</span> 候选人统计
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-[#111827] rounded-lg p-3 text-center">
+          <motion.div whileHover={{ scale: 1.05 }} className="bg-[#111827] rounded-lg p-3 text-center cursor-default">
             <div className="text-2xl font-bold text-cyan-400">{candidateStats.avgScore}%</div>
             <div className="text-xs text-gray-400 mt-1">平均匹配度</div>
-          </div>
-          <div className="bg-[#111827] rounded-lg p-3 text-center">
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.05 }} className="bg-[#111827] rounded-lg p-3 text-center cursor-default">
             <div className="text-2xl font-bold text-emerald-400">{candidateStats.scoreDistribution.high}</div>
             <div className="text-xs text-gray-400 mt-1">高分候选人(≥80)</div>
-          </div>
-          <div className="bg-[#111827] rounded-lg p-3 text-center">
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.05 }} className="bg-[#111827] rounded-lg p-3 text-center cursor-default">
             <div className="text-2xl font-bold text-amber-400">{candidateStats.scoreDistribution.medium}</div>
             <div className="text-xs text-gray-400 mt-1">中等候选人(60-79)</div>
-          </div>
-          <div className="bg-[#111827] rounded-lg p-3 text-center">
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.05 }} className="bg-[#111827] rounded-lg p-3 text-center cursor-default">
             <div className="text-2xl font-bold text-gray-400">{candidateStats.companies}</div>
             <div className="text-xs text-gray-400 mt-1">涉及公司数</div>
-          </div>
+          </motion.div>
         </div>
         {candidateStats.topTags.length > 0 && (
           <div className="mt-4">
             <div className="text-xs text-gray-400 mb-2">热门标签:</div>
             <div className="flex flex-wrap gap-2">
               {candidateStats.topTags.map(([tag, count]) => (
-                <span key={tag} className="bg-cyan-500/20 text-cyan-400 px-2 py-1 rounded-full text-xs flex items-center gap-1">
+                <motion.span
+                  key={tag}
+                  whileHover={{ scale: 1.1, boxShadow: "0 0 8px rgba(34, 211, 238, 0.4)" }}
+                  className="bg-cyan-500/20 text-cyan-400 px-2 py-1 rounded-full text-xs flex items-center gap-1 cursor-default"
+                >
                   {tag}
                   <span className="bg-cyan-500/40 px-1 rounded text-[10px]">{count}</span>
-                </span>
+                </motion.span>
               ))}
             </div>
           </div>
