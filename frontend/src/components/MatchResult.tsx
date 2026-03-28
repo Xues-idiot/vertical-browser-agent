@@ -29,6 +29,7 @@ interface Candidate {
   starred?: boolean;  // 收藏标记
   interviews?: { round: number; date: string; feedback: string; rating: number }[];  // 面试反馈
   percentile?: number;  // 百分位排名
+  status?: "pending" | "interview" | "offer" | "hired" | "rejected";  // 候选人状态
 }
 
 // 计算候选人在全体中的百分位排名
