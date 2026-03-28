@@ -427,18 +427,22 @@ export default function HistoryPage() {
                       </div>
                     </div>
                     <div className="bg-[#111827] px-6 py-4 border-t border-gray-700 flex gap-3">
-                      <button
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                         onClick={() => handleExport(item)}
                         className="flex-1 py-2 bg-cyan-600/20 text-cyan-400 border border-cyan-500/30 rounded-lg hover:bg-cyan-600/30 transition-colors text-sm"
                       >
                         导出JSON
-                      </button>
-                      <button
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                         onClick={() => setSelectedId(null)}
                         className="flex-1 py-2 bg-gray-600/20 text-gray-400 border border-gray-500/30 rounded-lg hover:bg-gray-600/30 transition-colors text-sm"
                       >
                         关闭
-                      </button>
+                      </motion.button>
                     </div>
                   </>
                 );
