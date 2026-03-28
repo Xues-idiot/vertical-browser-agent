@@ -1035,7 +1035,9 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
           )}
 
           {/* Starred filter */}
-          <button
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => {
               setShowOnlyStarred(!showOnlyStarred);
             }}
@@ -1046,10 +1048,12 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
             }`}
           >
             ★ 我的收藏 ({starred.size})
-          </button>
+          </motion.button>
 
           {/* Notes filter */}
-          <button
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => {
               setShowOnlyWithNotes(!showOnlyWithNotes);
             }}
@@ -1060,7 +1064,7 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
             }`}
           >
             📝 有笔记 ({notes.size})
-          </button>
+          </motion.button>
 
           {/* Score Range Filter */}
           <div className="flex items-center gap-2">
