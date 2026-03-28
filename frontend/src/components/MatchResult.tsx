@@ -1079,12 +1079,14 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
             />
             <span className="text-xs text-cyan-400 w-10">{minScore}%+</span>
             {minScore > 0 && (
-              <button
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
                 onClick={() => setMinScore(0)}
                 className="text-xs text-gray-500 hover:text-white"
               >
                 重置
-              </button>
+              </motion.button>
             )}
           </div>
 
