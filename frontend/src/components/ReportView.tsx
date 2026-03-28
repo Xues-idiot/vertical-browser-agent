@@ -108,6 +108,32 @@ export default function ReportView({ report, markdown }: ReportViewProps) {
         >
           生成时间: {report.generated_at}
         </motion.div>
+
+        {/* 复制报告 */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="mt-4 pt-4 border-t border-gray-700"
+        >
+          <button
+            onClick={() => {
+              const summary = `【筛选报告】
+岗位: ${report.position_name}
+收到简历: ${report.total_resumes}份
+筛选通过: ${report.screened_resumes}份
+通过率: ${passRate}%
+生成时间: ${report.generated_at}`;
+              navigator.clipboard.writeText(summary);
+            }}
+            className="w-full py-2 px-3 bg-[#111827] border border-gray-700 rounded-lg text-sm text-gray-400 hover:text-cyan-400 hover:border-cyan-500/50 transition-colors flex items-center justify-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            复制报告摘要
+          </button>
+        </motion.div>
       </div>
     </motion.div>
   );
