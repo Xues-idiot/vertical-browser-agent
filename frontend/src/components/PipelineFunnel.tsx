@@ -148,10 +148,10 @@ export default function PipelineFunnel({ candidates, totalResumes }: PipelineFun
                     onClick={() => setExpandedStage(isExpanded ? null : stage.key)}
                   >
                     {/* Stage label */}
-                    <div className="w-24 flex items-center gap-2">
+                    <motion.div whileHover={{ scale: 1.05 }} className="w-24 flex items-center gap-2">
                       <span className="text-lg">{stage.icon}</span>
                       <span className="text-sm text-gray-400">{stage.label}</span>
-                    </div>
+                    </motion.div>
 
                     {/* Bar */}
                     <div className="flex-1 h-10 bg-[#111827] rounded-lg overflow-hidden relative">
