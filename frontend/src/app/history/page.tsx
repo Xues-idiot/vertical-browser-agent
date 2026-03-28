@@ -280,8 +280,8 @@ export default function HistoryPage() {
                         </h3>
                         {getStatusBadge(item.status)}
                       </div>
-                      <p className="text-gray-400 text-sm mb-3">
-                        来源: {item.jd_source}
+                      <p className="text-gray-400 text-sm mb-3 truncate" title={item.jd_source}>
+                        来源: {item.jd_source.length > 50 ? item.jd_source.slice(0, 50) + "..." : item.jd_source}
                       </p>
                       <div className="flex flex-wrap gap-4 text-sm">
                         <span className="text-gray-400">
