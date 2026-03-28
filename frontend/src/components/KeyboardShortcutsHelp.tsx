@@ -24,10 +24,13 @@ export default function KeyboardShortcutsHelp() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-4 right-4 w-10 h-10 bg-[#1F2937] border border-gray-700 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:border-gray-600 transition-colors z-40 shadow-lg"
+        className="fixed bottom-4 right-4 w-12 h-12 bg-[#1F2937] border border-gray-700 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:border-gray-600 transition-colors z-40 shadow-lg"
         title="键盘快捷键"
       >
         <span className="text-lg">⌨️</span>
+        <span className="absolute -top-1 -right-1 w-5 h-5 bg-cyan-600 text-white text-xs rounded-full flex items-center justify-center font-medium">
+          {shortcuts.length}
+        </span>
       </button>
 
       <AnimatePresence>
