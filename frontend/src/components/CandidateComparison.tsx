@@ -73,12 +73,12 @@ function CandidateCard({
         </div>
 
         <div className="flex items-center gap-3">
-          <div className={`px-3 py-1.5 rounded-lg bg-gradient-to-br ${getScoreBg(candidate.match_score)} border border-gray-700`}>
+          <motion.div whileHover={{ scale: 1.05 }} className={`px-3 py-1.5 rounded-lg bg-gradient-to-br ${getScoreBg(candidate.match_score)} border border-gray-700 shadow-lg`}>
             <span className={`text-xl font-bold ${getScoreColor(candidate.match_score)}`}>
               {candidate.match_score}
             </span>
             <span className="text-xs text-gray-400 ml-1">分</span>
-          </div>
+          </motion.div>
           <span className={`text-xs px-2 py-1 rounded-full ${
             candidate.level === "strong_recommend"
               ? "bg-emerald-500/20 text-emerald-400"
