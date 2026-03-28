@@ -1356,7 +1356,7 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
                         <span className="truncate max-w-[150px]">{notes.get(candidate.candidate_name)?.slice(0, 30)}</span>
                       </div>
                     )}
-                    <p className="text-cyan-400 text-xs mt-2 hover:underline">
+                    <p className="text-cyan-400 text-xs mt-2 bg-cyan-500/10 hover:bg-cyan-500/20 px-2 py-1 rounded transition-colors inline-block">
                       点击查看详情 →
                     </p>
                   </div>
@@ -1525,7 +1525,7 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
                         ))}
                       </div>
                     )}
-                    <p className="text-cyan-400 text-xs mt-2 hover:underline">
+                    <p className="text-cyan-400 text-xs mt-2 bg-cyan-500/10 hover:bg-cyan-500/20 px-2 py-1 rounded transition-colors inline-block">
                       点击查看详情 →
                     </p>
                   </div>
