@@ -82,13 +82,13 @@ function CandidateCard({
             </span>
             <span className="text-xs text-gray-400 ml-1">分</span>
           </motion.div>
-          <span className={`text-xs px-2 py-1 rounded-full ${
+          <motion.span whileHover={{ scale: 1.1 }} className={`text-xs px-2 py-1 rounded-full ${
             candidate.level === "strong_recommend"
               ? "bg-emerald-500/20 text-emerald-400"
               : "bg-amber-500/20 text-amber-400"
           }`}>
             {candidate.level === "strong_recommend" ? "⭐强烈推荐" : "🟡可备选"}
-          </span>
+          </motion.span>
         </div>
       </div>
     </motion.div>
