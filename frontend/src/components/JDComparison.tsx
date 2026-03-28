@@ -207,7 +207,9 @@ export default function JDComparison({
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <button
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => {
                   const headers = ["| 候选人", ...jds.map(j => ` ${j.name}`)].join(" |") + " |";
                   const separator = headers.replace(/[^|]/g, "-");
@@ -229,7 +231,7 @@ export default function JDComparison({
                 }`}
               >
                 {copied ? "✅ 已复制" : "📋 Markdown"}
-              </button>
+              </motion.button>
               <motion.button
                 whileHover={{ scale: 1.2, rotate: 90 }}
                 whileTap={{ scale: 0.9 }}
