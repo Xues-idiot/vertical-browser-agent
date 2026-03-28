@@ -258,9 +258,33 @@ export default function PipelineFunnel({ candidates, totalResumes }: PipelineFun
 
         {/* 来源统计 */}
         <div className="mt-6 pt-6 border-t border-gray-700">
-          <h4 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">
-            来源渠道分析
-          </h4>
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
+              来源渠道分析
+            </h4>
+            <button
+              onClick={() => {
+                const sourceLabels: Record<string, string> = {
+                  referral: "内推",
+                  headhunter: "猎头",
+                  website: "网站",
+                  resume_db: "简历库",
+                  other: "其他"
+                };
+                const summary = Object.entries(sourceLabels)
+                  .map(([key, label]) => `${label}: ${candidates.filter(c => c.source === key).length}`)
+                  .filter(s => !s.endsWith(": 0"))
+                  .join(", ");
+                navigator.clipboard.writeText(summary || "无来源数据");
+              }}
+              className="text-xs text-gray-400 hover:text-cyan-400 transition-colors flex items-center gap-1"
+            >
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              复制
+            </button>
+          </div>
           <div className="flex flex-wrap gap-2">
             {["referral", "headhunter", "website", "resume_db", "other"].map((src) => {
               const count = candidates.filter(c => c.source === src).length;
