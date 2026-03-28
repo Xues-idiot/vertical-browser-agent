@@ -330,9 +330,16 @@ export default function CandidateComparison({
         <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
           {/* Candidate Selection */}
           <div className="mb-6">
-            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
-              选择候选人 (已选 {selectedCandidates.length}/4)
-            </h3>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
+                选择候选人 (已选 {selectedCandidates.length}/4)
+              </h3>
+              {selectedCandidates.length >= 4 && (
+                <span className="text-xs text-amber-400 bg-amber-500/20 px-2 py-1 rounded-full">
+                  已达最大选择数量
+                </span>
+              )}
+            </div>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {candidates.map((candidate, index) => (
                 <CandidateCard
