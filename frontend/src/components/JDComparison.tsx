@@ -230,12 +230,14 @@ export default function JDComparison({
               >
                 {copied ? "✅ 已复制" : "📋 Markdown"}
               </button>
-              <button
+              <motion.button
+                whileHover={{ scale: 1.2, rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
                 onClick={onClose}
                 className="text-purple-100 hover:text-white transition-colors"
               >
                 ✕
-              </button>
+              </motion.button>
             </div>
           </div>
         </div>
