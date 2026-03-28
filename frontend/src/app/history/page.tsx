@@ -473,13 +473,13 @@ export default function HistoryPage() {
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex justify-between items-center text-sm text-gray-400">
             <div className="flex items-center gap-4">
-              <span>Spider v1.34.2</span>
+              <motion.span whileHover={{ scale: 1.05 }} className="cursor-default">Spider v1.34.2</motion.span>
               <span className="w-px h-4 bg-gray-600" />
-              <span>垂直浏览器Agent</span>
+              <motion.span whileHover={{ scale: 1.05 }} className="cursor-default">垂直浏览器Agent</motion.span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-              <span>系统运行正常</span>
+              <motion.span animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 2, repeat: Infinity }} className="w-2 h-2 bg-green-500 rounded-full" />
+              <motion.span whileHover={{ scale: 1.05 }} className="cursor-default">系统运行正常</motion.span>
             </div>
           </div>
         </div>
