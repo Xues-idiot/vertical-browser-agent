@@ -219,9 +219,9 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
-                className="mt-3 bg-[#111827] rounded-lg p-3 border border-gray-700"
+                className="mt-3 bg-[#111827] rounded-lg p-3 border border-cyan-500/30 shadow-lg shadow-cyan-500/10"
               >
-                <div className="text-xs text-gray-400 mb-2 flex items-center gap-1">
+                <div className="text-xs text-cyan-400 mb-2 flex items-center gap-1">
                   <span>🔍</span> JD智能解析预览
                 </div>
                 {jdPreview.skills.length > 0 && (
