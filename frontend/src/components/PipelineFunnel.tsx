@@ -230,19 +230,19 @@ export default function PipelineFunnel({ candidates, totalResumes }: PipelineFun
             转化率分析
           </h4>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-[#111827] rounded-lg p-3 text-center">
+            <div className="bg-[#111827] rounded-lg p-3 text-center hover:bg-[#1a2332] transition-colors cursor-default">
               <div className="text-2xl font-bold text-cyan-400">
                 {totalResumes > 0 ? Math.round((counts.screened / totalResumes) * 100) : 0}%
               </div>
               <div className="text-xs text-gray-400 mt-1">简历→筛选</div>
             </div>
-            <div className="bg-[#111827] rounded-lg p-3 text-center">
+            <div className="bg-[#111827] rounded-lg p-3 text-center hover:bg-[#1a2332] transition-colors cursor-default">
               <div className="text-2xl font-bold text-amber-400">
                 {counts.screened > 0 ? Math.round((counts.interview / counts.screened) * 100) : 0}%
               </div>
               <div className="text-xs text-gray-400 mt-1">筛选→面试</div>
             </div>
-            <div className="bg-[#111827] rounded-lg p-3 text-center">
+            <div className="bg-[#111827] rounded-lg p-3 text-center hover:bg-[#1a2332] transition-colors cursor-default">
               <div className="text-2xl font-bold text-emerald-400">
                 {counts.interview > 0 ? Math.round((counts.offer / counts.interview) * 100) : 0}%
               </div>
