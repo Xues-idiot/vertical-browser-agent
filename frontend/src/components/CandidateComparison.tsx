@@ -371,7 +371,7 @@ export default function CandidateComparison({
               >
                 <div className="bg-gradient-to-r from-gray-600 to-gray-700 px-6 py-3">
                   <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-                    <span>📊</span> 对比分析表
+                    <span>📊</span> 对比分析表 ({selectedCandidates.length}人)
                   </h3>
                 </div>
                 <ComparisonTable candidates={selectedCandidates} criteria={criteria} />
