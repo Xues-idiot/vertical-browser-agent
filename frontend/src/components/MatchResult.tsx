@@ -598,8 +598,10 @@ function CandidateDetailModal({
               </h3>
               <div className="space-y-2">
                 {candidate.similar_candidates?.slice(0, 3).map((similar, i) => (
-                  <button
+                  <motion.button
                     key={i}
+                    whileHover={{ scale: 1.02, borderColor: "rgba(34, 211, 238, 0.5)" }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={() => {
                       onSelectSimilar?.(similar);
                     }}
@@ -617,7 +619,7 @@ function CandidateDetailModal({
                     <span className={`text-sm font-bold ${getScoreColor(similar.match_score)}`}>
                       {similar.match_score}%
                     </span>
-                  </button>
+                  </motion.button>
                 ))}
               </div>
             </div>
