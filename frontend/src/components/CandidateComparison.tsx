@@ -309,12 +309,14 @@ export default function CandidateComparison({
                 >
                   🔗 分享链接
                 </button>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={handleExportCSV}
                   className="px-3 py-1.5 bg-amber-500/40 text-white text-sm rounded-lg hover:bg-amber-500/50 transition-colors flex items-center gap-1"
                 >
                   📊 CSV
-                </button>
+                </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
