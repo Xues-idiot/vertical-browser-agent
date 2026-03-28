@@ -56,6 +56,7 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
   const [jdText, setJdText] = useState(""); // JD文本内容
   const [inputMode, setInputMode] = useState<"url" | "text">("url"); // 输入模式
   const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   // Compute JD preview when text changes
   const jdPreview = useMemo(() => {
@@ -167,13 +168,17 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
                     type="button"
                     onClick={() => {
                       navigator.clipboard.writeText(jdText);
+                      setCopied(true);
+                      setTimeout(() => setCopied(false), 2000);
                     }}
-                    className="text-xs text-gray-400 hover:text-cyan-400 transition-colors flex items-center gap-1"
+                    className={`text-xs transition-colors flex items-center gap-1 ${
+                      copied ? "text-emerald-400" : "text-gray-400 hover:text-cyan-400"
+                    }`}
                   >
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                     </svg>
-                    复制
+                    {copied ? "已复制" : "复制"}
                   </button>
                   <button
                     type="button"
