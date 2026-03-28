@@ -278,12 +278,12 @@ export default function ScreeningPage() {
                 transition={{ delay: 0.2 }}
                 className="text-center mb-8"
               >
-                <h2 className="text-2xl font-bold text-white mb-2">
+                <motion.h2 whileHover={{ scale: 1.02 }} className="text-2xl font-bold text-white mb-2 cursor-default">
                   智能简历筛选
-                </h2>
-                <p className="text-gray-400">
+                </motion.h2>
+                <motion.p whileHover={{ scale: 1.01 }} className="text-gray-400 cursor-default">
                   输入JD和简历，AI自动完成匹配筛选
-                </p>
+                </motion.p>
               </motion.div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <JDInput onSubmit={handleJDSubmit} loading={loading} />
