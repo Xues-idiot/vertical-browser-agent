@@ -1572,10 +1572,16 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
           transition={{ duration: 0.5, delay: 0.45 }}
           className="bg-[#1F2937] rounded-xl shadow-lg border border-gray-700 overflow-hidden"
         >
-          <div className="bg-gradient-to-r from-gray-600 to-gray-700 px-6 py-4">
+          <div className="bg-gradient-to-r from-gray-600 to-gray-700 px-6 py-4 flex justify-between items-center">
             <h3 className="text-lg font-semibold text-white flex items-center gap-2">
               <span>📜</span> 操作日志
             </h3>
+            <button
+              onClick={() => setActivityLog([])}
+              className="text-xs text-gray-400 hover:text-red-400 transition-colors"
+            >
+              清空日志
+            </button>
           </div>
           <div className="p-4 max-h-48 overflow-y-auto">
             <div className="space-y-2">
