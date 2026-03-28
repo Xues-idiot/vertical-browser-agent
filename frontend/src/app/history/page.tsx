@@ -215,8 +215,10 @@ export default function HistoryPage() {
                 { value: "completed", label: "已完成" },
                 { value: "failed", label: "失败" },
               ].map((tab) => (
-                <button
+                <motion.button
                   key={tab.value}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => setFilter(tab.value as typeof filter)}
                   className={`px-4 py-1.5 rounded-md text-sm transition-colors ${
                     filter === tab.value
@@ -225,7 +227,7 @@ export default function HistoryPage() {
                   }`}
                 >
                   {tab.label}
-                </button>
+                </motion.button>
               ))}
             </div>
           </div>
