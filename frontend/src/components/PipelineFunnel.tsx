@@ -110,10 +110,10 @@ export default function PipelineFunnel({ candidates, totalResumes }: PipelineFun
     >
       <div className="bg-gradient-to-r from-gray-600 to-gray-700 px-6 py-4 flex justify-between items-center">
         <div>
-          <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+          <motion.h3 whileHover={{ scale: 1.02 }} className="text-lg font-semibold text-white flex items-center gap-2 cursor-default">
             <span>🔍</span> 招聘漏斗
-          </h3>
-          <p className="text-gray-300 text-sm mt-1">候选人状态流转追踪</p>
+          </motion.h3>
+          <motion.p whileHover={{ scale: 1.02 }} className="text-gray-300 text-sm mt-1 cursor-default">候选人状态流转追踪</motion.p>
         </div>
         <motion.button
           whileHover={{ scale: 1.05 }}
@@ -235,9 +235,9 @@ export default function PipelineFunnel({ candidates, totalResumes }: PipelineFun
 
         {/* Conversion rates */}
         <div className="mt-6 pt-6 border-t border-gray-700">
-          <h4 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">
+          <motion.h4 whileHover={{ scale: 1.02 }} className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4 cursor-default">
             转化率分析
-          </h4>
+          </motion.h4>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-[#111827] rounded-lg p-3 text-center hover:bg-[#1a2332] transition-colors cursor-default">
               <div className="text-2xl font-bold text-cyan-400">
@@ -288,9 +288,9 @@ export default function PipelineFunnel({ candidates, totalResumes }: PipelineFun
         {/* 来源统计 */}
         <div className="mt-6 pt-6 border-t border-gray-700">
           <div className="flex items-center justify-between mb-4">
-            <h4 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
+            <motion.h4 whileHover={{ scale: 1.02 }} className="text-sm font-semibold text-gray-400 uppercase tracking-wider cursor-default">
               来源渠道分析
-            </h4>
+            </motion.h4>
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
