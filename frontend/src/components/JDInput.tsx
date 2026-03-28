@@ -213,25 +213,26 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
               disabled={loading}
             />
             <div className="flex justify-between items-center mt-1">
-              <span className="text-xs text-gray-500">
+              <motion.span whileHover={{ scale: 1.02 }} className="text-xs text-gray-500 cursor-default">
                 {jdText.length > 0 && (
                   <>
                     已输入 <span className={jdText.length >= 50 ? "text-cyan-400" : "text-amber-400"}>{jdText.length}</span> 字符
                     {jdText.length < 50 && <span className="text-amber-400">（最少50字符）</span>}
                   </>
                 )}
-              </span>
+              </motion.span>
             </div>
             {/* JD Preview */}
             {jdPreview && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
+                whileHover={{ scale: 1.01 }}
                 className="mt-3 bg-[#111827] rounded-lg p-3 border border-cyan-500/30 shadow-lg shadow-cyan-500/10"
               >
-                <div className="text-xs text-cyan-400 mb-2 flex items-center gap-1">
+                <motion.div whileHover={{ scale: 1.05 }} className="text-xs text-cyan-400 mb-2 flex items-center gap-1 cursor-default">
                   <span>🔍</span> JD智能解析预览
-                </div>
+                </motion.div>
                 {jdPreview.skills.length > 0 && (
                   <div className="mb-2">
                     <span className="text-xs text-gray-500">识别技能: </span>
