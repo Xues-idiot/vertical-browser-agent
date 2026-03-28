@@ -142,7 +142,7 @@ export default function HistoryPage() {
     };
     const s = status || "processing";
     return (
-      <span className={`px-2 py-0.5 text-xs rounded-full border ${styles[s] || styles.processing}`}>
+      <span className={`px-2 py-0.5 text-xs rounded-full border ${styles[s] || styles.processing} transition-all hover:shadow-md cursor-default`}>
         {labels[s] || "处理中"}
       </span>
     );
