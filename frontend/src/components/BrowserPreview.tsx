@@ -168,9 +168,9 @@ export default function BrowserPreview({ screenshot, currentStep }: BrowserPrevi
                 isCompleted ? "bg-emerald-500" : "bg-amber-500"
               }`}
             />
-            <span className="text-sm text-gray-400">
+            <motion.span whileHover={{ scale: 1.05 }} className="text-sm text-gray-400 cursor-default">
               {isCompleted ? "任务已完成" : "处理中..."}
-            </span>
+            </motion.span>
           </div>
           <motion.span
             whileHover={{ scale: 1.1, color: "#22d3ee" }}

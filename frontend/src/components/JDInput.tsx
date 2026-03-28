@@ -101,12 +101,12 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
           📋
         </motion.div>
         <div>
-          <h2 className="text-lg font-semibold text-white">
+          <motion.h2 whileHover={{ scale: 1.02 }} className="text-lg font-semibold text-white cursor-default">
             输入职位JD
-          </h2>
-          <p className="text-sm text-gray-400">
+          </motion.h2>
+          <motion.p whileHover={{ scale: 1.02 }} className="text-sm text-gray-400 cursor-default">
             {inputMode === "url" ? "粘贴招聘平台JD链接" : "填写JD内容"}
-          </p>
+          </motion.p>
         </div>
       </div>
 
@@ -148,9 +148,9 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
         )}
         {inputMode === "url" ? (
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <motion.label whileHover={{ scale: 1.02 }} className="block text-sm font-medium text-gray-300 mb-2 cursor-default">
               JD链接
-            </label>
+            </motion.label>
             <input
               type="text"
               value={jdUrl}
@@ -163,9 +163,9 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
         ) : (
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-sm font-medium text-gray-300">
+              <motion.label whileHover={{ scale: 1.02 }} className="text-sm font-medium text-gray-300 cursor-default">
                 JD内容
-              </label>
+              </motion.label>
               {jdText && (
                 <div className="flex gap-3">
                   <motion.button
@@ -235,7 +235,7 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
                 </motion.div>
                 {jdPreview.skills.length > 0 && (
                   <div className="mb-2">
-                    <span className="text-xs text-gray-500">识别技能: </span>
+                    <motion.span whileHover={{ scale: 1.05 }} className="text-xs text-gray-500 cursor-default">识别技能: </motion.span>
                     <div className="flex flex-wrap gap-1 mt-1">
                       {jdPreview.skills.map(skill => (
                         <motion.span
@@ -251,7 +251,7 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
                 )}
                 {jdPreview.requirements.length > 0 && (
                   <div>
-                    <span className="text-xs text-gray-500">关键要求: </span>
+                    <motion.span whileHover={{ scale: 1.05 }} className="text-xs text-gray-500 cursor-default">关键要求: </motion.span>
                     <ul className="mt-1 space-y-1">
                       {jdPreview.requirements.map((req, i) => (
                         <motion.li
