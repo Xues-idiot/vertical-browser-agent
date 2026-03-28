@@ -34,6 +34,60 @@ interface Report {
   generated_at: string;
 }
 
+// Helper function to generate mock candidates
+function generateMockCandidates(resumes: string[]) {
+  const strongRecs = resumes.slice(0, 2).map((r, i) => ({
+    candidate_name: `候选人${i + 1}`,
+    match_score: 85 - i * 5,
+    level: "strong_recommend",
+    summary: "匹配度高",
+    years_experience: 5 - i,
+    score_breakdown: {
+      hard_conditions: 85 + Math.floor(Math.random() * 10),
+      skill_match: 80 + Math.floor(Math.random() * 15),
+      industry_exp: 75 + Math.floor(Math.random() * 15),
+      potential: 70 + Math.floor(Math.random() * 20),
+    },
+    tags: i === 0 ? ["大厂经验", "管理经验", "SaaS"] : ["海归", "本科985"],
+    matched_criteria: ["经验≥3年", "有SaaS经验", "本科学历"],
+  }));
+  const backups = resumes.slice(2).map((r, i) => ({
+    candidate_name: `备选候选人${i + 1}`,
+    match_score: 70 - i * 3,
+    level: "backup",
+    summary: "基本匹配",
+    years_experience: 3 - i,
+    score_breakdown: {
+      hard_conditions: 60 + Math.floor(Math.random() * 15),
+      skill_match: 65 + Math.floor(Math.random() * 15),
+      industry_exp: 70 + Math.floor(Math.random() * 10),
+      potential: 60 + Math.floor(Math.random() * 15),
+    },
+    tags: i === 0 ? ["创业经验"] : ["小厂经验"],
+    matched_criteria: ["有电商经验"],
+  }));
+  return { strongRecs, backups };
+}
+
+// Helper to generate mock report
+function generateMockReport(resumes: string[], jdSource: string) {
+  const { strongRecs, backups } = generateMockCandidates(resumes);
+  return {
+    position_name: "高级产品经理",
+    jd_source: jdSource || "模拟JD",
+    total_resumes: resumes.length,
+    screened_resumes: Math.floor(resumes.length * 0.6),
+    strong_recommendations: strongRecs,
+    backup_candidates: backups,
+    screening_criteria: [
+      "经验年限 ≥ 3年",
+      "有电商/SaaS经验",
+      "学历本科以上",
+    ],
+    generated_at: new Date().toLocaleString(),
+  };
+}
+
 export default function ScreeningPage() {
   const [step, setStep] = useState<"input" | "screening" | "result">("input");
   const [currentStep, setCurrentStep] = useState("init");
@@ -150,100 +204,16 @@ export default function ScreeningPage() {
         setCandidates([...response.data.report.strong_recommendations, ...response.data.report.backup_candidates]);
         setStep("result");
       } else {
-        const strongRecs = resumes.slice(0, 2).map((r, i) => ({
-          candidate_name: `候选人${i + 1}`,
-          match_score: 85 - i * 5,
-          level: "strong_recommend",
-          summary: "匹配度高",
-          years_experience: 5 - i,
-          score_breakdown: {
-            hard_conditions: 85 + Math.floor(Math.random() * 10),
-            skill_match: 80 + Math.floor(Math.random() * 15),
-            industry_exp: 75 + Math.floor(Math.random() * 15),
-            potential: 70 + Math.floor(Math.random() * 20),
-          },
-          tags: i === 0 ? ["大厂经验", "管理经验", "SaaS"] : ["海归", "本科985"],
-          matched_criteria: ["经验≥3年", "有SaaS经验", "本科学历"],
-        }));
-        const backups = resumes.slice(2).map((r, i) => ({
-          candidate_name: `备选候选人${i + 1}`,
-          match_score: 70 - i * 3,
-          level: "backup",
-          summary: "基本匹配",
-          years_experience: 3 - i,
-          score_breakdown: {
-            hard_conditions: 60 + Math.floor(Math.random() * 15),
-            skill_match: 65 + Math.floor(Math.random() * 15),
-            industry_exp: 70 + Math.floor(Math.random() * 10),
-            potential: 60 + Math.floor(Math.random() * 15),
-          },
-          tags: i === 0 ? ["创业经验"] : ["小厂经验"],
-          matched_criteria: ["有电商经验"],
-        }));
-        setReport({
-          position_name: "高级产品经理",
-          jd_source: jdUrlRef.current || "模拟JD",
-          total_resumes: resumes.length,
-          screened_resumes: Math.floor(resumes.length * 0.6),
-          strong_recommendations: strongRecs,
-          backup_candidates: backups,
-          screening_criteria: [
-            "经验年限 ≥ 3年",
-            "有电商/SaaS经验",
-            "学历本科以上",
-          ],
-          generated_at: new Date().toLocaleString(),
-        });
-        setCandidates([...strongRecs, ...backups]);
+        const mockReport = generateMockReport(resumes, jdUrlRef.current);
+        setReport(mockReport);
+        setCandidates([...mockReport.strong_recommendations, ...mockReport.backup_candidates]);
         setStep("result");
       }
     } catch (error) {
       console.error("Screening failed:", error);
-      const strongRecs = resumes.slice(0, 2).map((r, i) => ({
-        candidate_name: `候选人${i + 1}`,
-        match_score: 85 - i * 5,
-        level: "strong_recommend",
-        summary: "匹配度高",
-        years_experience: 5 - i,
-        score_breakdown: {
-          hard_conditions: 85 + Math.floor(Math.random() * 10),
-          skill_match: 80 + Math.floor(Math.random() * 15),
-          industry_exp: 75 + Math.floor(Math.random() * 15),
-          potential: 70 + Math.floor(Math.random() * 20),
-        },
-        tags: i === 0 ? ["大厂经验", "管理经验", "SaaS"] : ["海归", "本科985"],
-        matched_criteria: ["经验≥3年", "有SaaS经验", "本科学历"],
-      }));
-      const backups = resumes.slice(2).map((r, i) => ({
-        candidate_name: `备选候选人${i + 1}`,
-        match_score: 70 - i * 3,
-        level: "backup",
-        summary: "基本匹配",
-        years_experience: 3 - i,
-        score_breakdown: {
-          hard_conditions: 60 + Math.floor(Math.random() * 15),
-          skill_match: 65 + Math.floor(Math.random() * 15),
-          industry_exp: 70 + Math.floor(Math.random() * 10),
-          potential: 60 + Math.floor(Math.random() * 15),
-        },
-        tags: i === 0 ? ["创业经验"] : ["小厂经验"],
-        matched_criteria: ["有电商经验"],
-      }));
-      setReport({
-        position_name: "高级产品经理",
-        jd_source: jdUrl || "模拟JD",
-        total_resumes: resumes.length,
-        screened_resumes: Math.floor(resumes.length * 0.6),
-        strong_recommendations: strongRecs,
-        backup_candidates: backups,
-        screening_criteria: [
-          "经验年限 ≥ 3年",
-          "有电商/SaaS经验",
-          "学历本科以上",
-        ],
-        generated_at: new Date().toLocaleString(),
-      });
-      setCandidates([...strongRecs, ...backups]);
+      const mockReport = generateMockReport(resumes, jdUrlRef.current);
+      setReport(mockReport);
+      setCandidates([...mockReport.strong_recommendations, ...mockReport.backup_candidates]);
       setStep("result");
     } finally {
       setLoading(false);
