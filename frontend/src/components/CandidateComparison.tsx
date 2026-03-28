@@ -61,9 +61,12 @@ function CandidateCard({
     >
       <div className="p-4">
         <div className="flex items-center gap-3 mb-3">
-          <span className="w-6 h-6 bg-cyan-500/20 text-cyan-400 rounded-full flex items-center justify-center text-xs font-bold">
+          <motion.span
+            whileHover={{ scale: 1.1, boxShadow: "0 0 10px rgba(34, 211, 238, 0.5)" }}
+            className="w-6 h-6 bg-cyan-500/20 text-cyan-400 rounded-full flex items-center justify-center text-xs font-bold"
+          >
             {rank}
-          </span>
+          </motion.span>
           <div className="flex-1">
             <h4 className="font-semibold text-white">{candidate.candidate_name}</h4>
             {candidate.current_company && (
