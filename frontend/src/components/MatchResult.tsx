@@ -1605,7 +1605,7 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
         >
           <div className="bg-gradient-to-r from-gray-600 to-gray-700 px-6 py-4 flex justify-between items-center">
             <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-              <span>📜</span> 操作日志
+              <span>📜</span> 操作日志 ({activityLog.length})
             </h3>
             <button
               onClick={() => setActivityLog([])}
