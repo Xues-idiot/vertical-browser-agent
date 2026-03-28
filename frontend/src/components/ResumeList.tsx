@@ -218,18 +218,23 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
               </div>
               {resumes[index] && (
                 <div className="flex justify-between items-center mt-1 px-1">
-                  <span className="text-xs text-gray-500">
+                  <motion.span whileHover={{ scale: 1.02 }} className="text-xs text-gray-500 cursor-default">
                     已输入 <span className={resumes[index].length >= 20 ? "text-emerald-400" : "text-amber-400"}>{resumes[index].length}</span> 字符
                     {resumes[index].length < 20 && <span className="text-amber-400">（最少20字符）</span>}
-                  </span>
+                  </motion.span>
                 </div>
               )}
               {/* Resume Preview */}
               {resumes[index] && resumes[index].length > 30 && (() => {
                 const preview = extractResumePreview(resumes[index]);
                 return preview.name || preview.email || preview.phone || preview.education || preview.experience ? (
-                  <div className="mt-2 bg-[#1F2937] rounded p-2 border border-emerald-500/30 shadow-lg shadow-emerald-500/10">
-                    <div className="text-xs text-emerald-400 mb-1">📋 智能提取:</div>
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    whileHover={{ scale: 1.01 }}
+                    className="mt-2 bg-[#1F2937] rounded p-2 border border-emerald-500/30 shadow-lg shadow-emerald-500/10"
+                  >
+                    <motion.div whileHover={{ scale: 1.05 }} className="text-xs text-emerald-400 mb-1 cursor-default">📋 智能提取:</motion.div>
                     <div className="flex flex-wrap gap-2">
                       {preview.name && <motion.span whileHover={{ scale: 1.05 }} className="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded cursor-default">姓名: {preview.name}</motion.span>}
                       {preview.email && <motion.span whileHover={{ scale: 1.05 }} className="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded cursor-default">📧 {preview.email}</motion.span>}
@@ -237,7 +242,7 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
                       {preview.education && <motion.span whileHover={{ scale: 1.05 }} className="text-xs bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded cursor-default">🎓 {preview.education}</motion.span>}
                       {preview.experience && <motion.span whileHover={{ scale: 1.05 }} className="text-xs bg-cyan-500/20 text-cyan-400 px-2 py-0.5 rounded cursor-default">💼 {preview.experience}</motion.span>}
                     </div>
-                  </div>
+                  </motion.div>
                 ) : null;
               })()}
               {errors[index] && (
