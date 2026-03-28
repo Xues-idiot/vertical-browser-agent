@@ -339,6 +339,105 @@ export default function HistoryPage() {
         )}
       </main>
 
+      {/* 历史详情弹窗 */}
+      <AnimatePresence>
+        {selectedId && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setSelectedId(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-[#1F2937] rounded-2xl shadow-2xl max-w-lg w-full max-h-[80vh] overflow-hidden border border-gray-700"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {(() => {
+                const item = history.find(h => h.id === selectedId);
+                if (!item) return null;
+                return (
+                  <>
+                    <div className="bg-gradient-to-r from-cyan-600 to-cyan-700 px-6 py-4 flex justify-between items-center">
+                      <h2 className="text-xl font-bold text-white">{item.position_name}</h2>
+                      <button
+                        onClick={() => setSelectedId(null)}
+                        className="text-cyan-100 hover:text-white transition-colors"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                    <div className="p-6 overflow-y-auto max-h-[60vh]">
+                      <div className="space-y-4">
+                        <div className="flex justify-between items-center p-3 bg-[#111827] rounded-lg">
+                          <span className="text-gray-400">状态</span>
+                          {getStatusBadge(item.status)}
+                        </div>
+                        <div className="flex justify-between items-center p-3 bg-[#111827] rounded-lg">
+                          <span className="text-gray-400">简历总数</span>
+                          <span className="text-white font-medium">{item.total_resumes}份</span>
+                        </div>
+                        <div className="flex justify-between items-center p-3 bg-[#111827] rounded-lg">
+                          <span className="text-gray-400">筛选通过</span>
+                          <span className="text-emerald-400 font-medium">{item.screened_resumes}份</span>
+                        </div>
+                        <div className="flex justify-between items-center p-3 bg-[#111827] rounded-lg">
+                          <span className="text-gray-400">强烈推荐</span>
+                          <span className="text-emerald-400 font-medium">{item.strong_count}份</span>
+                        </div>
+                        <div className="flex justify-between items-center p-3 bg-[#111827] rounded-lg">
+                          <span className="text-gray-400">可备选</span>
+                          <span className="text-amber-400 font-medium">{item.backup_count}份</span>
+                        </div>
+                        <div className="flex justify-between items-center p-3 bg-[#111827] rounded-lg">
+                          <span className="text-gray-400">淘汰</span>
+                          <span className="text-red-400 font-medium">{item.rejected_count}份</span>
+                        </div>
+                        <div className="p-3 bg-[#111827] rounded-lg">
+                          <span className="text-gray-400 text-sm">JD来源</span>
+                          <p className="text-white text-sm mt-1 truncate">{item.jd_source}</p>
+                        </div>
+                        <div className="p-3 bg-[#111827] rounded-lg">
+                          <span className="text-gray-400 text-sm">筛选标准</span>
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {(item.screening_criteria || []).map((c, i) => (
+                              <span key={i} className="bg-cyan-500/20 text-cyan-400 px-2 py-1 rounded-full text-xs">
+                                {c}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="p-3 bg-[#111827] rounded-lg">
+                          <span className="text-gray-400 text-sm">生成时间</span>
+                          <p className="text-white text-sm mt-1">{new Date(item.generated_at).toLocaleString()}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="bg-[#111827] px-6 py-4 border-t border-gray-700 flex gap-3">
+                      <button
+                        onClick={() => handleExport(item)}
+                        className="flex-1 py-2 bg-cyan-600/20 text-cyan-400 border border-cyan-500/30 rounded-lg hover:bg-cyan-600/30 transition-colors text-sm"
+                      >
+                        导出JSON
+                      </button>
+                      <button
+                        onClick={() => setSelectedId(null)}
+                        className="flex-1 py-2 bg-gray-600/20 text-gray-400 border border-gray-500/30 rounded-lg hover:bg-gray-600/30 transition-colors text-sm"
+                      >
+                        关闭
+                      </button>
+                    </div>
+                  </>
+                );
+              })()}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Footer */}
       <footer className="bg-[#1F2937]/50 border-t border-gray-700 mt-auto">
         <div className="max-w-7xl mx-auto px-4 py-6">
