@@ -162,18 +162,33 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
                 JD内容
               </label>
               {jdText && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    navigator.clipboard.writeText(jdText);
-                  }}
-                  className="text-xs text-gray-400 hover:text-cyan-400 transition-colors flex items-center gap-1"
-                >
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                  </svg>
-                  复制
-                </button>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(jdText);
+                    }}
+                    className="text-xs text-gray-400 hover:text-cyan-400 transition-colors flex items-center gap-1"
+                  >
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    复制
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setJdText("");
+                      setError(null);
+                    }}
+                    className="text-xs text-gray-400 hover:text-red-400 transition-colors flex items-center gap-1"
+                  >
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    清除
+                  </button>
+                </div>
               )}
             </div>
             <textarea
