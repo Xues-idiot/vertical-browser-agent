@@ -325,6 +325,7 @@ function CandidateDetailModal({
                     initial={{ width: 0 }}
                     animate={{ width: `${candidate.match_score}%` }}
                     transition={{ duration: 0.8 }}
+                    whileHover={{ boxShadow: "0 0 12px rgba(34, 211, 238, 0.5)", scaleY: 1.2 }}
                     className={`h-full rounded-full ${
                       candidate.match_score >= 80
                         ? "bg-emerald-500"
