@@ -159,7 +159,7 @@ export default function PipelineFunnel({ candidates, totalResumes }: PipelineFun
                         initial={{ width: 0 }}
                         animate={{ width: `${Math.max(percentage, 8)}%` }}
                         transition={{ duration: 0.8, delay: index * 0.1 + 0.2, ease: "easeOut" }}
-                        className={`h-full ${stage.bgColor} rounded-lg flex items-center justify-end pr-3`}
+                        className={`h-full ${stage.bgColor} rounded-lg flex items-center justify-end pr-3 shadow-lg`}
                         style={{ minWidth: "40px" }}
                       >
                         <span className="text-white font-bold text-sm">
