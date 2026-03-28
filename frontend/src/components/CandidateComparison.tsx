@@ -112,14 +112,21 @@ function ComparisonTable({
           <tr className="border-b border-gray-700">
             <th className="text-left py-3 px-4 text-sm font-semibold text-gray-400">维度</th>
             {candidates.map((c) => (
-              <th key={c.candidate_name} className="text-left py-3 px-4 text-sm font-semibold text-white min-w-[150px]">
+              <motion.th
+                key={c.candidate_name}
+                whileHover={{ backgroundColor: "rgba(55, 65, 81, 0.3)" }}
+                className="text-left py-3 px-4 text-sm font-semibold text-white min-w-[150px]"
+              >
                 {c.candidate_name}
-              </th>
+              </motion.th>
             ))}
           </tr>
         </thead>
         <tbody>
-          <tr className="border-b border-gray-700/50">
+          <motion.tr
+            whileHover={{ backgroundColor: "rgba(55, 65, 81, 0.2)" }}
+            className="border-b border-gray-700/50 cursor-default"
+          >
             <td className="py-3 px-4 text-sm text-gray-400">匹配分</td>
             {candidates.map((c) => (
               <td key={c.candidate_name} className="py-3 px-4">
@@ -128,8 +135,11 @@ function ComparisonTable({
                 </span>
               </td>
             ))}
-          </tr>
-          <tr className="border-b border-gray-700/50">
+          </motion.tr>
+          <motion.tr
+            whileHover={{ backgroundColor: "rgba(55, 65, 81, 0.2)" }}
+            className="border-b border-gray-700/50 cursor-default"
+          >
             <td className="py-3 px-4 text-sm text-gray-400">推荐等级</td>
             {candidates.map((c) => (
               <td key={c.candidate_name} className="py-3 px-4">
@@ -142,31 +152,40 @@ function ComparisonTable({
                 </span>
               </td>
             ))}
-          </tr>
-          <tr className="border-b border-gray-700/50">
+          </motion.tr>
+          <motion.tr
+            whileHover={{ backgroundColor: "rgba(55, 65, 81, 0.2)" }}
+            className="border-b border-gray-700/50 cursor-default"
+          >
             <td className="py-3 px-4 text-sm text-gray-400">当前公司</td>
             {candidates.map((c) => (
               <td key={c.candidate_name} className="py-3 px-4 text-sm text-gray-300">
                 {c.current_company || "-"}
               </td>
             ))}
-          </tr>
-          <tr className="border-b border-gray-700/50">
+          </motion.tr>
+          <motion.tr
+            whileHover={{ backgroundColor: "rgba(55, 65, 81, 0.2)" }}
+            className="border-b border-gray-700/50 cursor-default"
+          >
             <td className="py-3 px-4 text-sm text-gray-400">工作年限</td>
             {candidates.map((c) => (
               <td key={c.candidate_name} className="py-3 px-4 text-sm text-gray-300">
                 {c.years_experience ? `${c.years_experience}年` : "-"}
               </td>
             ))}
-          </tr>
-          <tr className="border-b border-gray-700/50">
+          </motion.tr>
+          <motion.tr
+            whileHover={{ backgroundColor: "rgba(55, 65, 81, 0.2)" }}
+            className="border-b border-gray-700/50 cursor-default"
+          >
             <td className="py-3 px-4 text-sm text-gray-400">匹配摘要</td>
             {candidates.map((c) => (
               <td key={c.candidate_name} className="py-3 px-4 text-sm text-gray-300">
                 {c.summary}
               </td>
             ))}
-          </tr>
+          </motion.tr>
         </tbody>
       </table>
     </div>
@@ -295,14 +314,16 @@ export default function CandidateComparison({
           <div className="flex items-center gap-3">
             {selectedCandidates.length >= 2 && (
               <>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={handleCopyReport}
                   className={`px-3 py-1.5 text-white text-sm rounded-lg transition-colors flex items-center gap-1 ${
                     copied ? "bg-emerald-500/40" : "bg-cyan-500/40 hover:bg-cyan-500/50"
                   }`}
                 >
                   {copied ? "✅ 已复制" : "📄 复制报告"}
-                </button>
+                </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -391,7 +412,11 @@ export default function CandidateComparison({
                   </h4>
                   <div className="space-y-4">
                     {selectedCandidates.map((c) => (
-                      <div key={c.candidate_name} className="flex items-center gap-4">
+                      <motion.div
+                        key={c.candidate_name}
+                        whileHover={{ scale: 1.01 }}
+                        className="flex items-center gap-4"
+                      >
                         <span className="w-24 text-sm text-gray-300 truncate">
                           {c.candidate_name}
                         </span>
@@ -400,6 +425,7 @@ export default function CandidateComparison({
                             initial={{ width: 0 }}
                             animate={{ width: `${c.match_score}%` }}
                             transition={{ duration: 0.8, ease: "easeOut" }}
+                            whileHover={{ boxShadow: "0 0 10px rgba(34, 211, 238, 0.5)" }}
                             className={`h-full rounded-full shadow-lg ${
                               c.match_score >= 80
                                 ? "bg-emerald-500 shadow-emerald-500/30"
@@ -412,7 +438,7 @@ export default function CandidateComparison({
                         <span className={`w-12 text-right text-sm font-bold ${getScoreColor(c.match_score)}`}>
                           {c.match_score}%
                         </span>
-                      </div>
+                      </motion.div>
                     ))}
                   </div>
                 </div>
