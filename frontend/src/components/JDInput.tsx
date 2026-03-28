@@ -4,6 +4,17 @@ import { useState, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 import { validateUrl, validateJDText } from "@/lib/validation";
 
+/* ============================================
+   JDINPUT COMPONENT
+   ============================================
+
+   Design System Applied:
+   - Card: Elevated surface with border
+   - Primary Color: Cyan (#0891B2)
+   - Typography: DM Sans (body)
+   - Motion: Scale on hover, smooth transitions
+   ============================================ */
+
 interface JDInputProps {
   onSubmit: (jdUrl: string, jdText?: string) => void;
   loading?: boolean;
@@ -14,7 +25,6 @@ function extractJDPreview(text: string): { skills: string[]; requirements: strin
   const skills: string[] = [];
   const requirements: string[] = [];
 
-  // Common skill keywords to look for
   const skillKeywords = [
     "Python", "Java", "JavaScript", "TypeScript", "React", "Vue", "Angular", "Node.js",
     "SQL", "MongoDB", "Redis", "Docker", "Kubernetes", "AWS", "GCP", "Azure",
@@ -24,14 +34,12 @@ function extractJDPreview(text: string): { skills: string[]; requirements: strin
     "SaaS", "B2B", "B2C", "E-commerce", "Fintech", "Blockchain",
   ];
 
-  // Extract skills
   skillKeywords.forEach(skill => {
     if (text.toLowerCase().includes(skill.toLowerCase())) {
       skills.push(skill);
     }
   });
 
-  // Extract requirements patterns
   const experienceMatch = text.match(/(\d+[\+]?\s*年|\d+[\+]?\s*years?)\s*(以上?|以上|以下|以下|-)/i);
   if (experienceMatch) {
     requirements.push(`经验要求: ${experienceMatch[0]}`);
@@ -42,7 +50,6 @@ function extractJDPreview(text: string): { skills: string[]; requirements: strin
     requirements.push(degreeMatch[0].slice(0, 30));
   }
 
-  // Extract salary if present
   const salaryMatch = text.match(/(薪资?| salary)[^。]*(\d+[kK]?[-\s]?\d*[kK]?|\d+[万¥$])/i);
   if (salaryMatch) {
     requirements.push(`薪资: ${salaryMatch[0].slice(0, 20)}`);
@@ -53,12 +60,11 @@ function extractJDPreview(text: string): { skills: string[]; requirements: strin
 
 export default function JDInput({ onSubmit, loading }: JDInputProps) {
   const [jdUrl, setJdUrl] = useState("");
-  const [jdText, setJdText] = useState(""); // JD文本内容
-  const [inputMode, setInputMode] = useState<"url" | "text">("url"); // 输入模式
+  const [jdText, setJdText] = useState("");
+  const [inputMode, setInputMode] = useState<"url" | "text">("url");
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  // Compute JD preview when text changes
   const jdPreview = useMemo(() => {
     if (inputMode !== "text" || jdText.length < 20) return null;
     return extractJDPreview(jdText);
@@ -68,7 +74,6 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
     e.preventDefault();
     setError(null);
 
-    // 验证
     if (inputMode === "text") {
       const textValidation = validateJDText(jdText);
       if (!textValidation.valid) {
@@ -91,36 +96,43 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-[#1F2937] rounded-xl shadow-lg p-6 border border-gray-700"
+      className="bg-[#1f2937] rounded-2xl shadow-xl p-6 border border-[#334155] hover:border-[#475569] transition-all"
     >
-      <div className="flex items-center gap-3 mb-4">
+      {/* Header */}
+      <div className="flex items-center gap-3 mb-6">
         <motion.div
           whileHover={{ scale: 1.1, rotate: 5 }}
-          className="w-10 h-10 bg-cyan-500/20 rounded-lg flex items-center justify-center text-xl border border-cyan-500/30"
+          className="w-12 h-12 bg-[#0891b2]/20 rounded-xl flex items-center justify-center text-xl border border-[#0891b2]/30"
         >
           📋
         </motion.div>
         <div>
-          <motion.h2 whileHover={{ scale: 1.02 }} className="text-lg font-semibold text-white cursor-default">
+          <motion.h2
+            whileHover={{ scale: 1.02 }}
+            className="text-lg font-display font-semibold text-[#f8fafc]"
+          >
             输入职位JD
           </motion.h2>
-          <motion.p whileHover={{ scale: 1.02 }} className="text-sm text-gray-400 cursor-default">
+          <motion.p
+            whileHover={{ scale: 1.02 }}
+            className="text-sm text-[#94a3b8]"
+          >
             {inputMode === "url" ? "粘贴招聘平台JD链接" : "填写JD内容"}
           </motion.p>
         </div>
       </div>
 
-      {/* 模式切换 */}
-      <div className="flex gap-2 mb-4">
+      {/* Mode Toggle */}
+      <div className="flex gap-2 mb-6">
         <motion.button
           type="button"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setInputMode("url")}
-          className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+          className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
             inputMode === "url"
-              ? "bg-cyan-600 text-white"
-              : "bg-[#111827] text-gray-400 border border-gray-700 hover:border-cyan-500"
+              ? "bg-[#0891b2] text-white shadow-lg shadow-[#0891b2]/20"
+              : "bg-[#1f2937] text-[#94a3b8] border border-[#334155] hover:border-[#0891b2]"
           }`}
         >
           🔗 URL模式
@@ -130,40 +142,53 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setInputMode("text")}
-          className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+          className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
             inputMode === "text"
-              ? "bg-cyan-600 text-white"
-              : "bg-[#111827] text-gray-400 border border-gray-700 hover:border-cyan-500"
+              ? "bg-[#0891b2] text-white shadow-lg shadow-[#0891b2]/20"
+              : "bg-[#1f2937] text-[#94a3b8] border border-[#334155] hover:border-[#0891b2]"
           }`}
         >
           📝 文本模式
         </motion.button>
       </div>
 
+      {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
-          <div className="bg-red-500/20 border border-red-500/30 rounded-lg px-4 py-2 text-red-400 text-sm">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-[#ef4444]/10 border border-[#ef4444]/30 rounded-xl px-4 py-3 text-[#f87171] text-sm"
+          >
             {error}
-          </div>
+          </motion.div>
         )}
+
         {inputMode === "url" ? (
           <div>
-            <motion.label whileHover={{ scale: 1.02 }} className="block text-sm font-medium text-gray-300 mb-2 cursor-default">
+            <motion.label
+              whileHover={{ scale: 1.02 }}
+              className="block text-sm font-medium text-[#94a3b8] mb-2"
+            >
               JD链接
             </motion.label>
             <input
               type="text"
               value={jdUrl}
               onChange={(e) => { setJdUrl(e.target.value); setError(null); }}
-              placeholder="https://www.zhipin.com/job/... / https://www.lagou.com/jobs/... / https://www.boss.com/..."
-              className="w-full px-4 py-3 border border-gray-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition bg-[#111827] text-white placeholder-gray-500"
+              placeholder="https://www.zhipin.com/job/... / https://www.lagou.com/jobs/..."
+              className="w-full px-4 py-3 bg-[#0a0f1a] border border-[#334155] rounded-xl text-[#f8fafc] placeholder-[#64748b] focus:outline-none focus:border-[#0891b2] focus:shadow-[0_0_0_3px_rgba(6,182,212,0.2)] transition-all"
               disabled={loading}
             />
           </div>
         ) : (
           <div>
+            {/* Textarea Header */}
             <div className="flex items-center justify-between mb-2">
-              <motion.label whileHover={{ scale: 1.02 }} className="text-sm font-medium text-gray-300 cursor-default">
+              <motion.label
+                whileHover={{ scale: 1.02 }}
+                className="text-sm font-medium text-[#94a3b8]"
+              >
                 JD内容
               </motion.label>
               {jdText && (
@@ -178,7 +203,7 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
                       setTimeout(() => setCopied(false), 2000);
                     }}
                     className={`text-xs transition-colors flex items-center gap-1 ${
-                      copied ? "text-emerald-400" : "text-gray-400 hover:text-cyan-400"
+                      copied ? "text-[#10b981]" : "text-[#94a3b8] hover:text-[#22d3ee]"
                     }`}
                   >
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -194,7 +219,7 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
                       setJdText("");
                       setError(null);
                     }}
-                    className="text-xs text-gray-400 hover:text-red-400 transition-colors flex items-center gap-1"
+                    className="text-xs text-[#94a3b8] hover:text-[#ef4444] transition-colors flex items-center gap-1"
                   >
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -204,44 +229,61 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
                 </div>
               )}
             </div>
+
             <textarea
               value={jdText}
               onChange={(e) => { setJdText(e.target.value); setError(null); }}
               placeholder="粘贴职位描述..."
-              className="w-full px-4 py-3 border border-gray-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition bg-[#111827] text-white placeholder-gray-500 resize-none"
+              className="w-full px-4 py-3 bg-[#0a0f1a] border border-[#334155] rounded-xl text-[#f8fafc] placeholder-[#64748b] focus:outline-none focus:border-[#0891b2] focus:shadow-[0_0_0_3px_rgba(6,182,212,0.2)] resize-none transition-all"
               rows={6}
               disabled={loading}
             />
-            <div className="flex justify-between items-center mt-1">
-              <motion.span whileHover={{ scale: 1.02 }} className="text-xs text-gray-500 cursor-default">
+
+            {/* Character Count */}
+            <div className="flex justify-between items-center mt-2">
+              <motion.span
+                whileHover={{ scale: 1.02 }}
+                className="text-xs text-[#64748b] cursor-default"
+              >
                 {jdText.length > 0 && (
                   <>
-                    已输入 <span className={jdText.length >= 50 ? "text-cyan-400" : "text-amber-400"}>{jdText.length}</span> 字符
-                    {jdText.length < 50 && <span className="text-amber-400">（最少50字符）</span>}
+                    已输入 <span className={jdText.length >= 50 ? "text-[#22d3ee]" : "text-[#f59e0b]"}>{jdText.length}</span> 字符
+                    {jdText.length < 50 && <span className="text-[#f59e0b]">（最少50字符）</span>}
                   </>
                 )}
               </motion.span>
             </div>
+
             {/* JD Preview */}
             {jdPreview && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 whileHover={{ scale: 1.01 }}
-                className="mt-3 bg-[#111827] rounded-lg p-3 border border-cyan-500/30 shadow-lg shadow-cyan-500/10"
+                className="mt-4 bg-[#0a0f1a] rounded-xl p-4 border border-[#0891b2]/30 shadow-lg shadow-[#0891b2]/10"
               >
-                <motion.div whileHover={{ scale: 1.05 }} className="text-xs text-cyan-400 mb-2 flex items-center gap-1 cursor-default">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className="text-xs text-[#22d3ee] mb-3 flex items-center gap-2 cursor-default"
+                >
                   <span>🔍</span> JD智能解析预览
                 </motion.div>
+
+                {/* Skills */}
                 {jdPreview.skills.length > 0 && (
-                  <div className="mb-2">
-                    <motion.span whileHover={{ scale: 1.05 }} className="text-xs text-gray-500 cursor-default">识别技能: </motion.span>
-                    <div className="flex flex-wrap gap-1 mt-1">
+                  <div className="mb-3">
+                    <motion.span
+                      whileHover={{ scale: 1.05 }}
+                      className="text-xs text-[#64748b] cursor-default"
+                    >
+                      识别技能:
+                    </motion.span>
+                    <div className="flex flex-wrap gap-2 mt-2">
                       {jdPreview.skills.map(skill => (
                         <motion.span
                           key={skill}
-                          whileHover={{ scale: 1.05 }}
-                          className="bg-cyan-500/20 text-cyan-400 px-2 py-0.5 rounded text-xs cursor-default"
+                          whileHover={{ scale: 1.05, boxShadow: "0 0 8px rgba(34, 211, 238, 0.4)" }}
+                          className="bg-[#0891b2]/20 text-[#22d3ee] px-3 py-1 rounded-full text-xs cursor-default border border-[#0891b2]/30"
                         >
                           {skill}
                         </motion.span>
@@ -249,17 +291,24 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
                     </div>
                   </div>
                 )}
+
+                {/* Requirements */}
                 {jdPreview.requirements.length > 0 && (
                   <div>
-                    <motion.span whileHover={{ scale: 1.05 }} className="text-xs text-gray-500 cursor-default">关键要求: </motion.span>
-                    <ul className="mt-1 space-y-1">
+                    <motion.span
+                      whileHover={{ scale: 1.05 }}
+                      className="text-xs text-[#64748b] cursor-default"
+                    >
+                      关键要求:
+                    </motion.span>
+                    <ul className="mt-2 space-y-1">
                       {jdPreview.requirements.map((req, i) => (
                         <motion.li
                           key={i}
                           whileHover={{ x: 4, color: "#22d3ee" }}
-                          className="text-xs text-gray-300 flex items-center gap-1 cursor-default"
+                          className="text-xs text-[#94a3b8] flex items-center gap-2 cursor-default"
                         >
-                          <span className="w-1 h-1 bg-cyan-400 rounded-full" />
+                          <span className="w-1.5 h-1.5 bg-[#0891b2] rounded-full" />
                           {req}
                         </motion.li>
                       ))}
@@ -270,12 +319,14 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
             )}
           </div>
         )}
+
+        {/* Submit Button */}
         <motion.button
           type="submit"
           disabled={loading || (inputMode === "url" ? !jdUrl.trim() : !jdText.trim())}
-          whileHover={{ scale: loading ? 1 : 1.02, boxShadow: "0 6px 20px rgba(34, 211, 238, 0.4)" }}
+          whileHover={{ scale: loading ? 1 : 1.02, boxShadow: "0 8px 30px rgba(6, 182, 212, 0.4)" }}
           whileTap={{ scale: loading ? 1 : 0.98 }}
-          className="w-full bg-gradient-to-r from-cyan-600 to-cyan-700 text-white py-3 px-4 rounded-lg disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed transition font-medium shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2"
+          className="w-full bg-gradient-to-r from-[#0891b2] to-[#0e7490] text-white py-4 px-4 rounded-xl font-medium shadow-lg shadow-[#0891b2]/20 disabled:from-[#334155] disabled:to-[#1f2937] disabled:cursor-not-allowed disabled:shadow-none transition-all flex items-center justify-center gap-2"
         >
           {loading ? (
             <motion.span

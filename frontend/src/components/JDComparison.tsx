@@ -3,6 +3,16 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+/* ============================================
+   JDCOMPARISON COMPONENT
+   ============================================
+
+   Design System Applied:
+   - Card: Dark elevated surface
+   - Colors: Cyan (#0891B2), Amber (#f59e0b), Emerald (#10b981), Purple (#7c3aed)
+   - Motion: Scale on hover, staggered animations
+   ============================================ */
+
 interface Candidate {
   candidate_name: string;
   match_score: number;
@@ -38,15 +48,15 @@ function JDComparisonTable({
   jds: JDItem[];
 }) {
   const getScoreColor = (score: number) => {
-    if (score >= 80) return "text-emerald-400";
-    if (score >= 60) return "text-amber-400";
-    return "text-red-400";
+    if (score >= 80) return "text-[#34d399]";
+    if (score >= 60) return "text-[#fbbf24]";
+    return "text-[#f87171]";
   };
 
   const getScoreBg = (score: number) => {
-    if (score >= 80) return "bg-emerald-500";
-    if (score >= 60) return "bg-amber-500";
-    return "bg-red-500";
+    if (score >= 80) return "bg-[#10b981]";
+    if (score >= 60) return "bg-[#f59e0b]";
+    return "bg-[#ef4444]";
   };
 
   // Simulate different scores for different JDs
@@ -60,20 +70,20 @@ function JDComparisonTable({
     <div className="overflow-x-auto">
       <table className="w-full">
         <thead>
-          <tr className="border-b border-gray-700">
-            <th className="text-left py-3 px-4 text-sm font-semibold text-gray-400 sticky left-0 bg-[#1F2937] z-10">
+          <tr className="border-b border-[#334155]">
+            <th className="text-left py-3 px-4 text-sm font-semibold text-[#94a3b8] sticky left-0 bg-[#0a0f1a] z-10">
               候选人
             </th>
             {jds.map((jd) => (
               <th
                 key={jd.id}
-                className="text-left py-3 px-4 text-sm font-semibold text-white min-w-[120px]"
+                className="text-left py-3 px-4 text-sm font-semibold text-[#f8fafc] min-w-[120px]"
               >
                 <div className="flex items-center gap-2">
-                  <motion.span whileHover={{ scale: 1.3 }} className="w-2 h-2 bg-cyan-500 rounded-full shadow-lg shadow-cyan-500/40" />
+                  <motion.span whileHover={{ scale: 1.3 }} className="w-2 h-2 bg-[#0891b2] rounded-full shadow-lg shadow-[#0891b2]/40 cursor-default" />
                   {jd.name}
                 </div>
-                <p className="text-xs text-gray-400 font-normal mt-1">
+                <p className="text-xs text-[#64748b] font-normal mt-1">
                   {jd.criteria.slice(0, 2).join(", ")}
                   {jd.criteria.length > 2 && "..."}
                 </p>
@@ -86,11 +96,11 @@ function JDComparisonTable({
             <motion.tr
               key={cIndex}
               whileHover={{ backgroundColor: "rgba(55, 65, 81, 0.3)" }}
-              className="border-b border-gray-700/50 cursor-pointer"
+              className="border-b border-[#334155]/50 cursor-pointer"
             >
-              <td className="py-4 px-4 sticky left-0 bg-[#111827] z-10">
-                <div className="font-medium text-white">{candidate.candidate_name}</div>
-                <div className="text-xs text-gray-400">
+              <td className="py-4 px-4 sticky left-0 bg-[#0a0f1a] z-10">
+                <div className="font-medium text-[#f8fafc]">{candidate.candidate_name}</div>
+                <div className="text-xs text-[#64748b]">
                   {candidate.current_company || "未知公司"}
                 </div>
               </td>
@@ -99,7 +109,7 @@ function JDComparisonTable({
                 return (
                   <td key={jd.id} className="py-4 px-4">
                     <div className="flex items-center gap-3">
-                      <div className="flex-1 bg-gray-700 rounded-full h-2 max-w-[100px] overflow-hidden">
+                      <div className="flex-1 bg-[#334155] rounded-full h-2 max-w-[100px] overflow-hidden">
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${score}%` }}
@@ -116,12 +126,12 @@ function JDComparisonTable({
                       {candidate.score_breakdown && (
                         <>
                           {candidate.score_breakdown.hard_conditions !== undefined && (
-                            <motion.span whileHover={{ scale: 1.1 }} className="text-xs text-gray-500 cursor-default">
+                            <motion.span whileHover={{ scale: 1.1 }} className="text-xs text-[#64748b] cursor-default">
                               硬{candidate.score_breakdown.hard_conditions}
                             </motion.span>
                           )}
                           {candidate.score_breakdown.skill_match !== undefined && (
-                            <motion.span whileHover={{ scale: 1.1 }} className="text-xs text-gray-500 cursor-default">
+                            <motion.span whileHover={{ scale: 1.1 }} className="text-xs text-[#64748b] cursor-default">
                               技{candidate.score_breakdown.skill_match}
                             </motion.span>
                           )}
@@ -160,9 +170,9 @@ export default function JDComparison({
   const [copied, setCopied] = useState(false);
 
   const getScoreColor = useCallback((score: number) => {
-    if (score >= 80) return "text-emerald-400";
-    if (score >= 60) return "text-amber-400";
-    return "text-red-400";
+    if (score >= 80) return "text-[#34d399]";
+    if (score >= 60) return "text-[#fbbf24]";
+    return "text-[#f87171]";
   }, []);
 
   const addJD = useCallback(() => {
@@ -195,17 +205,25 @@ export default function JDComparison({
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="bg-[#1F2937] rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden border border-gray-700"
+        className="bg-[#1f2937] rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden border border-[#334155]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-purple-700 px-6 py-4">
+        <div className="bg-gradient-to-r from-[#7c3aed] to-[#6d28d9] px-6 py-4">
           <div className="flex justify-between items-center">
             <div>
-              <h2 className="text-xl font-bold text-white">JD对比分析</h2>
-              <p className="text-purple-100 text-sm mt-1">
+              <motion.h2
+                whileHover={{ scale: 1.02 }}
+                className="text-xl font-bold text-white cursor-default"
+              >
+                JD对比分析
+              </motion.h2>
+              <motion.p
+                whileHover={{ scale: 1.02 }}
+                className="text-[#ddd6fe] text-sm mt-1 cursor-default"
+              >
                 对比候选人在不同职位下的适配度
-              </p>
+              </motion.p>
             </div>
             <div className="flex items-center gap-3">
               <motion.button
@@ -228,16 +246,16 @@ export default function JDComparison({
                   setTimeout(() => setCopied(false), 2000);
                 }}
                 className={`px-3 py-1.5 text-white text-sm rounded-lg transition-colors ${
-                  copied ? "bg-emerald-500/40" : "bg-white/20 hover:bg-white/30"
+                  copied ? "bg-[#10b981]/40" : "bg-white/20 hover:bg-white/30"
                 }`}
               >
-                {copied ? "✅ 已复制" : "📋 Markdown"}
+                {copied ? "已复制" : "Markdown"}
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.2, rotate: 90 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={onClose}
-                className="text-purple-100 hover:text-white transition-colors"
+                className="text-[#ddd6fe] hover:text-white transition-colors"
               >
                 ✕
               </motion.button>
@@ -248,24 +266,27 @@ export default function JDComparison({
         <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
           {/* JD List Management */}
           <div className="mb-6">
-            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
+            <motion.h3
+              whileHover={{ scale: 1.02 }}
+              className="text-sm font-semibold text-[#94a3b8] uppercase tracking-wider mb-3 cursor-default"
+            >
               职位列表 ({jds.length}/5)
-            </h3>
+            </motion.h3>
             <div className="flex flex-wrap gap-2 mb-3">
               {jds.map((jd) => (
                 <motion.div
                   key={jd.id}
                   whileHover={{ scale: 1.02, borderColor: "rgba(34, 211, 238, 0.5)" }}
-                  className="flex items-center gap-2 bg-[#111827] border border-gray-700 rounded-lg px-3 py-2"
+                  className="flex items-center gap-2 bg-[#0a0f1a] border border-[#334155] rounded-lg px-3 py-2"
                 >
-                  <span className="w-2 h-2 bg-cyan-500 rounded-full" />
-                  <span className="text-sm text-white">{jd.name}</span>
+                  <span className="w-2 h-2 bg-[#0891b2] rounded-full" />
+                  <span className="text-sm text-[#f8fafc]">{jd.name}</span>
                   {jds.length > 1 && (
                     <motion.button
                       whileHover={{ scale: 1.2 }}
                       whileTap={{ scale: 0.9 }}
                       onClick={() => removeJD(jd.id)}
-                      className="text-gray-500 hover:text-red-400 transition-colors ml-1"
+                      className="text-[#64748b] hover:text-[#ef4444] transition-colors ml-1"
                     >
                       ×
                     </motion.button>
@@ -281,30 +302,33 @@ export default function JDComparison({
                   onChange={(e) => setNewJDName(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && addJD()}
                   placeholder="输入新职位名称..."
-                  className="flex-1 bg-[#111827] border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:border-cyan-500"
+                  className="flex-1 bg-[#0a0f1a] border border-[#334155] rounded-lg px-3 py-2 text-sm text-[#f8fafc] placeholder-[#64748b] focus:outline-none focus:border-[#0891b2]"
                 />
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={addJD}
-                  className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors text-sm"
+                  className="px-4 py-2 bg-[#0891b2] text-white rounded-lg hover:bg-[#0e7490] transition-colors text-sm"
                 >
                   添加JD
                 </motion.button>
               </div>
             ) : (
-              <div className="text-xs text-gray-500 bg-[#111827] rounded-lg px-3 py-2 border border-gray-700">
+              <div className="text-xs text-[#64748b] bg-[#0a0f1a] rounded-lg px-3 py-2 border border-[#334155]">
                 已达到最大职位数量（5个），如需添加请先删除现有职位
               </div>
             )}
           </div>
 
           {/* Comparison Table */}
-          <div className="bg-[#111827] rounded-xl border border-gray-700 overflow-hidden">
-            <div className="bg-gradient-to-r from-gray-600 to-gray-700 px-6 py-3">
-              <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-                <span>📊</span> 适配度对比表 ({candidates.length}人)
-              </h3>
+          <div className="bg-[#0a0f1a] rounded-xl border border-[#334155] overflow-hidden">
+            <div className="bg-gradient-to-r from-[#475569] to-[#334155] px-6 py-3">
+              <motion.h3
+                whileHover={{ scale: 1.02 }}
+                className="text-sm font-semibold text-[#f8fafc] flex items-center gap-2 cursor-default"
+              >
+                适配度对比表 ({candidates.length}人)
+              </motion.h3>
             </div>
             <JDComparisonTable candidates={candidates} jds={jds} />
           </div>
@@ -315,15 +339,15 @@ export default function JDComparison({
               <motion.div
                 key={i}
                 whileHover={{ scale: 1.03, borderColor: "rgba(34, 211, 238, 0.4)" }}
-                className="bg-[#111827] rounded-lg p-4 border border-gray-700 cursor-default"
+                className="bg-[#0a0f1a] rounded-lg p-4 border border-[#334155] cursor-default"
               >
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="w-6 h-6 bg-cyan-500/20 text-cyan-400 rounded-full flex items-center justify-center text-xs font-bold">
+                  <span className="w-6 h-6 bg-[#0891b2]/20 text-[#22d3ee] rounded-full flex items-center justify-center text-xs font-bold">
                     {i + 1}
                   </span>
-                  <span className="font-medium text-white">{c.candidate_name}</span>
+                  <span className="font-medium text-[#f8fafc]">{c.candidate_name}</span>
                 </div>
-                <div className="text-xs text-gray-400">
+                <div className="text-xs text-[#64748b]">
                   最高适配:{" "}
                   <span className={getScoreColor(c.match_score)}>
                     {c.match_score}%

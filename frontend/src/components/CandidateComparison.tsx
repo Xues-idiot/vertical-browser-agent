@@ -3,6 +3,16 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+/* ============================================
+   CANDIDATECOMPARISON COMPONENT
+   ============================================
+
+   Design System Applied:
+   - Card: Dark elevated surface
+   - Colors: Cyan (#0891B2), Amber (#f59e0b), Emerald (#10b981), Purple (#7c3aed)
+   - Motion: Scale on hover, staggered animations
+   ============================================ */
+
 interface Candidate {
   candidate_name: string;
   match_score: number;
@@ -38,15 +48,15 @@ function CandidateCard({
   rank: number;
 }) {
   const getScoreColor = (score: number) => {
-    if (score >= 80) return "text-emerald-400";
-    if (score >= 60) return "text-amber-400";
-    return "text-red-400";
+    if (score >= 80) return "text-[#34d399]";
+    if (score >= 60) return "text-[#fbbf24]";
+    return "text-[#f87171]";
   };
 
   const getScoreBg = (score: number) => {
-    if (score >= 80) return "from-emerald-500/20 to-emerald-600/10";
-    if (score >= 60) return "from-amber-500/20 to-amber-600/10";
-    return "from-red-500/20 to-red-600/10";
+    if (score >= 80) return "from-[#10b981]/20 to-[#10b981]/10";
+    if (score >= 60) return "from-[#f59e0b]/20 to-[#f59e0b]/10";
+    return "from-[#ef4444]/20 to-[#ef4444]/10";
   };
 
   return (
@@ -55,39 +65,39 @@ function CandidateCard({
       onClick={onClick}
       className={`cursor-pointer rounded-xl border-2 transition-all ${
         isSelected
-          ? "border-cyan-500 bg-cyan-500/10"
-          : "border-gray-700 bg-[#111827] hover:border-gray-500"
+          ? "border-[#0891b2] bg-[#0891b2]/10"
+          : "border-[#334155] bg-[#0a0f1a] hover:border-[#475569]"
       }`}
     >
       <div className="p-4">
         <div className="flex items-center gap-3 mb-3">
           <motion.span
             whileHover={{ scale: 1.1, boxShadow: "0 0 10px rgba(34, 211, 238, 0.5)" }}
-            className="w-6 h-6 bg-cyan-500/20 text-cyan-400 rounded-full flex items-center justify-center text-xs font-bold"
+            className="w-6 h-6 bg-[#0891b2]/20 text-[#22d3ee] rounded-full flex items-center justify-center text-xs font-bold"
           >
             {rank}
           </motion.span>
           <div className="flex-1">
-            <h4 className="font-semibold text-white">{candidate.candidate_name}</h4>
+            <h4 className="font-semibold text-[#f8fafc]">{candidate.candidate_name}</h4>
             {candidate.current_company && (
-              <p className="text-xs text-gray-400">{candidate.current_company}</p>
+              <p className="text-xs text-[#64748b]">{candidate.current_company}</p>
             )}
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <motion.div whileHover={{ scale: 1.05 }} className={`px-3 py-1.5 rounded-lg bg-gradient-to-br ${getScoreBg(candidate.match_score)} border border-gray-700 shadow-lg`}>
+          <motion.div whileHover={{ scale: 1.05 }} className={`px-3 py-1.5 rounded-lg bg-gradient-to-br ${getScoreBg(candidate.match_score)} border border-[#334155] shadow-lg`}>
             <span className={`text-xl font-bold ${getScoreColor(candidate.match_score)}`}>
               {candidate.match_score}
             </span>
-            <span className="text-xs text-gray-400 ml-1">分</span>
+            <span className="text-xs text-[#64748b] ml-1">分</span>
           </motion.div>
           <motion.span whileHover={{ scale: 1.1 }} className={`text-xs px-2 py-1 rounded-full ${
             candidate.level === "strong_recommend"
-              ? "bg-emerald-500/20 text-emerald-400"
-              : "bg-amber-500/20 text-amber-400"
+              ? "bg-[#10b981]/20 text-[#34d399]"
+              : "bg-[#f59e0b]/20 text-[#fbbf24]"
           }`}>
-            {candidate.level === "strong_recommend" ? "⭐强烈推荐" : "🟡可备选"}
+            {candidate.level === "strong_recommend" ? "强烈推荐" : "可备选"}
           </motion.span>
         </div>
       </div>
@@ -103,22 +113,22 @@ function ComparisonTable({
   criteria: string[];
 }) {
   const getScoreColor = (score: number) => {
-    if (score >= 80) return "text-emerald-400";
-    if (score >= 60) return "text-amber-400";
-    return "text-red-400";
+    if (score >= 80) return "text-[#34d399]";
+    if (score >= 60) return "text-[#fbbf24]";
+    return "text-[#f87171]";
   };
 
   return (
     <div className="overflow-x-auto">
       <table className="w-full">
         <thead>
-          <tr className="border-b border-gray-700">
-            <th className="text-left py-3 px-4 text-sm font-semibold text-gray-400">维度</th>
+          <tr className="border-b border-[#334155]">
+            <th className="text-left py-3 px-4 text-sm font-semibold text-[#94a3b8]">维度</th>
             {candidates.map((c) => (
               <motion.th
                 key={c.candidate_name}
                 whileHover={{ backgroundColor: "rgba(55, 65, 81, 0.3)" }}
-                className="text-left py-3 px-4 text-sm font-semibold text-white min-w-[150px]"
+                className="text-left py-3 px-4 text-sm font-semibold text-[#f8fafc] min-w-[150px]"
               >
                 {c.candidate_name}
               </motion.th>
@@ -128,9 +138,9 @@ function ComparisonTable({
         <tbody>
           <motion.tr
             whileHover={{ backgroundColor: "rgba(55, 65, 81, 0.2)" }}
-            className="border-b border-gray-700/50 cursor-default"
+            className="border-b border-[#334155]/50 cursor-default"
           >
-            <td className="py-3 px-4 text-sm text-gray-400">匹配分</td>
+            <td className="py-3 px-4 text-sm text-[#94a3b8]">匹配分</td>
             {candidates.map((c) => (
               <td key={c.candidate_name} className="py-3 px-4">
                 <span className={`text-lg font-bold ${getScoreColor(c.match_score)}`}>
@@ -141,15 +151,15 @@ function ComparisonTable({
           </motion.tr>
           <motion.tr
             whileHover={{ backgroundColor: "rgba(55, 65, 81, 0.2)" }}
-            className="border-b border-gray-700/50 cursor-default"
+            className="border-b border-[#334155]/50 cursor-default"
           >
-            <td className="py-3 px-4 text-sm text-gray-400">推荐等级</td>
+            <td className="py-3 px-4 text-sm text-[#94a3b8]">推荐等级</td>
             {candidates.map((c) => (
               <td key={c.candidate_name} className="py-3 px-4">
                 <span className={`text-xs px-2 py-1 rounded-full ${
                   c.level === "strong_recommend"
-                    ? "bg-emerald-500/20 text-emerald-400"
-                    : "bg-amber-500/20 text-amber-400"
+                    ? "bg-[#10b981]/20 text-[#34d399]"
+                    : "bg-[#f59e0b]/20 text-[#fbbf24]"
                 }`}>
                   {c.level === "strong_recommend" ? "强烈推荐" : "可备选"}
                 </span>
@@ -158,33 +168,33 @@ function ComparisonTable({
           </motion.tr>
           <motion.tr
             whileHover={{ backgroundColor: "rgba(55, 65, 81, 0.2)" }}
-            className="border-b border-gray-700/50 cursor-default"
+            className="border-b border-[#334155]/50 cursor-default"
           >
-            <td className="py-3 px-4 text-sm text-gray-400">当前公司</td>
+            <td className="py-3 px-4 text-sm text-[#94a3b8]">当前公司</td>
             {candidates.map((c) => (
-              <td key={c.candidate_name} className="py-3 px-4 text-sm text-gray-300">
+              <td key={c.candidate_name} className="py-3 px-4 text-sm text-[#cbd5e1]">
                 {c.current_company || "-"}
               </td>
             ))}
           </motion.tr>
           <motion.tr
             whileHover={{ backgroundColor: "rgba(55, 65, 81, 0.2)" }}
-            className="border-b border-gray-700/50 cursor-default"
+            className="border-b border-[#334155]/50 cursor-default"
           >
-            <td className="py-3 px-4 text-sm text-gray-400">工作年限</td>
+            <td className="py-3 px-4 text-sm text-[#94a3b8]">工作年限</td>
             {candidates.map((c) => (
-              <td key={c.candidate_name} className="py-3 px-4 text-sm text-gray-300">
+              <td key={c.candidate_name} className="py-3 px-4 text-sm text-[#cbd5e1]">
                 {c.years_experience ? `${c.years_experience}年` : "-"}
               </td>
             ))}
           </motion.tr>
           <motion.tr
             whileHover={{ backgroundColor: "rgba(55, 65, 81, 0.2)" }}
-            className="border-b border-gray-700/50 cursor-default"
+            className="border-b border-[#334155]/50 cursor-default"
           >
-            <td className="py-3 px-4 text-sm text-gray-400">匹配摘要</td>
+            <td className="py-3 px-4 text-sm text-[#94a3b8]">匹配摘要</td>
             {candidates.map((c) => (
-              <td key={c.candidate_name} className="py-3 px-4 text-sm text-gray-300">
+              <td key={c.candidate_name} className="py-3 px-4 text-sm text-[#cbd5e1]">
                 {c.summary}
               </td>
             ))}
@@ -286,9 +296,9 @@ export default function CandidateComparison({
   }, [selectedCandidates]);
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return "text-emerald-400";
-    if (score >= 60) return "text-amber-400";
-    return "text-red-400";
+    if (score >= 80) return "text-[#34d399]";
+    if (score >= 60) return "text-[#fbbf24]";
+    return "text-[#f87171]";
   };
 
   return (
@@ -303,16 +313,24 @@ export default function CandidateComparison({
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="bg-[#1F2937] rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-hidden border border-gray-700"
+        className="bg-[#1f2937] rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-hidden border border-[#334155]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-cyan-600 to-cyan-700 px-6 py-4 flex justify-between items-center">
+        <div className="bg-gradient-to-r from-[#0891b2] to-[#0e7490] px-6 py-4 flex justify-between items-center">
           <div>
-            <h2 className="text-xl font-bold text-white">候选人对比</h2>
-            <p className="text-cyan-100 text-sm mt-1">
+            <motion.h2
+              whileHover={{ scale: 1.02 }}
+              className="text-xl font-bold text-white cursor-default"
+            >
+              候选人对比
+            </motion.h2>
+            <motion.p
+              whileHover={{ scale: 1.02 }}
+              className="text-[#a5f3fc] text-sm mt-1 cursor-default"
+            >
               选择2-4位候选人进行横向对比
-            </p>
+            </motion.p>
           </div>
           <div className="flex items-center gap-3">
             {selectedCandidates.length >= 2 && (
@@ -322,10 +340,10 @@ export default function CandidateComparison({
                   whileTap={{ scale: 0.95 }}
                   onClick={handleCopyReport}
                   className={`px-3 py-1.5 text-white text-sm rounded-lg transition-colors flex items-center gap-1 ${
-                    copied ? "bg-emerald-500/40" : "bg-cyan-500/40 hover:bg-cyan-500/50"
+                    copied ? "bg-[#10b981]/40" : "bg-[#0891b2]/40 hover:bg-[#0891b2]/50"
                   }`}
                 >
-                  {copied ? "✅ 已复制" : "📄 复制报告"}
+                  {copied ? "已复制" : "复制报告"}
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -333,23 +351,23 @@ export default function CandidateComparison({
                   onClick={handleShareLink}
                   className="px-3 py-1.5 bg-white/20 text-white text-sm rounded-lg hover:bg-white/30 transition-colors flex items-center gap-1"
                 >
-                  🔗 分享链接
+                  分享链接
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleExportCSV}
-                  className="px-3 py-1.5 bg-amber-500/40 text-white text-sm rounded-lg hover:bg-amber-500/50 transition-colors flex items-center gap-1"
+                  className="px-3 py-1.5 bg-[#f59e0b]/40 text-white text-sm rounded-lg hover:bg-[#f59e0b]/50 transition-colors flex items-center gap-1"
                 >
-                  📊 CSV
+                  CSV
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={handleExportJSON}
-                  className="px-3 py-1.5 bg-emerald-500/40 text-white text-sm rounded-lg hover:bg-emerald-500/50 transition-colors flex items-center gap-1"
+                  className="px-3 py-1.5 bg-[#10b981]/40 text-white text-sm rounded-lg hover:bg-[#10b981]/50 transition-colors flex items-center gap-1"
                 >
-                  📋 JSON
+                  JSON
                 </motion.button>
               </>
             )}
@@ -357,7 +375,7 @@ export default function CandidateComparison({
               whileHover={{ scale: 1.2, rotate: 90 }}
               whileTap={{ scale: 0.9 }}
               onClick={onClose}
-              className="text-cyan-100 hover:text-white transition-colors"
+              className="text-[#a5f3fc] hover:text-white transition-colors"
             >
               ✕
             </motion.button>
@@ -368,11 +386,14 @@ export default function CandidateComparison({
           {/* Candidate Selection */}
           <div className="mb-6">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
+              <motion.h3
+                whileHover={{ scale: 1.02 }}
+                className="text-sm font-semibold text-[#94a3b8] uppercase tracking-wider cursor-default"
+              >
                 选择候选人 (已选 {selectedCandidates.length}/4)
-              </h3>
+              </motion.h3>
               {selectedCandidates.length >= 4 && (
-                <span className="text-xs text-amber-400 bg-amber-500/20 px-2 py-1 rounded-full">
+                <span className="text-xs text-[#fbbf24] bg-[#f59e0b]/20 px-2 py-1 rounded-full">
                   已达最大选择数量
                 </span>
               )}
@@ -399,20 +420,26 @@ export default function CandidateComparison({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="bg-[#111827] rounded-xl border border-gray-700 overflow-hidden"
+                className="bg-[#0a0f1a] rounded-xl border border-[#334155] overflow-hidden"
               >
-                <div className="bg-gradient-to-r from-gray-600 to-gray-700 px-6 py-3">
-                  <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-                    <span>📊</span> 对比分析表 ({selectedCandidates.length}人)
-                  </h3>
+                <div className="bg-gradient-to-r from-[#475569] to-[#334155] px-6 py-3">
+                  <motion.h3
+                    whileHover={{ scale: 1.02 }}
+                    className="text-sm font-semibold text-[#f8fafc] flex items-center gap-2 cursor-default"
+                  >
+                    对比分析表 ({selectedCandidates.length}人)
+                  </motion.h3>
                 </div>
                 <ComparisonTable candidates={selectedCandidates} criteria={criteria} />
 
                 {/* Score visualization */}
-                <div className="p-6 border-t border-gray-700">
-                  <h4 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">
+                <div className="p-6 border-t border-[#334155]">
+                  <motion.h4
+                    whileHover={{ scale: 1.02 }}
+                    className="text-sm font-semibold text-[#94a3b8] uppercase tracking-wider mb-4 cursor-default"
+                  >
                     分数对比
-                  </h4>
+                  </motion.h4>
                   <div className="space-y-4">
                     {selectedCandidates.map((c) => (
                       <motion.div
@@ -420,10 +447,10 @@ export default function CandidateComparison({
                         whileHover={{ scale: 1.01 }}
                         className="flex items-center gap-4"
                       >
-                        <span className="w-24 text-sm text-gray-300 truncate">
+                        <span className="w-24 text-sm text-[#cbd5e1] truncate">
                           {c.candidate_name}
                         </span>
-                        <div className="flex-1 bg-gray-700 rounded-full h-4 overflow-hidden">
+                        <div className="flex-1 bg-[#334155] rounded-full h-4 overflow-hidden">
                           <motion.div
                             initial={{ width: 0 }}
                             animate={{ width: `${c.match_score}%` }}
@@ -431,10 +458,10 @@ export default function CandidateComparison({
                             whileHover={{ boxShadow: "0 0 10px rgba(34, 211, 238, 0.5)" }}
                             className={`h-full rounded-full shadow-lg ${
                               c.match_score >= 80
-                                ? "bg-emerald-500 shadow-emerald-500/30"
+                                ? "bg-[#10b981] shadow-[#10b981]/30"
                                 : c.match_score >= 60
-                                ? "bg-amber-500 shadow-amber-500/30"
-                                : "bg-red-500 shadow-red-500/30"
+                                ? "bg-[#f59e0b] shadow-[#f59e0b]/30"
+                                : "bg-[#ef4444] shadow-[#ef4444]/30"
                             }`}
                           />
                         </div>
@@ -450,10 +477,14 @@ export default function CandidateComparison({
           </AnimatePresence>
 
           {selectedCandidates.length < 2 && (
-            <div className="text-center py-12 text-gray-400">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-center py-12 text-[#64748b]"
+            >
               <span className="text-4xl mb-4 block">👆</span>
               <p>请选择至少2位候选人进行对比</p>
-            </div>
+            </motion.div>
           )}
         </div>
       </motion.div>

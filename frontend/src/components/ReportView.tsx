@@ -3,6 +3,17 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 
+/* ============================================
+   REPORTVIEW COMPONENT
+   ============================================
+
+   Design System Applied:
+   - Card: Cyan gradient header
+   - Primary Color: Cyan (#0891B2)
+   - Semantic Colors: Emerald (success), Red (error)
+   - Motion: Scale on hover, staggered animations
+   ============================================ */
+
 interface Report {
   position_name: string;
   jd_source: string;
@@ -39,121 +50,129 @@ export default function ReportView({ report, markdown }: ReportViewProps) {
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-[#1F2937] rounded-xl shadow-lg border border-gray-700 overflow-hidden"
+      className="bg-[#1f2937] rounded-2xl shadow-xl border border-[#334155] overflow-hidden"
     >
-      <div className="bg-gradient-to-r from-cyan-600 to-cyan-700 px-6 py-4">
-        <h2 className="text-xl font-bold text-white flex items-center gap-2">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-[#0891b2] to-[#0e7490] px-6 py-5">
+        <motion.h2
+          whileHover={{ scale: 1.02 }}
+          className="text-xl font-display font-bold text-white flex items-center gap-2"
+        >
           <span>📋</span> 筛选报告
-        </h2>
+        </motion.h2>
       </div>
 
-      <div className="p-6">
-        {/* 基本信息 */}
-        <div className="space-y-3 mb-6">
-          <motion.div
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.1 }}
-            whileHover={{ scale: 1.01, borderColor: "rgba(34, 211, 238, 0.4)" }}
-            className="flex justify-between items-center p-3 bg-[#111827] rounded-lg border border-gray-700 shadow-sm cursor-default"
-          >
-            <span className="text-gray-400">岗位</span>
-            <span className="font-semibold text-white">
-              {report.position_name}
-            </span>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.15 }}
-            whileHover={{ scale: 1.01, borderColor: "rgba(34, 211, 238, 0.4)" }}
-            className="flex justify-between items-center p-3 bg-[#111827] rounded-lg border border-gray-700 shadow-sm cursor-default"
-          >
-            <span className="text-gray-400">收到简历</span>
-            <span className="font-semibold text-white">
-              {report.total_resumes}份
-            </span>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-            whileHover={{ scale: 1.01, borderColor: "rgba(52, 211, 153, 0.4)" }}
-            className="flex justify-between items-center p-3 bg-emerald-500/10 rounded-lg border border-emerald-500/30 shadow-sm shadow-emerald-500/10 cursor-default"
-          >
-            <span className="text-emerald-400">筛选通过</span>
-            <span className="font-bold text-emerald-400 text-lg">
-              {report.screened_resumes}份
-            </span>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.25 }}
-            whileHover={{ scale: 1.01, borderColor: "rgba(248, 113, 113, 0.4)" }}
-            className="flex justify-between items-center p-3 bg-red-500/10 rounded-lg border border-red-500/30 shadow-sm shadow-red-500/10 cursor-default"
-          >
-            <span className="text-red-400">淘汰</span>
-            <span className="font-bold text-red-400 text-lg">
-              {report.total_resumes - report.screened_resumes}份
-            </span>
-          </motion.div>
-        </div>
+      <div className="p-6 space-y-4">
+        {/* Position Info */}
+        <motion.div
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.1 }}
+          whileHover={{ scale: 1.01, borderColor: "rgba(34, 211, 238, 0.4)" }}
+          className="flex justify-between items-center p-4 bg-[#0a0f1a] rounded-xl border border-[#334155] cursor-default"
+        >
+          <span className="text-[#94a3b8]">岗位</span>
+          <span className="font-semibold text-[#f8fafc]">
+            {report.position_name}
+          </span>
+        </motion.div>
 
-        {/* 通过率 */}
+        {/* Total Resumes */}
+        <motion.div
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.15 }}
+          whileHover={{ scale: 1.01, borderColor: "rgba(34, 211, 238, 0.4)" }}
+          className="flex justify-between items-center p-4 bg-[#0a0f1a] rounded-xl border border-[#334155] cursor-default"
+        >
+          <span className="text-[#94a3b8]">收到简历</span>
+          <span className="font-semibold text-[#f8fafc]">
+            {report.total_resumes}份
+          </span>
+        </motion.div>
+
+        {/* Screened */}
+        <motion.div
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2 }}
+          whileHover={{ scale: 1.01, borderColor: "rgba(52, 211, 153, 0.4)" }}
+          className="flex justify-between items-center p-4 bg-[#10b981]/10 rounded-xl border border-[#10b981]/30 cursor-default shadow-lg shadow-[#10b981]/5"
+        >
+          <span className="text-[#34d399]">筛选通过</span>
+          <span className="font-bold text-[#34d399] text-lg">
+            {report.screened_resumes}份
+          </span>
+        </motion.div>
+
+        {/* Rejected */}
+        <motion.div
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.25 }}
+          whileHover={{ scale: 1.01, borderColor: "rgba(248, 113, 113, 0.4)" }}
+          className="flex justify-between items-center p-4 bg-[#ef4444]/10 rounded-xl border border-[#ef4444]/30 cursor-default shadow-lg shadow-[#ef4444]/5"
+        >
+          <span className="text-[#f87171]">淘汰</span>
+          <span className="font-bold text-[#f87171] text-lg">
+            {report.total_resumes - report.screened_resumes}份
+          </span>
+        </motion.div>
+
+        {/* Pass Rate */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.25 }}
-          className="bg-gradient-to-br from-cyan-500/10 to-cyan-600/5 rounded-xl p-5 mb-6 border border-cyan-500/20"
+          className="bg-gradient-to-br from-[#0891b2]/10 to-[#0891b2]/5 rounded-2xl p-5 border border-[#0891b2]/20 shadow-lg"
         >
           <div className="flex justify-between items-center mb-3">
-            <span className="text-cyan-400 font-medium">简历通过率</span>
+            <span className="text-[#22d3ee] font-medium">简历通过率</span>
             <motion.span
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.4, type: "spring" }}
-              className="text-3xl font-bold text-cyan-400"
+              className="text-3xl font-bold text-[#22d3ee]"
             >
               {passRate}%
             </motion.span>
           </div>
-          <div className="bg-[#111827] rounded-full h-3 overflow-hidden">
+          <div className="bg-[#0a0f1a] rounded-full h-3 overflow-hidden">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${passRate}%` }}
               transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-              className="bg-gradient-to-r from-cyan-500 to-cyan-600 h-3 rounded-full shadow-lg shadow-cyan-500/30"
+              className="bg-gradient-to-r from-[#0891b2] to-[#22d3ee] h-3 rounded-full shadow-lg shadow-[#0891b2]/30"
             />
           </div>
         </motion.div>
 
-        {/* 生成时间 */}
+        {/* Generation Time */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
           whileHover={{ scale: 1.02 }}
-          className="text-center text-sm text-gray-500 cursor-default"
+          className="text-center text-sm text-[#64748b] cursor-default pt-2"
         >
           生成时间: {report.generated_at}
         </motion.div>
 
-        {/* 复制报告 */}
+        {/* Copy Report Button */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="mt-4 pt-4 border-t border-gray-700"
+          className="pt-4 border-t border-[#334155]"
         >
           <motion.button
-            whileHover={{ scale: 1.02, boxShadow: "0 4px 12px rgba(0,0,0,0.2)" }}
+            whileHover={{ scale: 1.02, boxShadow: "0 4px 20px rgba(6, 182, 212, 0.3)" }}
             whileTap={{ scale: 0.98 }}
             onClick={handleCopyReport}
-            className={`w-full py-2 px-3 bg-[#111827] border rounded-lg text-sm flex items-center justify-center gap-2 transition-colors ${
+            className={`w-full py-3 px-4 rounded-xl text-sm flex items-center justify-center gap-2 transition-all ${
               copied
-                ? "border-emerald-500/50 text-emerald-400"
-                : "border-gray-700 text-gray-400 hover:text-cyan-400 hover:border-cyan-500/50"
+                ? "bg-[#10b981]/20 border border-[#10b981]/50 text-[#34d399]"
+                : "bg-[#0a0f1a] border border-[#334155] text-[#94a3b8] hover:text-[#22d3ee] hover:border-[#0891b2]/50"
             }`}
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

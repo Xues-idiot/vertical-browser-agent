@@ -32,6 +32,16 @@ interface Candidate {
   status?: "pending" | "interview" | "offer" | "hired" | "rejected";  // 候选人状态
 }
 
+/* ============================================
+   MATCHRESULT COMPONENT
+   ============================================
+
+   Design System Applied:
+   - Card: Dark elevated surface
+   - Colors: Cyan (#0891B2), Amber (#f59e0b), Emerald (#10b981), Purple (#7c3aed)
+   - Motion: Scale on hover, staggered animations
+   ============================================ */
+
 // 计算候选人在全体中的百分位排名
 function calculatePercentile(candidates: Candidate[], candidateName: string): number {
   const sorted = [...candidates].sort((a, b) => b.match_score - a.match_score);
@@ -42,11 +52,11 @@ function calculatePercentile(candidates: Candidate[], candidateName: string): nu
 
 // 获取百分位等级标签
 function getPercentileLabel(percentile: number): { label: string; color: string; bg: string } {
-  if (percentile >= 90) return { label: "顶尖", color: "text-emerald-400", bg: "bg-emerald-500" };
-  if (percentile >= 70) return { label: "优秀", color: "text-cyan-400", bg: "bg-cyan-500" };
-  if (percentile >= 50) return { label: "良好", color: "text-blue-400", bg: "bg-blue-500" };
-  if (percentile >= 30) return { label: "一般", color: "text-amber-400", bg: "bg-amber-500" };
-  return { label: "靠后", color: "text-gray-400", bg: "bg-gray-500" };
+  if (percentile >= 90) return { label: "顶尖", color: "text-[#34d399]", bg: "bg-[#10b981]" };
+  if (percentile >= 70) return { label: "优秀", color: "text-[#22d3ee]", bg: "bg-[#0891b2]" };
+  if (percentile >= 50) return { label: "良好", color: "text-[#60a5fa]", bg: "bg-[#3b82f6]" };
+  if (percentile >= 30) return { label: "一般", color: "text-[#fbbf24]", bg: "bg-[#f59e0b]" };
+  return { label: "靠后", color: "text-[#94a3b8]", bg: "bg-[#64748b]" };
 }
 
 interface MatchResultProps {
@@ -247,7 +257,7 @@ function CandidateDetailModal({
       const isMatch = keywords.some(k => k.toLowerCase() === part.toLowerCase());
       if (isMatch) {
         return (
-          <span key={i} className="bg-cyan-500/30 text-cyan-300 px-1 rounded">
+          <span key={i} className="bg-[#0891b2]/30 text-[#22d3ee] px-1 rounded">
             {part}
           </span>
         );
@@ -257,17 +267,17 @@ function CandidateDetailModal({
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return "text-emerald-400";
-    if (score >= 60) return "text-amber-400";
-    return "text-red-400";
+    if (score >= 80) return "text-[#34d399]";
+    if (score >= 60) return "text-[#fbbf24]";
+    return "text-[#f87171]";
   };
 
   const statusOptions: { value: CandidateStatus; label: string; color: string }[] = [
-    { value: "pending", label: "待沟通", color: "bg-gray-600" },
-    { value: "interview", label: "面试中", color: "bg-amber-500" },
-    { value: "offer", label: "Offer", color: "bg-emerald-500" },
-    { value: "hired", label: "已入职", color: "bg-purple-500" },
-    { value: "rejected", label: "淘汰", color: "bg-red-500" },
+    { value: "pending", label: "待沟通", color: "bg-[#64748b]" },
+    { value: "interview", label: "面试中", color: "bg-[#f59e0b]" },
+    { value: "offer", label: "Offer", color: "bg-[#10b981]" },
+    { value: "hired", label: "已入职", color: "bg-[#7c3aed]" },
+    { value: "rejected", label: "淘汰", color: "bg-[#ef4444]" },
   ];
 
   return (
@@ -282,27 +292,41 @@ function CandidateDetailModal({
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
-        className="bg-[#1F2937] rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden border border-gray-700"
+        className="bg-[#1f2937] rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden border border-[#334155]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-cyan-600 to-cyan-700 px-6 py-4">
+        <div className="bg-gradient-to-r from-[#0891b2] to-[#0e7490] px-6 py-4">
           <div className="flex justify-between items-start">
             <div>
-              <h2 className="text-xl font-bold text-white">{candidate.candidate_name}</h2>
-              <p className="text-cyan-100 text-sm mt-1">
+              <motion.h2
+                whileHover={{ scale: 1.02 }}
+                className="text-xl font-bold text-white cursor-default"
+              >
+                {candidate.candidate_name}
+              </motion.h2>
+              <motion.p
+                whileHover={{ scale: 1.02 }}
+                className="text-[#a5f3fc] text-sm mt-1 cursor-default"
+              >
                 {candidate.years_experience && `${candidate.years_experience}年经验`}
                 {candidate.current_company && ` · ${candidate.current_company}`}
-              </p>
+              </motion.p>
             </div>
             <div className="text-right">
-              <div className={`text-4xl font-bold ${getScoreColor(candidate.match_score)}`}>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className={`text-4xl font-bold ${getScoreColor(candidate.match_score)}`}
+              >
                 {candidate.match_score}%
-              </div>
+              </motion.div>
               <div className="flex items-center gap-2 mt-1 justify-end">
-                <span className={`text-xs font-medium ${percentileInfo.color}`}>
+                <motion.span
+                  whileHover={{ scale: 1.05 }}
+                  className={`text-xs font-medium ${percentileInfo.color} cursor-default`}
+                >
                   超越 {percentile}% 的候选人
-                </span>
+                </motion.span>
                 <span className={`text-xs px-2 py-0.5 rounded-full text-white ${percentileInfo.bg}`}>
                   {percentileInfo.label}
                 </span>
@@ -315,12 +339,15 @@ function CandidateDetailModal({
         <div className="p-6 overflow-y-auto max-h-[60vh]">
           {/* Match Score Breakdown */}
           <div className="mb-6">
-            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
+            <motion.h3
+              whileHover={{ scale: 1.02 }}
+              className="text-sm font-semibold text-[#94a3b8] uppercase tracking-wider mb-3 cursor-default"
+            >
               匹配度分析
-            </h3>
-            <div className="bg-[#111827] rounded-xl p-4 border border-gray-700">
+            </motion.h3>
+            <div className="bg-[#0a0f1a] rounded-xl p-4 border border-[#334155]">
               <div className="flex items-center gap-3 mb-4">
-                <div className="flex-1 bg-gray-700 rounded-full h-4 overflow-hidden">
+                <div className="flex-1 bg-[#334155] rounded-full h-4 overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${candidate.match_score}%` }}
@@ -328,10 +355,10 @@ function CandidateDetailModal({
                     whileHover={{ boxShadow: "0 0 12px rgba(34, 211, 238, 0.5)", scaleY: 1.2 }}
                     className={`h-full rounded-full ${
                       candidate.match_score >= 80
-                        ? "bg-emerald-500"
+                        ? "bg-[#10b981]"
                         : candidate.match_score >= 60
-                        ? "bg-amber-500"
-                        : "bg-red-500"
+                        ? "bg-[#f59e0b]"
+                        : "bg-[#ef4444]"
                     }`}
                   />
                 </div>
@@ -343,73 +370,76 @@ function CandidateDetailModal({
               {/* Score Breakdown */}
               {candidate.score_breakdown && (
                 <div className="mt-4 space-y-3">
-                  <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  <motion.h4
+                    whileHover={{ scale: 1.02 }}
+                    className="text-xs font-semibold text-[#64748b] uppercase tracking-wider cursor-default"
+                  >
                     评分明细
-                  </h4>
+                  </motion.h4>
                   {candidate.score_breakdown.hard_conditions !== undefined && (
-                    <motion.div whileHover={{ scale: 1.02 }} className="flex items-center gap-3">
-                      <span className="w-20 text-xs text-gray-400">硬性条件</span>
-                      <div className="flex-1 bg-gray-700/50 rounded-full h-2 overflow-hidden">
+                    <motion.div whileHover={{ scale: 1.02 }} className="flex items-center gap-3 cursor-default">
+                      <span className="w-20 text-xs text-[#94a3b8]">硬性条件</span>
+                      <div className="flex-1 bg-[#334155]/50 rounded-full h-2 overflow-hidden">
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${candidate.score_breakdown.hard_conditions}%` }}
                           transition={{ duration: 0.8, delay: 0.1 }}
                           whileHover={{ boxShadow: "0 0 8px rgba(34, 211, 238, 0.6)" }}
-                          className="h-full bg-cyan-500 rounded-full"
+                          className="h-full bg-[#0891b2] rounded-full"
                         />
                       </div>
-                      <span className="w-10 text-xs text-cyan-400 font-medium">
+                      <span className="w-10 text-xs text-[#22d3ee] font-medium">
                         {candidate.score_breakdown.hard_conditions}%
                       </span>
                     </motion.div>
                   )}
                   {candidate.score_breakdown.skill_match !== undefined && (
-                    <motion.div whileHover={{ scale: 1.02 }} className="flex items-center gap-3">
-                      <span className="w-20 text-xs text-gray-400">技能匹配</span>
-                      <div className="flex-1 bg-gray-700/50 rounded-full h-2 overflow-hidden">
+                    <motion.div whileHover={{ scale: 1.02 }} className="flex items-center gap-3 cursor-default">
+                      <span className="w-20 text-xs text-[#94a3b8]">技能匹配</span>
+                      <div className="flex-1 bg-[#334155]/50 rounded-full h-2 overflow-hidden">
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${candidate.score_breakdown.skill_match}%` }}
                           transition={{ duration: 0.8, delay: 0.2 }}
                           whileHover={{ boxShadow: "0 0 8px rgba(52, 211, 153, 0.6)" }}
-                          className="h-full bg-emerald-500 rounded-full"
+                          className="h-full bg-[#10b981] rounded-full"
                         />
                       </div>
-                      <span className="w-10 text-xs text-emerald-400 font-medium">
+                      <span className="w-10 text-xs text-[#34d399] font-medium">
                         {candidate.score_breakdown.skill_match}%
                       </span>
                     </motion.div>
                   )}
                   {candidate.score_breakdown.industry_exp !== undefined && (
-                    <motion.div whileHover={{ scale: 1.02 }} className="flex items-center gap-3">
-                      <span className="w-20 text-xs text-gray-400">行业经验</span>
-                      <div className="flex-1 bg-gray-700/50 rounded-full h-2 overflow-hidden">
+                    <motion.div whileHover={{ scale: 1.02 }} className="flex items-center gap-3 cursor-default">
+                      <span className="w-20 text-xs text-[#94a3b8]">行业经验</span>
+                      <div className="flex-1 bg-[#334155]/50 rounded-full h-2 overflow-hidden">
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${candidate.score_breakdown.industry_exp}%` }}
                           transition={{ duration: 0.8, delay: 0.3 }}
                           whileHover={{ boxShadow: "0 0 8px rgba(251, 191, 36, 0.6)" }}
-                          className="h-full bg-amber-500 rounded-full"
+                          className="h-full bg-[#f59e0b] rounded-full"
                         />
                       </div>
-                      <span className="w-10 text-xs text-amber-400 font-medium">
+                      <span className="w-10 text-xs text-[#fbbf24] font-medium">
                         {candidate.score_breakdown.industry_exp}%
                       </span>
                     </motion.div>
                   )}
                   {candidate.score_breakdown.potential !== undefined && (
-                    <motion.div whileHover={{ scale: 1.02 }} className="flex items-center gap-3">
-                      <span className="w-20 text-xs text-gray-400">发展潜力</span>
-                      <div className="flex-1 bg-gray-700/50 rounded-full h-2 overflow-hidden">
+                    <motion.div whileHover={{ scale: 1.02 }} className="flex items-center gap-3 cursor-default">
+                      <span className="w-20 text-xs text-[#94a3b8]">发展潜力</span>
+                      <div className="flex-1 bg-[#334155]/50 rounded-full h-2 overflow-hidden">
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${candidate.score_breakdown.potential}%` }}
                           transition={{ duration: 0.8, delay: 0.4 }}
                           whileHover={{ boxShadow: "0 0 8px rgba(167, 139, 250, 0.6)" }}
-                          className="h-full bg-purple-500 rounded-full"
+                          className="h-full bg-[#7c3aed] rounded-full"
                         />
                       </div>
-                      <span className="w-10 text-xs text-purple-400 font-medium">
+                      <span className="w-10 text-xs text-[#a78bfa] font-medium">
                         {candidate.score_breakdown.potential}%
                       </span>
                     </motion.div>
@@ -417,24 +447,27 @@ function CandidateDetailModal({
                 </div>
               )}
 
-              <p className="text-gray-300 text-sm mt-4">{highlightKeywords(candidate.summary, criteria)}</p>
+              <p className="text-[#cbd5e1] text-sm mt-4">{highlightKeywords(candidate.summary, criteria)}</p>
             </div>
           </div>
 
           {/* Matched Criteria */}
           {candidate.matched_criteria && candidate.matched_criteria.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
+              <motion.h3
+                whileHover={{ scale: 1.02 }}
+                className="text-sm font-semibold text-[#94a3b8] uppercase tracking-wider mb-3 cursor-default"
+              >
                 匹配的标准
-              </h3>
+              </motion.h3>
               <div className="flex flex-wrap gap-2">
                 {candidate.matched_criteria.map((c, i) => (
                   <motion.span
                     key={i}
                     whileHover={{ scale: 1.05, boxShadow: "0 0 12px rgba(52, 211, 153, 0.4)" }}
-                    className="bg-emerald-500/20 text-emerald-400 px-3 py-1.5 rounded-full text-sm border border-emerald-500/30 flex items-center gap-1 cursor-default"
+                    className="bg-[#10b981]/20 text-[#34d399] px-3 py-1.5 rounded-full text-sm border border-[#10b981]/30 flex items-center gap-1 cursor-default"
                   >
-                    <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full" />
+                    <span className="w-1.5 h-1.5 bg-[#34d399] rounded-full" />
                     {c}
                   </motion.span>
                 ))}
@@ -444,7 +477,10 @@ function CandidateDetailModal({
 
           {/* Screening Criteria Reference */}
           <div className="mb-6">
-            <motion.h3 whileHover={{ scale: 1.02 }} className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3 cursor-default">
+            <motion.h3
+              whileHover={{ scale: 1.02 }}
+              className="text-sm font-semibold text-[#94a3b8] uppercase tracking-wider mb-3 cursor-default"
+            >
               筛选标准 (JD要求)
             </motion.h3>
             <div className="flex flex-wrap gap-2">
@@ -452,9 +488,9 @@ function CandidateDetailModal({
                 <motion.span
                   key={i}
                   whileHover={{ scale: 1.05, borderColor: "rgba(34, 211, 238, 0.5)" }}
-                  className="bg-[#111827] text-gray-300 px-3 py-1.5 rounded-full text-sm border border-gray-700 flex items-center gap-1 cursor-default"
+                  className="bg-[#0a0f1a] text-[#cbd5e1] px-3 py-1.5 rounded-full text-sm border border-[#334155] flex items-center gap-1 cursor-default"
                 >
-                  <span className="w-1.5 h-1.5 bg-cyan-500 rounded-full" />
+                  <span className="w-1.5 h-1.5 bg-[#0891b2] rounded-full" />
                   {c}
                 </motion.span>
               ))}
@@ -466,19 +502,24 @@ function CandidateDetailModal({
             const suggestions = suggestTags(candidate);
             return suggestions.length > 0 ? (
               <div className="mb-6">
-                <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
-                  💡 推荐标签
-                </h3>
+                <motion.h3
+                  whileHover={{ scale: 1.02 }}
+                  className="text-sm font-semibold text-[#94a3b8] uppercase tracking-wider mb-3 cursor-default"
+                >
+                  推荐标签
+                </motion.h3>
                 <div className="flex flex-wrap gap-2">
                   {suggestions.map((tag) => (
-                    <button
+                    <motion.button
                       key={tag}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                       onClick={() => onAddTag?.(candidate.candidate_name, tag)}
-                      className="bg-purple-500/20 text-purple-400 px-3 py-1.5 rounded-full text-sm border border-purple-500/30 hover:bg-purple-500/30 transition-colors flex items-center gap-1"
+                      className="bg-[#7c3aed]/20 text-[#a78bfa] px-3 py-1.5 rounded-full text-sm border border-[#7c3aed]/30 hover:bg-[#7c3aed]/30 transition-colors flex items-center gap-1"
                     >
                       <span className="text-xs">+</span>
                       {tag}
-                    </button>
+                    </motion.button>
                   ))}
                 </div>
               </div>
@@ -487,14 +528,17 @@ function CandidateDetailModal({
 
           {/* AI推荐理由 */}
           <div className="mb-6">
-            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
+            <motion.h3
+              whileHover={{ scale: 1.02 }}
+              className="text-sm font-semibold text-[#94a3b8] uppercase tracking-wider mb-3 cursor-default"
+            >
               AI推荐理由
-            </h3>
-            <div className="bg-gradient-to-r from-purple-900/30 to-purple-900/10 rounded-xl p-4 border border-purple-500/30">
+            </motion.h3>
+            <div className="bg-gradient-to-r from-[#7c3aed]/30 to-[#7c3aed]/10 rounded-xl p-4 border border-[#7c3aed]/30">
               <div className="flex items-start gap-3">
                 <span className="text-2xl">🤖</span>
                 <div className="flex-1">
-                  <p className="text-gray-200 text-sm leading-relaxed">
+                  <p className="text-[#e2e8f0] text-sm leading-relaxed">
                     {candidate.ai_reason || generateAIRecommendation(candidate)}
                   </p>
                 </div>
@@ -505,20 +549,23 @@ function CandidateDetailModal({
           {/* 关键经历亮点 */}
           {(candidate.key_highlights || generateKeyHighlights(candidate)).length > 0 && (
             <div className="mb-6">
-              <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
+              <motion.h3
+                whileHover={{ scale: 1.02 }}
+                className="text-sm font-semibold text-[#94a3b8] uppercase tracking-wider mb-3 cursor-default"
+              >
                 关键经历亮点
-              </h3>
+              </motion.h3>
               <div className="space-y-2">
                 {(candidate.key_highlights || generateKeyHighlights(candidate)).map((highlight, i) => (
                   <motion.div
                     key={i}
                     whileHover={{ scale: 1.01, borderColor: "rgba(52, 211, 153, 0.4)" }}
-                    className="flex items-start gap-2 bg-[#111827] rounded-lg p-3 border border-gray-700 cursor-default"
+                    className="flex items-start gap-2 bg-[#0a0f1a] rounded-lg p-3 border border-[#334155] cursor-default"
                   >
-                    <span className="w-5 h-5 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
+                    <span className="w-5 h-5 bg-[#10b981]/20 text-[#34d399] rounded-full flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
                       {i + 1}
                     </span>
-                    <p className="text-gray-300 text-sm">{highlight}</p>
+                    <p className="text-[#cbd5e1] text-sm">{highlight}</p>
                   </motion.div>
                 ))}
               </div>
@@ -528,11 +575,14 @@ function CandidateDetailModal({
           {/* Resume Text Preview */}
           {candidate.resume_text && (
             <div className="mb-6">
-              <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
+              <motion.h3
+                whileHover={{ scale: 1.02 }}
+                className="text-sm font-semibold text-[#94a3b8] uppercase tracking-wider mb-3 cursor-default"
+              >
                 简历摘要
-              </h3>
-              <div className="bg-[#111827] rounded-xl p-4 border border-gray-700">
-                <p className="text-gray-300 text-sm whitespace-pre-wrap">
+              </motion.h3>
+              <div className="bg-[#0a0f1a] rounded-xl p-4 border border-[#334155]">
+                <p className="text-[#cbd5e1] text-sm whitespace-pre-wrap">
                   {candidate.resume_text.slice(0, 500)}
                   {candidate.resume_text.length > 500 && "..."}
                 </p>
@@ -543,10 +593,13 @@ function CandidateDetailModal({
           {/* 评分历史 */}
           {(candidate.score_history || generateMockScoreHistory(candidate)).length > 0 && (
             <div className="mb-6">
-              <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
-                📈 评分历史
-              </h3>
-              <div className="bg-[#111827] rounded-xl p-4 border border-gray-700">
+              <motion.h3
+                whileHover={{ scale: 1.02 }}
+                className="text-sm font-semibold text-[#94a3b8] uppercase tracking-wider mb-3 cursor-default"
+              >
+                评分历史
+              </motion.h3>
+              <div className="bg-[#0a0f1a] rounded-xl p-4 border border-[#334155]">
                 <div className="flex items-end gap-1 h-20">
                   {(candidate.score_history || generateMockScoreHistory(candidate)).map((entry, i, arr) => {
                     const height = `${entry.score}%`;
@@ -558,18 +611,18 @@ function CandidateDetailModal({
                           animate={{ height: height }}
                           transition={{ duration: 0.5, delay: i * 0.1 }}
                           whileHover={{ scaleY: 1.1, boxShadow: "0 0 10px rgba(34, 211, 238, 0.5)" }}
-                          className={`w-full rounded-t-sm ${isLatest ? "bg-cyan-500" : "bg-gray-600"}`}
+                          className={`w-full rounded-t-sm ${isLatest ? "bg-[#0891b2]" : "bg-[#475569]"}`}
                         />
-                        <motion.span whileHover={{ scale: 1.1 }} className="text-xs text-gray-500 cursor-default">
+                        <motion.span whileHover={{ scale: 1.1 }} className="text-xs text-[#64748b] cursor-default">
                           {new Date(entry.date).toLocaleDateString().slice(5)}
                         </motion.span>
                       </div>
                     );
                   })}
                 </div>
-                <div className="flex justify-between mt-2 text-xs text-gray-500">
+                <div className="flex justify-between mt-2 text-xs text-[#64748b]">
                   <motion.span whileHover={{ scale: 1.05 }} className="cursor-default">早期评估</motion.span>
-                  <motion.span whileHover={{ scale: 1.05 }} className="cursor-default">最近评估: <span className="text-cyan-400">{candidate.match_score}%</span></motion.span>
+                  <motion.span whileHover={{ scale: 1.05 }} className="cursor-default">最近评估: <span className="text-[#22d3ee]">{candidate.match_score}%</span></motion.span>
                 </div>
               </div>
             </div>
@@ -577,9 +630,12 @@ function CandidateDetailModal({
 
           {/* Status Management */}
           <div className="mb-6">
-            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
+            <motion.h3
+              whileHover={{ scale: 1.02 }}
+              className="text-sm font-semibold text-[#94a3b8] uppercase tracking-wider mb-3 cursor-default"
+            >
               候选人状态
-            </h3>
+            </motion.h3>
             <div className="flex flex-wrap gap-2">
               {statusOptions.map((opt) => (
                 <motion.button
@@ -593,7 +649,7 @@ function CandidateDetailModal({
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                     status === opt.value
                       ? `${opt.color} text-white shadow-lg`
-                      : "bg-[#111827] text-gray-400 border border-gray-700 hover:border-gray-500"
+                      : "bg-[#0a0f1a] text-[#94a3b8] border border-[#334155] hover:border-[#475569]"
                   }`}
                 >
                   {opt.label}
@@ -605,9 +661,12 @@ function CandidateDetailModal({
           {/* 相似候选人 */}
           {(candidate.similar_candidates || []).length > 0 && (
             <div className="mb-6">
-              <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
-                👥 相似候选人
-              </h3>
+              <motion.h3
+                whileHover={{ scale: 1.02 }}
+                className="text-sm font-semibold text-[#94a3b8] uppercase tracking-wider mb-3 cursor-default"
+              >
+                相似候选人
+              </motion.h3>
               <div className="space-y-2">
                 {candidate.similar_candidates?.slice(0, 3).map((similar, i) => (
                   <motion.button
@@ -617,15 +676,15 @@ function CandidateDetailModal({
                     onClick={() => {
                       onSelectSimilar?.(similar);
                     }}
-                    className="w-full flex items-center justify-between bg-[#111827] rounded-lg p-3 border border-gray-700 hover:border-cyan-500/50 transition-colors text-left"
+                    className="w-full flex items-center justify-between bg-[#0a0f1a] rounded-lg p-3 border border-[#334155] hover:border-[#0891b2]/50 transition-colors text-left"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="w-6 h-6 bg-gray-600/50 text-gray-400 rounded-full flex items-center justify-center text-xs">
+                      <span className="w-6 h-6 bg-[#475569]/50 text-[#94a3b8] rounded-full flex items-center justify-center text-xs">
                         {i + 1}
                       </span>
                       <div>
-                        <p className="text-sm text-white font-medium">{similar.candidate_name}</p>
-                        <p className="text-xs text-gray-400">{similar.current_company}</p>
+                        <p className="text-sm text-[#f8fafc] font-medium">{similar.candidate_name}</p>
+                        <p className="text-xs text-[#64748b]">{similar.current_company}</p>
                       </div>
                     </div>
                     <span className={`text-sm font-bold ${getScoreColor(similar.match_score)}`}>
@@ -640,30 +699,33 @@ function CandidateDetailModal({
           {/* Interview Feedback */}
           {(candidate.interviews || []).length > 0 && (
             <div className="mb-6">
-              <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
+              <motion.h3
+                whileHover={{ scale: 1.02 }}
+                className="text-sm font-semibold text-[#94a3b8] uppercase tracking-wider mb-3 cursor-default"
+              >
                 面试反馈 ({candidate.interviews?.length}轮)
-              </h3>
+              </motion.h3>
               <div className="space-y-3">
                 {candidate.interviews?.map((interview, i) => (
                   <motion.div
                     key={i}
                     whileHover={{ scale: 1.01 }}
-                    className="bg-[#111827] rounded-lg p-3 border border-gray-700 hover:border-gray-600 transition-colors"
+                    className="bg-[#0a0f1a] rounded-lg p-3 border border-[#334155] hover:border-[#475569] transition-colors"
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-cyan-400">第{interview.round}轮面试</span>
+                      <span className="text-sm font-medium text-[#22d3ee]">第{interview.round}轮面试</span>
                       <div className="flex items-center gap-1">
                         {Array.from({ length: 5 }).map((_, si) => (
                           <motion.span
                             key={si}
                             whileHover={{ scale: 1.3 }}
-                            className={`text-sm ${si < interview.rating ? "text-amber-400" : "text-gray-600"}`}
+                            className={`text-sm ${si < interview.rating ? "text-[#fbbf24]" : "text-[#475569]"}`}
                           >★</motion.span>
                         ))}
                       </div>
                     </div>
-                    <motion.p whileHover={{ scale: 1.02 }} className="text-xs text-gray-400 mb-1 cursor-default">{interview.date}</motion.p>
-                    <p className="text-sm text-gray-300">{interview.feedback}</p>
+                    <motion.p whileHover={{ scale: 1.02 }} className="text-xs text-[#64748b] mb-1 cursor-default">{interview.date}</motion.p>
+                    <p className="text-sm text-[#cbd5e1]">{interview.feedback}</p>
                   </motion.div>
                 ))}
               </div>
@@ -673,32 +735,35 @@ function CandidateDetailModal({
           {/* Notes */}
           <div>
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
+              <motion.h3
+                whileHover={{ scale: 1.02 }}
+                className="text-sm font-semibold text-[#94a3b8] uppercase tracking-wider cursor-default"
+              >
                 备注
-              </h3>
+              </motion.h3>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => onSaveNote?.(candidate.candidate_name, note)}
-                className="px-3 py-1 bg-cyan-600/20 text-cyan-400 border border-cyan-500/30 rounded-lg hover:bg-cyan-600/30 transition-colors text-xs flex items-center gap-1"
+                className="px-3 py-1 bg-[#0891b2]/20 text-[#22d3ee] border border-[#0891b2]/30 rounded-lg hover:bg-[#0891b2]/30 transition-colors text-xs flex items-center gap-1"
               >
-                💾 保存备注
+                保存备注
               </motion.button>
             </div>
             <textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
               placeholder="添加备注信息..."
-              className="w-full bg-[#111827] border border-gray-700 rounded-xl px-4 py-3 text-gray-100 placeholder-gray-500 focus:outline-none focus:border-cyan-500 resize-none"
+              className="w-full bg-[#0a0f1a] border border-[#334155] rounded-xl px-4 py-3 text-[#f8fafc] placeholder-[#64748b] focus:outline-none focus:border-[#0891b2] resize-none"
               rows={3}
             />
           </div>
         </div>
 
         {/* Footer - Quick Actions */}
-        <div className="bg-[#111827] px-6 py-4 border-t border-gray-700">
+        <div className="bg-[#0a0f1a] px-6 py-4 border-t border-[#334155]">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-sm text-gray-400">快捷操作</span>
+            <span className="text-sm text-[#94a3b8]">快捷操作</span>
           </div>
           <div className="flex flex-wrap gap-2">
             <motion.button
@@ -708,9 +773,9 @@ function CandidateDetailModal({
                 setStatus("interview");
                 onStatusChange("interview");
               }}
-              className="px-4 py-2 bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 rounded-lg hover:bg-emerald-600/30 transition-colors text-sm flex items-center gap-2"
+              className="px-4 py-2 bg-[#10b981]/20 text-[#34d399] border border-[#10b981]/30 rounded-lg hover:bg-[#10b981]/30 transition-colors text-sm flex items-center gap-2"
             >
-              📅 安排面试
+              安排面试
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -719,9 +784,9 @@ function CandidateDetailModal({
                 const subject = encodeURIComponent(`【Spider招聘】关于${candidate.candidate_name}的面试邀请`);
                 window.open(`mailto:?subject=${subject}`);
               }}
-              className="px-4 py-2 bg-blue-600/20 text-blue-400 border border-blue-500/30 rounded-lg hover:bg-blue-600/30 transition-colors text-sm flex items-center gap-2"
+              className="px-4 py-2 bg-[#3b82f6]/20 text-[#60a5fa] border border-[#3b82f6]/30 rounded-lg hover:bg-[#3b82f6]/30 transition-colors text-sm flex items-center gap-2"
             >
-              ✉️ 发送邮件
+              发送邮件
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -730,9 +795,9 @@ function CandidateDetailModal({
                 setStatus("offer");
                 onStatusChange("offer");
               }}
-              className="px-4 py-2 bg-purple-600/20 text-purple-400 border border-purple-500/30 rounded-lg hover:bg-purple-600/30 transition-colors text-sm flex items-center gap-2"
+              className="px-4 py-2 bg-[#7c3aed]/20 text-[#a78bfa] border border-[#7c3aed]/30 rounded-lg hover:bg-[#7c3aed]/30 transition-colors text-sm flex items-center gap-2"
             >
-              🎯 发放Offer
+              发放Offer
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -747,9 +812,9 @@ function CandidateDetailModal({
                 a.click();
                 URL.revokeObjectURL(url);
               }}
-              className="px-4 py-2 bg-cyan-600/20 text-cyan-400 border border-cyan-500/30 rounded-lg hover:bg-cyan-600/30 transition-colors text-sm flex items-center gap-2"
+              className="px-4 py-2 bg-[#0891b2]/20 text-[#22d3ee] border border-[#0891b2]/30 rounded-lg hover:bg-[#0891b2]/30 transition-colors text-sm flex items-center gap-2"
             >
-              📥 导出
+              导出
             </motion.button>
           </div>
         </div>
@@ -870,19 +935,19 @@ export default function MatchResult({
     switch (level) {
       case "strong_recommend":
         return (
-          <motion.span whileHover={{ scale: 1.1 }} className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-xs px-3 py-1 rounded-full shadow-lg shadow-emerald-500/30">
-            ⭐ 强烈推荐
+          <motion.span whileHover={{ scale: 1.1 }} className="bg-gradient-to-r from-[#10b981] to-[#059669] text-white text-xs px-3 py-1 rounded-full shadow-lg shadow-[#10b981]/30">
+            强烈推荐
           </motion.span>
         );
       case "backup":
         return (
-          <motion.span whileHover={{ scale: 1.1 }} className="bg-gradient-to-r from-amber-400 to-amber-500 text-amber-900 text-xs px-3 py-1 rounded-full shadow-lg shadow-amber-500/30">
-            🟡 可备选
+          <motion.span whileHover={{ scale: 1.1 }} className="bg-gradient-to-r from-[#fbbf24] to-[#f59e0b] text-[#78350f] text-xs px-3 py-1 rounded-full shadow-lg shadow-[#f59e0b]/30">
+            可备选
           </motion.span>
         );
       default:
         return (
-          <span className="bg-gray-600 text-gray-200 text-xs px-3 py-1 rounded-full">
+          <span className="bg-[#64748b] text-[#e2e8f0] text-xs px-3 py-1 rounded-full">
             {level}
           </span>
         );
@@ -890,15 +955,15 @@ export default function MatchResult({
   }, []);
 
   const getScoreColor = useCallback((score: number) => {
-    if (score >= 80) return "text-emerald-400";
-    if (score >= 60) return "text-amber-400";
-    return "text-red-400";
+    if (score >= 80) return "text-[#34d399]";
+    if (score >= 60) return "text-[#fbbf24]";
+    return "text-[#f87171]";
   }, []);
 
   const getScoreBg = useCallback((score: number) => {
-    if (score >= 80) return "from-emerald-500/20 to-emerald-600/10";
-    if (score >= 60) return "from-amber-500/20 to-amber-600/10";
-    return "from-red-500/20 to-red-600/10";
+    if (score >= 80) return "from-[#10b981]/20 to-[#059669]/10";
+    if (score >= 60) return "from-[#f59e0b]/20 to-[#d97706]/10";
+    return "from-[#ef4444]/20 to-[#dc2626]/10";
   }, []);
 
   const handleStatusChange = useCallback((candidate: Candidate, status: CandidateStatus) => {
@@ -1004,7 +1069,11 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
       </AnimatePresence>
 
       {/* Search & Filter */}
-      <div className="bg-[#1F2937] rounded-xl p-4 border border-gray-700">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-[#1f2937] rounded-xl p-4 border border-[#334155]"
+      >
         <div className="flex flex-col md:flex-row gap-4">
           {/* Search Input */}
           <div className="relative flex-1">
@@ -1013,54 +1082,62 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="搜索候选人姓名、公司、摘要..."
-              className="w-full bg-[#111827] border border-gray-700 rounded-lg px-4 py-2 pl-10 text-gray-100 placeholder-gray-500 focus:outline-none focus:border-cyan-500"
+              className="w-full bg-[#0a0f1a] border border-[#334155] rounded-lg px-4 py-2 pl-10 text-[#f8fafc] placeholder-[#64748b] focus:outline-none focus:border-[#0891b2]"
             />
-            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#64748b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             {searchQuery && (
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-cyan-400">
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#22d3ee]">
                 {sortedFilteredStrong.length + sortedFilteredBackup.length} 条结果
               </span>
             )}
           </div>
 
           {/* Batch Mode Toggle */}
-          <button
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => {
               setBatchMode(!batchMode);
               setBatchSelected([]);
             }}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               batchMode
-                ? "bg-purple-600 text-white"
-                : "bg-[#111827] text-gray-400 border border-gray-700 hover:border-purple-500"
+                ? "bg-[#7c3aed] text-white"
+                : "bg-[#0a0f1a] text-[#94a3b8] border border-[#334155] hover:border-[#7c3aed]"
             }`}
           >
-            {batchMode ? "✓ 退出批量" : "📋 批量操作"}
-          </button>
+            {batchMode ? "✓ 退出批量" : "批量操作"}
+          </motion.button>
 
           {/* Batch Select All / Deselect */}
           {batchMode && (
             <div className="flex gap-2">
-              <button
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setBatchSelected(sortedFilteredStrong.map(c => c.candidate_name))}
-                className="px-3 py-1.5 bg-[#111827] text-gray-400 border border-gray-700 hover:border-cyan-500 rounded-lg text-xs transition-colors"
+                className="px-3 py-1.5 bg-[#0a0f1a] text-[#94a3b8] border border-[#334155] hover:border-[#0891b2] rounded-lg text-xs transition-colors"
               >
                 全选强推
-              </button>
-              <button
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setBatchSelected(sortedFilteredBackup.map(c => c.candidate_name))}
-                className="px-3 py-1.5 bg-[#111827] text-gray-400 border border-gray-700 hover:border-cyan-500 rounded-lg text-xs transition-colors"
+                className="px-3 py-1.5 bg-[#0a0f1a] text-[#94a3b8] border border-[#334155] hover:border-[#0891b2] rounded-lg text-xs transition-colors"
               >
                 全选备选
-              </button>
-              <button
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setBatchSelected([])}
-                className="px-3 py-1.5 bg-[#111827] text-gray-400 border border-gray-700 hover:border-red-500 rounded-lg text-xs transition-colors"
+                className="px-3 py-1.5 bg-[#0a0f1a] text-[#94a3b8] border border-[#334155] hover:border-[#ef4444] rounded-lg text-xs transition-colors"
               >
                 取消全选
-              </button>
+              </motion.button>
             </div>
           )}
 
@@ -1073,8 +1150,8 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
             }}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               showOnlyStarred
-                ? "bg-amber-600 text-white"
-                : "bg-[#111827] text-gray-400 border border-gray-700 hover:border-amber-500"
+                ? "bg-[#f59e0b] text-white"
+                : "bg-[#0a0f1a] text-[#94a3b8] border border-[#334155] hover:border-[#f59e0b]"
             }`}
           >
             ★ 我的收藏 ({starred.size})
@@ -1089,31 +1166,31 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
             }}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               showOnlyWithNotes
-                ? "bg-cyan-600 text-white"
-                : "bg-[#111827] text-gray-400 border border-gray-700 hover:border-cyan-500"
+                ? "bg-[#0891b2] text-white"
+                : "bg-[#0a0f1a] text-[#94a3b8] border border-[#334155] hover:border-[#0891b2]"
             }`}
           >
-            📝 有笔记 ({notes.size})
+            有笔记 ({notes.size})
           </motion.button>
 
           {/* Score Range Filter */}
           <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-400">评分:</span>
+            <span className="text-xs text-[#94a3b8]">评分:</span>
             <input
               type="range"
               min="0"
               max="100"
               value={minScore}
               onChange={(e) => setMinScore(Number(e.target.value))}
-              className="w-24 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-cyan-500"
+              className="w-24 h-2 bg-[#334155] rounded-lg appearance-none cursor-pointer accent-[#0891b2]"
             />
-            <span className="text-xs text-cyan-400 w-10">{minScore}%+</span>
+            <span className="text-xs text-[#22d3ee] w-10">{minScore}%+</span>
             {minScore > 0 && (
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setMinScore(0)}
-                className="text-xs text-gray-500 hover:text-white"
+                className="text-xs text-[#64748b] hover:text-white cursor-default"
               >
                 重置
               </motion.button>
@@ -1122,11 +1199,11 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
 
           {/* Sort Controls */}
           <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-400">排序:</span>
+            <span className="text-xs text-[#94a3b8]">排序:</span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as "score" | "name" | "experience")}
-              className="bg-[#111827] border border-gray-700 rounded px-2 py-1 text-xs text-gray-300 focus:outline-none focus:border-cyan-500"
+              className="bg-[#0a0f1a] border border-[#334155] rounded px-2 py-1 text-xs text-[#cbd5e1] focus:outline-none focus:border-[#0891b2]"
             >
               <option value="score">评分最高</option>
               <option value="name">姓名排序</option>
@@ -1145,8 +1222,8 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
                   onClick={() => toggleTag(tag)}
                   className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                     selectedTags.includes(tag)
-                      ? "bg-cyan-600 text-white"
-                      : "bg-[#111827] text-gray-400 border border-gray-700 hover:border-cyan-500"
+                      ? "bg-[#0891b2] text-white"
+                      : "bg-[#0a0f1a] text-[#94a3b8] border border-[#334155] hover:border-[#0891b2]"
                   }`}
                 >
                   {tag}
@@ -1157,7 +1234,7 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setSelectedTags([])}
-                  className="px-3 py-1.5 text-xs text-gray-400 hover:text-white transition-colors"
+                  className="px-3 py-1.5 text-xs text-[#94a3b8] hover:text-white transition-colors cursor-default"
                 >
                   清除
                 </motion.button>
@@ -1165,17 +1242,17 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
 
       {/* Batch Action Toolbar */}
       {batchMode && batchSelected.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-purple-900/30 border border-purple-500/30 rounded-xl p-4 flex items-center justify-between"
+          className="bg-[#7c3aed]/30 border border-[#7c3aed]/30 rounded-xl p-4 flex items-center justify-between"
         >
           <div className="flex items-center gap-3">
-            <span className="text-purple-300 text-sm font-medium">
+            <span className="text-[#c4b5fd] text-sm font-medium">
               已选择 {batchSelected.length} 位候选人
             </span>
           </div>
@@ -1190,9 +1267,9 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
                 });
                 setBatchSelected([]);
               }}
-              className="px-4 py-2 bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 rounded-lg hover:bg-emerald-600/30 transition-colors text-sm"
+              className="px-4 py-2 bg-[#10b981]/20 text-[#34d399] border border-[#10b981]/30 rounded-lg hover:bg-[#10b981]/30 transition-colors text-sm"
             >
-              📅 批量面试
+              批量面试
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -1210,15 +1287,15 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
                 URL.revokeObjectURL(url);
                 setBatchSelected([]);
               }}
-              className="px-4 py-2 bg-cyan-600/20 text-cyan-400 border border-cyan-500/30 rounded-lg hover:bg-cyan-600/30 transition-colors text-sm"
+              className="px-4 py-2 bg-[#0891b2]/20 text-[#22d3ee] border border-[#0891b2]/30 rounded-lg hover:bg-[#0891b2]/30 transition-colors text-sm"
             >
-              📥 导出选中
+              导出选中
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setBatchSelected([])}
-              className="px-4 py-2 bg-gray-600/20 text-gray-400 border border-gray-500/30 rounded-lg hover:bg-gray-600/30 transition-colors text-sm"
+              className="px-4 py-2 bg-[#64748b]/20 text-[#94a3b8] border border-[#64748b]/30 rounded-lg hover:bg-[#64748b]/30 transition-colors text-sm"
             >
               取消
             </motion.button>
@@ -1231,11 +1308,14 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-[#1F2937] rounded-xl p-4 border border-gray-700"
+          className="bg-[#1f2937] rounded-xl p-4 border border-[#334155]"
         >
-          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-            <span>🕒</span> 最近查看
-          </h3>
+          <motion.h3
+            whileHover={{ scale: 1.02 }}
+            className="text-sm font-semibold text-[#94a3b8] uppercase tracking-wider mb-3 flex items-center gap-2 cursor-default"
+          >
+            最近查看
+          </motion.h3>
           <div className="flex gap-3 overflow-x-auto pb-2">
             {recentlyViewed.map((candidate, i) => (
               <motion.button
@@ -1246,18 +1326,18 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
                   setSelectedCandidate(candidate);
                   addToRecentlyViewed(candidate);
                 }}
-                className="flex-shrink-0 bg-[#111827] rounded-lg p-3 border border-gray-700 hover:border-cyan-500/50 transition-colors flex items-center gap-3 min-w-[200px]"
+                className="flex-shrink-0 bg-[#0a0f1a] rounded-lg p-3 border border-[#334155] hover:border-[#0891b2]/50 transition-colors flex items-center gap-3 min-w-[200px]"
               >
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${
-                  candidate.match_score >= 80 ? "bg-emerald-500/20 text-emerald-400" :
-                  candidate.match_score >= 60 ? "bg-amber-500/20 text-amber-400" :
-                  "bg-red-500/20 text-red-400"
+                  candidate.match_score >= 80 ? "bg-[#10b981]/20 text-[#34d399]" :
+                  candidate.match_score >= 60 ? "bg-[#f59e0b]/20 text-[#fbbf24]" :
+                  "bg-[#ef4444]/20 text-[#f87171]"
                 }`}>
                   {candidate.match_score}
                 </div>
                 <div className="text-left">
-                  <p className="text-sm text-white font-medium truncate max-w-[120px]">{candidate.candidate_name}</p>
-                  <p className="text-xs text-gray-500 truncate max-w-[120px]">{candidate.current_company || "未填写公司"}</p>
+                  <p className="text-sm text-[#f8fafc] font-medium truncate max-w-[120px]">{candidate.candidate_name}</p>
+                  <p className="text-xs text-[#64748b] truncate max-w-[120px]">{candidate.current_company || "未填写公司"}</p>
                 </div>
               </motion.button>
             ))}
@@ -1266,46 +1346,53 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
       )}
 
       {/* Statistics Panel */}
-      <div className="bg-[#1F2937] rounded-xl p-4 border border-gray-700">
-        <motion.h3 whileHover={{ scale: 1.02 }} className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2 cursor-default">
-          <span>📊</span> 候选人统计
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-[#1f2937] rounded-xl p-4 border border-[#334155]"
+      >
+        <motion.h3
+          whileHover={{ scale: 1.02 }}
+          className="text-sm font-semibold text-[#94a3b8] uppercase tracking-wider mb-3 flex items-center gap-2 cursor-default"
+        >
+          候选人统计
         </motion.h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <motion.div whileHover={{ scale: 1.05 }} className="bg-[#111827] rounded-lg p-3 text-center cursor-default">
-            <div className="text-2xl font-bold text-cyan-400">{candidateStats.avgScore}%</div>
-            <div className="text-xs text-gray-400 mt-1">平均匹配度</div>
+          <motion.div whileHover={{ scale: 1.05 }} className="bg-[#0a0f1a] rounded-lg p-3 text-center cursor-default border border-[#334155]">
+            <div className="text-2xl font-bold text-[#22d3ee]">{candidateStats.avgScore}%</div>
+            <div className="text-xs text-[#64748b] mt-1">平均匹配度</div>
           </motion.div>
-          <motion.div whileHover={{ scale: 1.05 }} className="bg-[#111827] rounded-lg p-3 text-center cursor-default">
-            <div className="text-2xl font-bold text-emerald-400">{candidateStats.scoreDistribution.high}</div>
-            <div className="text-xs text-gray-400 mt-1">高分候选人(≥80)</div>
+          <motion.div whileHover={{ scale: 1.05 }} className="bg-[#0a0f1a] rounded-lg p-3 text-center cursor-default border border-[#334155]">
+            <div className="text-2xl font-bold text-[#34d399]">{candidateStats.scoreDistribution.high}</div>
+            <div className="text-xs text-[#64748b] mt-1">高分候选人(≥80)</div>
           </motion.div>
-          <motion.div whileHover={{ scale: 1.05 }} className="bg-[#111827] rounded-lg p-3 text-center cursor-default">
-            <div className="text-2xl font-bold text-amber-400">{candidateStats.scoreDistribution.medium}</div>
-            <div className="text-xs text-gray-400 mt-1">中等候选人(60-79)</div>
+          <motion.div whileHover={{ scale: 1.05 }} className="bg-[#0a0f1a] rounded-lg p-3 text-center cursor-default border border-[#334155]">
+            <div className="text-2xl font-bold text-[#fbbf24]">{candidateStats.scoreDistribution.medium}</div>
+            <div className="text-xs text-[#64748b] mt-1">中等候选人(60-79)</div>
           </motion.div>
-          <motion.div whileHover={{ scale: 1.05 }} className="bg-[#111827] rounded-lg p-3 text-center cursor-default">
-            <div className="text-2xl font-bold text-gray-400">{candidateStats.companies}</div>
-            <div className="text-xs text-gray-400 mt-1">涉及公司数</div>
+          <motion.div whileHover={{ scale: 1.05 }} className="bg-[#0a0f1a] rounded-lg p-3 text-center cursor-default border border-[#334155]">
+            <div className="text-2xl font-bold text-[#94a3b8]">{candidateStats.companies}</div>
+            <div className="text-xs text-[#64748b] mt-1">涉及公司数</div>
           </motion.div>
         </div>
         {candidateStats.topTags.length > 0 && (
           <div className="mt-4">
-            <motion.span whileHover={{ scale: 1.05 }} className="text-xs text-gray-400 mb-2 inline-block cursor-default">热门标签:</motion.span>
+            <motion.span whileHover={{ scale: 1.05 }} className="text-xs text-[#64748b] mb-2 inline-block cursor-default">热门标签:</motion.span>
             <div className="flex flex-wrap gap-2">
               {candidateStats.topTags.map(([tag, count]) => (
                 <motion.span
                   key={tag}
                   whileHover={{ scale: 1.1, boxShadow: "0 0 8px rgba(34, 211, 238, 0.4)" }}
-                  className="bg-cyan-500/20 text-cyan-400 px-2 py-1 rounded-full text-xs flex items-center gap-1 cursor-default"
+                  className="bg-[#0891b2]/20 text-[#22d3ee] px-2 py-1 rounded-full text-xs flex items-center gap-1 cursor-default border border-[#0891b2]/30"
                 >
                   {tag}
-                  <span className="bg-cyan-500/40 px-1 rounded text-[10px]">{count}</span>
+                  <span className="bg-[#0891b2]/40 px-1 rounded text-[10px]">{count}</span>
                 </motion.span>
               ))}
             </div>
           </div>
         )}
-      </div>
+      </motion.div>
 
       {/* 强烈推荐 */}
       {sortedFilteredStrong.length > 0 && (
@@ -1313,11 +1400,14 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-[#1F2937] rounded-xl shadow-lg border border-gray-700 overflow-hidden"
+          className="bg-[#1f2937] rounded-xl shadow-lg border border-[#334155] overflow-hidden"
         >
-          <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 px-6 py-4">
-            <motion.h3 whileHover={{ scale: 1.02 }} className="text-lg font-semibold text-white flex items-center gap-2 cursor-default">
-              <span>⭐</span> 强烈推荐 ({sortedFilteredStrong.length}份)
+          <div className="bg-gradient-to-r from-[#10b981] to-[#059669] px-6 py-4">
+            <motion.h3
+              whileHover={{ scale: 1.02 }}
+              className="text-lg font-semibold text-white flex items-center gap-2 cursor-default"
+            >
+              强烈推荐 ({sortedFilteredStrong.length}份)
             </motion.h3>
           </div>
           <div className="p-6 space-y-4">
@@ -1340,11 +1430,11 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
                     addToRecentlyViewed(candidate);
                   }
                 }}
-                className={`border rounded-lg p-5 hover:shadow-lg transition-all bg-[#111827] cursor-pointer ${
+                className={`border rounded-lg p-5 hover:shadow-lg transition-all bg-[#0a0f1a] cursor-pointer border-[#334155] ${
                   batchMode
-                    ? "border-gray-700 hover:border-purple-500"
-                    : "border-gray-700"
-                } ${batchSelected.includes(candidate.candidate_name) ? "border-purple-500 bg-purple-900/10" : ""}`}
+                    ? "hover:border-[#7c3aed]"
+                    : ""
+                } ${batchSelected.includes(candidate.candidate_name) ? "border-[#7c3aed] bg-[#7c3aed]/10" : ""}`}
               >
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
@@ -1352,8 +1442,8 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
                       {batchMode ? (
                         <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${
                           batchSelected.includes(candidate.candidate_name)
-                            ? "bg-purple-600 border-purple-600"
-                            : "border-gray-500"
+                            ? "bg-[#7c3aed] border-[#7c3aed]"
+                            : "border-[#64748b]"
                         }`}>
                           {batchSelected.includes(candidate.candidate_name) && (
                             <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1362,65 +1452,68 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
                           )}
                         </div>
                       ) : (
-                        <span className="w-8 h-8 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center font-bold text-sm border border-emerald-500/30">
+                        <span className="w-8 h-8 bg-[#10b981]/20 text-[#34d399] rounded-full flex items-center justify-center font-bold text-sm border border-[#10b981]/30">
                           {index + 1}
                         </span>
                       )}
                       <div>
-                        <h4 className="font-semibold text-white text-lg">
+                        <h4 className="font-semibold text-[#f8fafc] text-lg">
                           {candidate.candidate_name}
                         </h4>
                         {candidate.years_experience && (
-                          <p className="text-sm text-gray-400">
+                          <p className="text-sm text-[#94a3b8]">
                             {candidate.years_experience}年经验
                           </p>
                         )}
                       </div>
                     </div>
                     {candidate.current_company && (
-                      <p className="text-sm text-gray-400 mt-2 flex items-center gap-1">
-                        <span>🏢</span> {candidate.current_company}
+                      <p className="text-sm text-[#94a3b8] mt-2 flex items-center gap-1">
+                        {candidate.current_company}
                       </p>
                     )}
                     {candidate.source && (
                       <div className="flex items-center gap-1 mt-2">
-                        <span className="text-xs px-2 py-0.5 bg-gray-500/20 text-gray-400 rounded border border-gray-500/30">
-                          {candidate.source === "referral" && "👥 内推"}
-                          {candidate.source === "headhunter" && "🎯 猎头"}
-                          {candidate.source === "website" && "🌐 网站"}
-                          {candidate.source === "resume_db" && "📁 简历库"}
-                          {candidate.source === "other" && "📋 其他"}
+                        <span className="text-xs px-2 py-0.5 bg-[#475569]/20 text-[#94a3b8] rounded border border-[#475569]/30">
+                          {candidate.source === "referral" && "内推"}
+                          {candidate.source === "headhunter" && "猎头"}
+                          {candidate.source === "website" && "网站"}
+                          {candidate.source === "resume_db" && "简历库"}
+                          {candidate.source === "other" && "其他"}
                         </span>
                         {candidate.source_name && (
-                          <span className="text-xs text-gray-500">- {candidate.source_name}</span>
+                          <span className="text-xs text-[#64748b]">- {candidate.source_name}</span>
                         )}
                       </div>
                     )}
-                    <p className="text-gray-400 text-sm mt-3">{candidate.summary}</p>
+                    <p className="text-[#94a3b8] text-sm mt-3">{candidate.summary}</p>
                     {getAllTags(candidate).length > 0 && (
                       <div className="flex flex-wrap gap-1 mt-2">
                         {getAllTags(candidate).slice(0, 3).map((tag, i) => (
-                          <span key={i} className="text-xs px-2 py-0.5 bg-cyan-500/20 text-cyan-400 rounded-full border border-cyan-500/30">
+                          <span key={i} className="text-xs px-2 py-0.5 bg-[#0891b2]/20 text-[#22d3ee] rounded-full border border-[#0891b2]/30">
                             {tag}
                           </span>
                         ))}
                       </div>
                     )}
                     {notes.get(candidate.candidate_name) && (
-                      <div className="flex items-center gap-1 mt-2 text-xs text-gray-500">
+                      <div className="flex items-center gap-1 mt-2 text-xs text-[#64748b]">
                         <span>📝</span>
                         <span className="truncate max-w-[150px]">{notes.get(candidate.candidate_name)?.slice(0, 30)}</span>
                       </div>
                     )}
-                    <p className="text-cyan-400 text-xs mt-2 bg-cyan-500/10 hover:bg-cyan-500/20 px-2 py-1 rounded transition-colors inline-flex items-center gap-1">
-                      点击查看详情 <motion.span whileHover={{ x: 3 }} transition={{ duration: 0.2 }}>→</motion.span>
-                    </p>
+                    <motion.p
+                      whileHover={{ scale: 1.02 }}
+                      className="text-[#22d3ee] text-xs mt-2 bg-[#0891b2]/10 hover:bg-[#0891b2]/20 px-2 py-1 rounded transition-colors inline-flex items-center gap-1 cursor-default"
+                    >
+                      点击查看详情
+                    </motion.p>
                   </div>
                   <motion.div
                     initial={{ scale: 0.8 }}
                     animate={{ scale: 1 }}
                     transition={{ delay: index * 0.1 + 0.2 }}
-                    className={`bg-gradient-to-br ${getScoreBg(candidate.match_score)} rounded-xl p-4 text-center min-w-[100px] border border-gray-700 flex flex-col items-center gap-2`}
+                    className={`bg-gradient-to-br ${getScoreBg(candidate.match_score)} rounded-xl p-4 text-center min-w-[100px] border border-[#334155] flex flex-col items-center gap-2`}
                   >
                     <button
                       onClick={(e) => {
@@ -1437,7 +1530,7 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
                         });
                         logActivity(isStarred ? "取消收藏" : "添加收藏", candidate.candidate_name);
                       }}
-                      className={`text-xl transition-colors ${starred.has(candidate.candidate_name) ? "text-amber-400" : "text-gray-500 hover:text-amber-300"}`}
+                      className={`text-xl transition-colors ${starred.has(candidate.candidate_name) ? "text-[#fbbf24]" : "text-[#64748b] hover:text-[#fbbf24]"}`}
                     >
                       {starred.has(candidate.candidate_name) ? "★" : "☆"}
                     </button>
@@ -1452,7 +1545,7 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
                           e.stopPropagation();
                           copyCandidateInfo(candidate);
                         }}
-                        className="p-1.5 text-gray-500 hover:text-cyan-400 transition-colors rounded hover:bg-gray-700"
+                        className="p-1.5 text-[#64748b] hover:text-[#22d3ee] transition-colors rounded hover:bg-[#334155]"
                         title="复制信息"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1466,7 +1559,7 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
                           navigator.clipboard.writeText(link);
                           logActivity("生成分享链接", candidate.candidate_name);
                         }}
-                        className="p-1.5 text-gray-500 hover:text-purple-400 transition-colors rounded hover:bg-gray-700"
+                        className="p-1.5 text-[#64748b] hover:text-[#a78bfa] transition-colors rounded hover:bg-[#334155]"
                         title="生成分享链接"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1488,11 +1581,14 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-[#1F2937] rounded-xl shadow-lg border border-gray-700 overflow-hidden"
+          className="bg-[#1f2937] rounded-xl shadow-lg border border-[#334155] overflow-hidden"
         >
-          <div className="bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-4">
-            <motion.h3 whileHover={{ scale: 1.02 }} className="text-lg font-semibold text-amber-900 flex items-center gap-2 cursor-default">
-              <span>🟡</span> 可备选 ({sortedFilteredBackup.length}份)
+          <div className="bg-gradient-to-r from-[#f59e0b] to-[#d97706] px-6 py-4">
+            <motion.h3
+              whileHover={{ scale: 1.02 }}
+              className="text-lg font-semibold text-[#78350f] flex items-center gap-2 cursor-default"
+            >
+              可备选 ({sortedFilteredBackup.length}份)
             </motion.h3>
           </div>
           <div className="p-6 space-y-4">
@@ -1515,11 +1611,11 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
                     addToRecentlyViewed(candidate);
                   }
                 }}
-                className={`border rounded-lg p-5 hover:shadow-lg transition-all bg-[#111827] cursor-pointer ${
+                className={`border rounded-lg p-5 hover:shadow-lg transition-all bg-[#0a0f1a] cursor-pointer border-[#334155] ${
                   batchMode
-                    ? "border-gray-700 hover:border-purple-500"
-                    : "border-gray-700"
-                } ${batchSelected.includes(candidate.candidate_name) ? "border-purple-500 bg-purple-900/10" : ""}`}
+                    ? "hover:border-[#7c3aed]"
+                    : ""
+                } ${batchSelected.includes(candidate.candidate_name) ? "border-[#7c3aed] bg-[#7c3aed]/10" : ""}`}
               >
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
@@ -1527,8 +1623,8 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
                       {batchMode ? (
                         <div className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${
                           batchSelected.includes(candidate.candidate_name)
-                            ? "bg-purple-600 border-purple-600"
-                            : "border-gray-500"
+                            ? "bg-[#7c3aed] border-[#7c3aed]"
+                            : "border-[#64748b]"
                         }`}>
                           {batchSelected.includes(candidate.candidate_name) && (
                             <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1537,59 +1633,62 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
                           )}
                         </div>
                       ) : (
-                        <span className="w-8 h-8 bg-amber-500/20 text-amber-400 rounded-full flex items-center justify-center font-bold text-sm border border-amber-500/30">
+                        <span className="w-8 h-8 bg-[#f59e0b]/20 text-[#fbbf24] rounded-full flex items-center justify-center font-bold text-sm border border-[#f59e0b]/30">
                           {index + 1}
                         </span>
                       )}
                       <div>
-                        <h4 className="font-semibold text-white text-lg">
+                        <h4 className="font-semibold text-[#f8fafc] text-lg">
                           {candidate.candidate_name}
                         </h4>
                         {candidate.years_experience && (
-                          <p className="text-sm text-gray-400">
+                          <p className="text-sm text-[#94a3b8]">
                             {candidate.years_experience}年经验
                           </p>
                         )}
                       </div>
                     </div>
                     {candidate.current_company && (
-                      <p className="text-sm text-gray-400 mt-2 flex items-center gap-1">
-                        <span>🏢</span> {candidate.current_company}
+                      <p className="text-sm text-[#94a3b8] mt-2 flex items-center gap-1">
+                        {candidate.current_company}
                       </p>
                     )}
                     {candidate.source && (
                       <div className="flex items-center gap-1 mt-2">
-                        <span className="text-xs px-2 py-0.5 bg-gray-500/20 text-gray-400 rounded border border-gray-500/30">
-                          {candidate.source === "referral" && "👥 内推"}
-                          {candidate.source === "headhunter" && "🎯 猎头"}
-                          {candidate.source === "website" && "🌐 网站"}
-                          {candidate.source === "resume_db" && "📁 简历库"}
-                          {candidate.source === "other" && "📋 其他"}
+                        <span className="text-xs px-2 py-0.5 bg-[#475569]/20 text-[#94a3b8] rounded border border-[#475569]/30">
+                          {candidate.source === "referral" && "内推"}
+                          {candidate.source === "headhunter" && "猎头"}
+                          {candidate.source === "website" && "网站"}
+                          {candidate.source === "resume_db" && "简历库"}
+                          {candidate.source === "other" && "其他"}
                         </span>
                         {candidate.source_name && (
-                          <span className="text-xs text-gray-500">- {candidate.source_name}</span>
+                          <span className="text-xs text-[#64748b]">- {candidate.source_name}</span>
                         )}
                       </div>
                     )}
-                    <p className="text-gray-400 text-sm mt-3">{candidate.summary}</p>
+                    <p className="text-[#94a3b8] text-sm mt-3">{candidate.summary}</p>
                     {getAllTags(candidate).length > 0 && (
                       <div className="flex flex-wrap gap-1 mt-2">
                         {getAllTags(candidate).slice(0, 3).map((tag, i) => (
-                          <span key={i} className="text-xs px-2 py-0.5 bg-amber-500/20 text-amber-400 rounded-full border border-amber-500/30">
+                          <span key={i} className="text-xs px-2 py-0.5 bg-[#f59e0b]/20 text-[#fbbf24] rounded-full border border-[#f59e0b]/30">
                             {tag}
                           </span>
                         ))}
                       </div>
                     )}
-                    <p className="text-cyan-400 text-xs mt-2 bg-cyan-500/10 hover:bg-cyan-500/20 px-2 py-1 rounded transition-colors inline-flex items-center gap-1">
-                      点击查看详情 <motion.span whileHover={{ x: 3 }} transition={{ duration: 0.2 }}>→</motion.span>
-                    </p>
+                    <motion.p
+                      whileHover={{ scale: 1.02 }}
+                      className="text-[#22d3ee] text-xs mt-2 bg-[#0891b2]/10 hover:bg-[#0891b2]/20 px-2 py-1 rounded transition-colors inline-flex items-center gap-1 cursor-default"
+                    >
+                      点击查看详情
+                    </motion.p>
                   </div>
                   <motion.div
                     initial={{ scale: 0.8 }}
                     animate={{ scale: 1 }}
                     transition={{ delay: 0.2 + index * 0.1 + 0.2 }}
-                    className={`bg-gradient-to-br ${getScoreBg(candidate.match_score)} rounded-xl p-4 text-center min-w-[100px] border border-gray-700 flex flex-col items-center gap-2`}
+                    className={`bg-gradient-to-br ${getScoreBg(candidate.match_score)} rounded-xl p-4 text-center min-w-[100px] border border-[#334155] flex flex-col items-center gap-2`}
                   >
                     <button
                       onClick={(e) => {
@@ -1606,7 +1705,7 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
                         });
                         logActivity(isStarred ? "取消收藏" : "添加收藏", candidate.candidate_name);
                       }}
-                      className={`text-xl transition-colors ${starred.has(candidate.candidate_name) ? "text-amber-400" : "text-gray-500 hover:text-amber-300"}`}
+                      className={`text-xl transition-colors ${starred.has(candidate.candidate_name) ? "text-[#fbbf24]" : "text-[#64748b] hover:text-[#fbbf24]"}`}
                     >
                       {starred.has(candidate.candidate_name) ? "★" : "☆"}
                     </button>
@@ -1621,7 +1720,7 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
                           e.stopPropagation();
                           copyCandidateInfo(candidate);
                         }}
-                        className="p-1.5 text-gray-500 hover:text-cyan-400 transition-colors rounded hover:bg-gray-700"
+                        className="p-1.5 text-[#64748b] hover:text-[#22d3ee] transition-colors rounded hover:bg-[#334155]"
                         title="复制信息"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1635,7 +1734,7 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
                           navigator.clipboard.writeText(link);
                           logActivity("生成分享链接", candidate.candidate_name);
                         }}
-                        className="p-1.5 text-gray-500 hover:text-purple-400 transition-colors rounded hover:bg-gray-700"
+                        className="p-1.5 text-[#64748b] hover:text-[#a78bfa] transition-colors rounded hover:bg-[#334155]"
                         title="生成分享链接"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1657,26 +1756,31 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.45 }}
-          className="bg-[#1F2937] rounded-xl shadow-lg border border-gray-700 overflow-hidden"
+          className="bg-[#1f2937] rounded-xl shadow-lg border border-[#334155] overflow-hidden"
         >
-          <div className="bg-gradient-to-r from-gray-600 to-gray-700 px-6 py-4 flex justify-between items-center">
-            <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-              <span>📜</span> 操作日志 ({activityLog.length})
-            </h3>
-            <button
+          <div className="bg-gradient-to-r from-[#475569] to-[#334155] px-6 py-4 flex justify-between items-center">
+            <motion.h3
+              whileHover={{ scale: 1.02 }}
+              className="text-lg font-semibold text-[#f8fafc] flex items-center gap-2 cursor-default"
+            >
+              操作日志 ({activityLog.length})
+            </motion.h3>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setActivityLog([])}
-              className="text-xs text-gray-400 hover:text-red-400 transition-colors"
+              className="text-xs text-[#94a3b8] hover:text-[#ef4444] transition-colors"
             >
               清空日志
-            </button>
+            </motion.button>
           </div>
           <div className="p-4 max-h-48 overflow-y-auto">
             <div className="space-y-2">
               {activityLog.slice(0, 10).map((log, i) => (
                 <div key={i} className="flex items-start gap-3 text-sm">
-                  <span className="text-gray-500 w-16 flex-shrink-0">{log.time}</span>
-                  <span className="text-cyan-400 w-32 flex-shrink-0 truncate">{log.candidate}</span>
-                  <span className="text-gray-300">{log.action}</span>
+                  <span className="text-[#64748b] w-16 flex-shrink-0">{log.time}</span>
+                  <span className="text-[#22d3ee] w-32 flex-shrink-0 truncate">{log.candidate}</span>
+                  <span className="text-[#cbd5e1]">{log.action}</span>
                 </div>
               ))}
             </div>
@@ -1690,21 +1794,26 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="bg-[#1F2937] rounded-xl shadow-lg border border-gray-700 overflow-hidden"
+          className="bg-[#1f2937] rounded-xl shadow-lg border border-[#334155] overflow-hidden"
         >
-          <div className="bg-gradient-to-r from-gray-600 to-gray-700 px-6 py-4 flex justify-between items-center">
-            <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-              <span>💡</span> 筛选标准
-            </h3>
-            <button
+          <div className="bg-gradient-to-r from-[#475569] to-[#334155] px-6 py-4 flex justify-between items-center">
+            <motion.h3
+              whileHover={{ scale: 1.02 }}
+              className="text-lg font-semibold text-[#f8fafc] flex items-center gap-2 cursor-default"
+            >
+              筛选标准
+            </motion.h3>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => navigator.clipboard.writeText(criteria.join("\n"))}
-              className="text-xs text-gray-400 hover:text-cyan-400 transition-colors flex items-center gap-1"
+              className="text-xs text-[#94a3b8] hover:text-[#22d3ee] transition-colors flex items-center gap-1"
             >
               <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
               </svg>
               复制
-            </button>
+            </motion.button>
           </div>
           <div className="p-6">
             <div className="flex flex-wrap gap-2">
@@ -1714,9 +1823,10 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.5 + index * 0.05 }}
-                  className="bg-[#111827] text-gray-300 px-4 py-2 rounded-full text-sm flex items-center gap-2 border border-gray-700"
+                  whileHover={{ scale: 1.05 }}
+                  className="bg-[#0a0f1a] text-[#cbd5e1] px-4 py-2 rounded-full text-sm flex items-center gap-2 border border-[#334155] cursor-default"
                 >
-                  <span className="w-2 h-2 bg-cyan-500 rounded-full"></span>
+                  <span className="w-2 h-2 bg-[#0891b2] rounded-full"></span>
                   {criterion}
                 </motion.span>
               ))}

@@ -40,10 +40,10 @@ function ToastContainer() {
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
             className={`px-4 py-3 rounded-lg shadow-lg border ${
               toast.type === "success"
-                ? "bg-emerald-500/90 border-emerald-400 text-white"
+                ? "bg-[#10b981]/90 border-[#34d399] text-white"
                 : toast.type === "error"
-                ? "bg-red-500/90 border-red-400 text-white"
-                : "bg-gray-700/90 border-gray-500 text-white"
+                ? "bg-[#ef4444]/90 border-[#f87171] text-white"
+                : "bg-[#475569]/90 border-[#64748b] text-white"
             }`}
           >
             <div className="flex items-center gap-3">

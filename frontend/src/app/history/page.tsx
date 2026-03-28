@@ -4,6 +4,17 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { historyAPI, HistoryReport } from "@/lib/api";
 
+/* ============================================
+   HISTORY PAGE
+   ============================================
+
+   Design System Applied:
+   - Card: Dark elevated surface
+   - Colors: Cyan (#0891B2), Amber (#f59e0b), Emerald (#10b981), Purple (#7c3aed)
+   - Background: #0a0f1a
+   - Motion: Scale on hover, staggered animations
+   ============================================ */
+
 interface HistoryItem {
   id: string;
   position_name: string;
@@ -131,9 +142,9 @@ export default function HistoryPage() {
 
   const getStatusBadge = useCallback((status?: string) => {
     const styles: Record<string, string> = {
-      completed: "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-      failed: "bg-red-500/20 text-red-400 border-red-500/30",
-      processing: "bg-amber-500/20 text-amber-400 border-amber-500/30",
+      completed: "bg-[#10b981]/20 text-[#34d399] border-[#10b981]/30",
+      failed: "bg-[#ef4444]/20 text-[#f87171] border-[#ef4444]/30",
+      processing: "bg-[#f59e0b]/20 text-[#fbbf24] border-[#f59e0b]/30",
     };
     const labels: Record<string, string> = {
       completed: "已完成",
@@ -142,19 +153,22 @@ export default function HistoryPage() {
     };
     const s = status || "processing";
     return (
-      <span className={`px-2 py-0.5 text-xs rounded-full border ${styles[s] || styles.processing} transition-all hover:shadow-md cursor-default`}>
+      <motion.span
+        whileHover={{ scale: 1.05 }}
+        className={`px-2 py-0.5 text-xs rounded-full border ${styles[s] || styles.processing} transition-all hover:shadow-md cursor-default`}
+      >
         {labels[s] || "处理中"}
-      </span>
+      </motion.span>
     );
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#111827] text-gray-100">
+    <div className="min-h-screen bg-[#0a0f1a] text-[#f8fafc]">
       {/* Header */}
       <motion.header
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="bg-[#1F2937]/80 backdrop-blur-sm border-b border-gray-700 sticky top-0 z-50"
+        className="bg-[#1f2937]/80 backdrop-blur-sm border-b border-[#334155] sticky top-0 z-50"
       >
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -162,13 +176,13 @@ export default function HistoryPage() {
               <motion.div
                 whileHover={{ rotate: 360 }}
                 transition={{ duration: 0.5 }}
-                className="w-10 h-10 bg-gradient-to-br from-cyan-500 to-cyan-700 rounded-xl flex items-center justify-center text-xl shadow-lg shadow-cyan-500/20"
+                className="w-10 h-10 bg-gradient-to-br from-[#0891b2] to-[#0e7490] rounded-xl flex items-center justify-center text-xl shadow-lg shadow-[#0891b2]/20"
               >
                 🕷️
               </motion.div>
               <div>
-                <motion.h1 whileHover={{ scale: 1.05 }} className="text-xl font-bold text-white cursor-default">Spider</motion.h1>
-                <motion.p whileHover={{ scale: 1.05 }} className="text-xs text-gray-400 cursor-default">筛选历史记录</motion.p>
+                <motion.h1 whileHover={{ scale: 1.05 }} className="text-xl font-bold text-[#f8fafc] cursor-default">Spider</motion.h1>
+                <motion.p whileHover={{ scale: 1.05 }} className="text-xs text-[#64748b] cursor-default">筛选历史记录</motion.p>
               </div>
             </div>
             <motion.div
@@ -177,7 +191,7 @@ export default function HistoryPage() {
               transition={{ delay: 0.3 }}
               className="flex items-center gap-2"
             >
-              <span className="px-3 py-1 bg-cyan-500/20 text-cyan-400 text-xs font-medium rounded-full border border-cyan-500/30">
+              <span className="px-3 py-1 bg-[#0891b2]/20 text-[#22d3ee] text-xs font-medium rounded-full border border-[#0891b2]/30">
                 v1.34.2
               </span>
             </motion.div>
@@ -201,15 +215,15 @@ export default function HistoryPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="搜索职位名称或JD来源..."
-                className="w-full bg-[#1F2937] border border-gray-700 rounded-lg px-4 py-2 pl-10 text-gray-100 placeholder-gray-500 focus:outline-none focus:border-cyan-500 focus:shadow-lg focus:shadow-cyan-500/20 transition-shadow"
+                className="w-full bg-[#1f2937] border border-[#334155] rounded-lg px-4 py-2 pl-10 text-[#f8fafc] placeholder-[#64748b] focus:outline-none focus:border-[#0891b2] focus:shadow-lg focus:shadow-[#0891b2]/20 transition-shadow"
               />
-              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#64748b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
 
             {/* Tabs */}
-            <div className="flex bg-[#1F2937] rounded-lg p-1 border border-gray-700">
+            <div className="flex bg-[#1f2937] rounded-lg p-1 border border-[#334155]">
               {[
                 { value: "all", label: "全部" },
                 { value: "completed", label: "已完成" },
@@ -222,8 +236,8 @@ export default function HistoryPage() {
                   onClick={() => setFilter(tab.value as typeof filter)}
                   className={`px-4 py-1.5 rounded-md text-sm transition-colors ${
                     filter === tab.value
-                      ? "bg-cyan-600 text-white"
-                      : "text-gray-400 hover:text-white"
+                      ? "bg-[#0891b2] text-white"
+                      : "text-[#94a3b8] hover:text-white"
                   }`}
                 >
                   {tab.label}
@@ -242,25 +256,32 @@ export default function HistoryPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-[#1F2937] rounded-xl p-6 animate-pulse"
+                className="bg-[#1f2937] rounded-xl p-6 animate-pulse"
               >
-                <div className="h-6 bg-gray-700 rounded w-1/4 mb-4" />
-                <div className="h-4 bg-gray-700 rounded w-1/2 mb-2" />
-                <div className="h-4 bg-gray-700 rounded w-1/3" />
+                <div className="h-6 bg-[#334155] rounded w-1/4 mb-4" />
+                <div className="h-4 bg-[#334155] rounded w-1/2 mb-2" />
+                <div className="h-4 bg-[#334155] rounded w-1/3" />
               </motion.div>
             ))}
           </div>
         ) : filteredHistory.length === 0 ? (
           <div className="text-center py-16">
-            <div className="text-6xl mb-4">📋</div>
-            <motion.h3 whileHover={{ scale: 1.05 }} className="text-xl font-semibold text-white mb-2 cursor-default">暂无筛选记录</motion.h3>
-            <motion.p whileHover={{ scale: 1.05 }} className="text-gray-400 mb-6 cursor-default">开始你的第一次简历筛选吧</motion.p>
-            <a
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="text-6xl mb-4 cursor-default"
+            >
+              📋
+            </motion.div>
+            <motion.h3 whileHover={{ scale: 1.05 }} className="text-xl font-semibold text-[#f8fafc] mb-2 cursor-default">暂无筛选记录</motion.h3>
+            <motion.p whileHover={{ scale: 1.05 }} className="text-[#64748b] mb-6 cursor-default">开始你的第一次简历筛选吧</motion.p>
+            <motion.a
               href="/"
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-600 to-cyan-700 text-white px-6 py-3 rounded-xl shadow-lg shadow-cyan-500/20 hover:from-cyan-700 hover:to-cyan-800 transition-all"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-[#0891b2] to-[#0e7490] text-white px-6 py-3 rounded-xl shadow-lg shadow-[#0891b2]/20 hover:from-[#0e7490] hover:to-[#0891b2] transition-all"
             >
               前往筛选
-            </a>
+            </motion.a>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4">
@@ -273,34 +294,34 @@ export default function HistoryPage() {
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ delay: index * 0.05 }}
                   whileHover={{ scale: 1.01 }}
-                  className="bg-[#1F2937] rounded-xl p-6 hover:bg-[#252d3d] transition-colors shadow-lg hover:shadow-xl"
+                  className="bg-[#1f2937] rounded-xl p-6 hover:bg-[#334155] transition-colors shadow-lg hover:shadow-xl border border-[#334155] hover:border-[#475569]"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <motion.h3 whileHover={{ scale: 1.02 }} className="text-lg font-semibold text-white cursor-default">
+                        <motion.h3 whileHover={{ scale: 1.02 }} className="text-lg font-semibold text-[#f8fafc] cursor-default">
                           {item.position_name}
                         </motion.h3>
                         {getStatusBadge(item.status)}
                       </div>
-                      <motion.p whileHover={{ scale: 1.02 }} className="text-gray-400 text-sm mb-3 truncate cursor-default" title={item.jd_source || ""}>
+                      <motion.p whileHover={{ scale: 1.02 }} className="text-[#64748b] text-sm mb-3 truncate cursor-default" title={item.jd_source || ""}>
                         来源: {item.jd_source ? (item.jd_source.length > 50 ? item.jd_source.slice(0, 50) + "..." : item.jd_source) : "无"}
                       </motion.p>
                       <div className="flex flex-wrap gap-4 text-sm">
-                        <motion.span whileHover={{ scale: 1.05 }} className="text-gray-400 cursor-default">
-                          📅 {formatDate(item.generated_at)}
+                        <motion.span whileHover={{ scale: 1.05 }} className="text-[#64748b] cursor-default">
+                          {formatDate(item.generated_at)}
                         </motion.span>
-                        <motion.span whileHover={{ scale: 1.05 }} className="text-gray-400 cursor-default">
-                          📄 简历: {item.total_resumes}份
+                        <motion.span whileHover={{ scale: 1.05 }} className="text-[#64748b] cursor-default">
+                          简历: {item.total_resumes}份
                         </motion.span>
-                        <motion.span whileHover={{ scale: 1.05 }} className="text-emerald-400 cursor-default">
-                          ✅ 推荐: {item.strong_count}份
+                        <motion.span whileHover={{ scale: 1.05 }} className="text-[#34d399] cursor-default">
+                          推荐: {item.strong_count}份
                         </motion.span>
-                        <motion.span whileHover={{ scale: 1.05 }} className="text-amber-400 cursor-default">
-                          ⏳ 备选: {item.backup_count}份
+                        <motion.span whileHover={{ scale: 1.05 }} className="text-[#fbbf24] cursor-default">
+                          备选: {item.backup_count}份
                         </motion.span>
-                        <motion.span whileHover={{ scale: 1.05 }} className="text-red-400 cursor-default">
-                          ❌ 淘汰: {item.rejected_count}份
+                        <motion.span whileHover={{ scale: 1.05 }} className="text-[#f87171] cursor-default">
+                          淘汰: {item.rejected_count}份
                         </motion.span>
                       </div>
                     </div>
@@ -309,7 +330,7 @@ export default function HistoryPage() {
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                         onClick={() => setSelectedId(item.id)}
-                        className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors"
+                        className="p-2 text-[#64748b] hover:text-white hover:bg-[#334155] rounded-lg transition-colors"
                         title="查看"
                       >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -321,7 +342,7 @@ export default function HistoryPage() {
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                         onClick={() => handleExport(item)}
-                        className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors"
+                        className="p-2 text-[#64748b] hover:text-white hover:bg-[#334155] rounded-lg transition-colors"
                         title="导出"
                       >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -332,7 +353,7 @@ export default function HistoryPage() {
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                         onClick={() => navigator.clipboard.writeText(item.jd_source)}
-                        className="p-2 text-gray-400 hover:text-cyan-400 hover:bg-gray-700 rounded-lg transition-colors"
+                        className="p-2 text-[#64748b] hover:text-[#22d3ee] hover:bg-[#334155] rounded-lg transition-colors"
                         title="复制JD链接"
                       >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -343,7 +364,7 @@ export default function HistoryPage() {
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                         onClick={() => handleDelete(item.id)}
-                        className="p-2 text-gray-400 hover:text-red-400 hover:bg-gray-700 rounded-lg transition-colors"
+                        className="p-2 text-[#64748b] hover:text-[#ef4444] hover:bg-[#334155] rounded-lg transition-colors"
                         title="删除"
                       >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -373,7 +394,7 @@ export default function HistoryPage() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-[#1F2937] rounded-2xl shadow-2xl max-w-lg w-full max-h-[80vh] overflow-hidden border border-gray-700"
+              className="bg-[#1f2937] rounded-2xl shadow-2xl max-w-lg w-full max-h-[80vh] overflow-hidden border border-[#334155]"
               onClick={(e) => e.stopPropagation()}
             >
               {(() => {
@@ -381,73 +402,78 @@ export default function HistoryPage() {
                 if (!item) return null;
                 return (
                   <>
-                    <div className="bg-gradient-to-r from-cyan-600 to-cyan-700 px-6 py-4 flex justify-between items-center">
-                      <h2 className="text-xl font-bold text-white">{item.position_name}</h2>
+                    <div className="bg-gradient-to-r from-[#0891b2] to-[#0e7490] px-6 py-4 flex justify-between items-center">
+                      <motion.h2
+                        whileHover={{ scale: 1.02 }}
+                        className="text-xl font-bold text-white cursor-default"
+                      >
+                        {item.position_name}
+                      </motion.h2>
                       <motion.button
                         whileHover={{ scale: 1.2, rotate: 90 }}
                         whileTap={{ scale: 0.9 }}
                         onClick={() => setSelectedId(null)}
-                        className="text-cyan-100 hover:text-white transition-colors"
+                        className="text-[#a5f3fc] hover:text-white transition-colors"
                       >
                         ✕
                       </motion.button>
                     </div>
                     <div className="p-6 overflow-y-auto max-h-[60vh]">
                       <div className="space-y-4">
-                        <motion.div whileHover={{ scale: 1.01 }} className="flex justify-between items-center p-3 bg-[#111827] rounded-lg">
-                          <span className="text-gray-400">状态</span>
+                        <motion.div whileHover={{ scale: 1.01 }} className="flex justify-between items-center p-3 bg-[#0a0f1a] rounded-lg cursor-default">
+                          <span className="text-[#94a3b8]">状态</span>
                           {getStatusBadge(item.status)}
                         </motion.div>
-                        <motion.div whileHover={{ scale: 1.01 }} className="flex justify-between items-center p-3 bg-[#111827] rounded-lg">
-                          <span className="text-gray-400">简历总数</span>
-                          <span className="text-white font-medium">{item.total_resumes}份</span>
+                        <motion.div whileHover={{ scale: 1.01 }} className="flex justify-between items-center p-3 bg-[#0a0f1a] rounded-lg cursor-default">
+                          <span className="text-[#94a3b8]">简历总数</span>
+                          <span className="text-[#f8fafc] font-medium">{item.total_resumes}份</span>
                         </motion.div>
-                        <motion.div whileHover={{ scale: 1.01 }} className="flex justify-between items-center p-3 bg-[#111827] rounded-lg">
-                          <span className="text-gray-400">筛选通过</span>
-                          <span className="text-emerald-400 font-medium">{item.screened_resumes}份</span>
+                        <motion.div whileHover={{ scale: 1.01 }} className="flex justify-between items-center p-3 bg-[#0a0f1a] rounded-lg cursor-default">
+                          <span className="text-[#94a3b8]">筛选通过</span>
+                          <span className="text-[#34d399] font-medium">{item.screened_resumes}份</span>
                         </motion.div>
-                        <motion.div whileHover={{ scale: 1.01 }} className="flex justify-between items-center p-3 bg-[#111827] rounded-lg">
-                          <span className="text-gray-400">强烈推荐</span>
-                          <span className="text-emerald-400 font-medium">{item.strong_count}份</span>
+                        <motion.div whileHover={{ scale: 1.01 }} className="flex justify-between items-center p-3 bg-[#0a0f1a] rounded-lg cursor-default">
+                          <span className="text-[#94a3b8]">强烈推荐</span>
+                          <span className="text-[#34d399] font-medium">{item.strong_count}份</span>
                         </motion.div>
-                        <motion.div whileHover={{ scale: 1.01 }} className="flex justify-between items-center p-3 bg-[#111827] rounded-lg">
-                          <span className="text-gray-400">可备选</span>
-                          <span className="text-amber-400 font-medium">{item.backup_count}份</span>
+                        <motion.div whileHover={{ scale: 1.01 }} className="flex justify-between items-center p-3 bg-[#0a0f1a] rounded-lg cursor-default">
+                          <span className="text-[#94a3b8]">可备选</span>
+                          <span className="text-[#fbbf24] font-medium">{item.backup_count}份</span>
                         </motion.div>
-                        <motion.div whileHover={{ scale: 1.01 }} className="flex justify-between items-center p-3 bg-[#111827] rounded-lg">
-                          <span className="text-gray-400">淘汰</span>
-                          <span className="text-red-400 font-medium">{item.rejected_count}份</span>
+                        <motion.div whileHover={{ scale: 1.01 }} className="flex justify-between items-center p-3 bg-[#0a0f1a] rounded-lg cursor-default">
+                          <span className="text-[#94a3b8]">淘汰</span>
+                          <span className="text-[#f87171] font-medium">{item.rejected_count}份</span>
                         </motion.div>
-                        <motion.div whileHover={{ scale: 1.01 }} className="p-3 bg-[#111827] rounded-lg">
-                          <span className="text-gray-400 text-sm">JD来源</span>
-                          <p className="text-white text-sm mt-1 truncate">{item.jd_source}</p>
+                        <motion.div whileHover={{ scale: 1.01 }} className="p-3 bg-[#0a0f1a] rounded-lg cursor-default">
+                          <span className="text-[#64748b] text-sm">JD来源</span>
+                          <p className="text-[#f8fafc] text-sm mt-1 truncate">{item.jd_source}</p>
                         </motion.div>
-                        <motion.div whileHover={{ scale: 1.01 }} className="p-3 bg-[#111827] rounded-lg">
-                          <span className="text-gray-400 text-sm">筛选标准</span>
+                        <motion.div whileHover={{ scale: 1.01 }} className="p-3 bg-[#0a0f1a] rounded-lg">
+                          <span className="text-[#64748b] text-sm">筛选标准</span>
                           <div className="flex flex-wrap gap-2 mt-2">
                             {(item.screening_criteria || []).map((c, i) => (
                               <motion.span
                                 key={i}
                                 whileHover={{ scale: 1.1 }}
-                                className="bg-cyan-500/20 text-cyan-400 px-2 py-1 rounded-full text-xs"
+                                className="bg-[#0891b2]/20 text-[#22d3ee] px-2 py-1 rounded-full text-xs border border-[#0891b2]/30 cursor-default"
                               >
                                 {c}
                               </motion.span>
                             ))}
                           </div>
                         </motion.div>
-                        <motion.div whileHover={{ scale: 1.01 }} className="p-3 bg-[#111827] rounded-lg">
-                          <span className="text-gray-400 text-sm">生成时间</span>
-                          <p className="text-white text-sm mt-1">{new Date(item.generated_at).toLocaleString()}</p>
+                        <motion.div whileHover={{ scale: 1.01 }} className="p-3 bg-[#0a0f1a] rounded-lg cursor-default">
+                          <span className="text-[#64748b] text-sm">生成时间</span>
+                          <p className="text-[#f8fafc] text-sm mt-1">{new Date(item.generated_at).toLocaleString()}</p>
                         </motion.div>
                       </div>
                     </div>
-                    <div className="bg-[#111827] px-6 py-4 border-t border-gray-700 flex gap-3">
+                    <div className="bg-[#0a0f1a] px-6 py-4 border-t border-[#334155] flex gap-3">
                       <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={() => handleExport(item)}
-                        className="flex-1 py-2 bg-cyan-600/20 text-cyan-400 border border-cyan-500/30 rounded-lg hover:bg-cyan-600/30 transition-colors text-sm"
+                        className="flex-1 py-2 bg-[#0891b2]/20 text-[#22d3ee] border border-[#0891b2]/30 rounded-lg hover:bg-[#0891b2]/30 transition-colors text-sm"
                       >
                         导出JSON
                       </motion.button>
@@ -455,7 +481,7 @@ export default function HistoryPage() {
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         onClick={() => setSelectedId(null)}
-                        className="flex-1 py-2 bg-gray-600/20 text-gray-400 border border-gray-500/30 rounded-lg hover:bg-gray-600/30 transition-colors text-sm"
+                        className="flex-1 py-2 bg-[#64748b]/20 text-[#94a3b8] border border-[#64748b]/30 rounded-lg hover:bg-[#64748b]/30 transition-colors text-sm"
                       >
                         关闭
                       </motion.button>
@@ -469,16 +495,16 @@ export default function HistoryPage() {
       </AnimatePresence>
 
       {/* Footer */}
-      <footer className="bg-[#1F2937]/50 border-t border-gray-700 mt-auto">
+      <footer className="bg-[#1f2937]/50 border-t border-[#334155] mt-auto">
         <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex justify-between items-center text-sm text-gray-400">
+          <div className="flex justify-between items-center text-sm text-[#64748b]">
             <div className="flex items-center gap-4">
               <motion.span whileHover={{ scale: 1.05 }} className="cursor-default">Spider v1.34.2</motion.span>
-              <span className="w-px h-4 bg-gray-600" />
+              <span className="w-px h-4 bg-[#334155]" />
               <motion.span whileHover={{ scale: 1.05 }} className="cursor-default">垂直浏览器Agent</motion.span>
             </div>
             <div className="flex items-center gap-2">
-              <motion.span animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 2, repeat: Infinity }} className="w-2 h-2 bg-green-500 rounded-full" />
+              <motion.span animate={{ scale: [1, 1.1, 1] }} transition={{ duration: 2, repeat: Infinity }} className="w-2 h-2 bg-[#10b981] rounded-full" />
               <motion.span whileHover={{ scale: 1.05 }} className="cursor-default">系统运行正常</motion.span>
             </div>
           </div>

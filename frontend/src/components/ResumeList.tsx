@@ -4,6 +4,17 @@ import { useState, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { validateResumeText } from "@/lib/validation";
 
+/* ============================================
+   RESUMELIST COMPONENT
+   ============================================
+
+   Design System Applied:
+   - Card: Elevated surface with emerald accents
+   - Accent Color: Emerald (#10b981)
+   - Typography: DM Sans (body)
+   - Motion: Scale on hover, smooth transitions
+   ============================================ */
+
 interface ResumeListProps {
   onSubmit: (resumes: string[]) => void;
   loading?: boolean;
@@ -13,15 +24,12 @@ interface ResumeListProps {
 function extractResumePreview(text: string): { name?: string; email?: string; phone?: string; education?: string; experience?: string } {
   const result: { name?: string; email?: string; phone?: string; education?: string; experience?: string } = {};
 
-  // Extract email
   const emailMatch = text.match(/[\w.-]+@[\w.-]+\.\w+/);
   if (emailMatch) result.email = emailMatch[0];
 
-  // Extract phone
   const phoneMatch = text.match(/1[3-9]\d{9}/);
   if (phoneMatch) result.phone = phoneMatch[0];
 
-  // Extract education
   const eduKeywords = ["本科", "硕士", "博士", "大专", "高中", "985", "211", "研究生"];
   for (const kw of eduKeywords) {
     if (text.includes(kw)) {
@@ -30,7 +38,6 @@ function extractResumePreview(text: string): { name?: string; email?: string; ph
     }
   }
 
-  // Extract years of experience
   const expMatch = text.match(/(\d+)\s*年/);
   if (expMatch) result.experience = `${expMatch[1]}年`;
 
@@ -79,7 +86,6 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
   }, []);
 
   const handleSubmit = useCallback(() => {
-    // Validate all resumes
     const newErrors: (string | null)[] = [];
     let hasError = false;
 
@@ -105,7 +111,6 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
 
     const validResumes = resumes.filter((r) => r.trim());
     if (validResumes.length > 0) {
-      // 将候选人姓名嵌入简历文本中传递给后端
       const resumesWithNames = resumes.map((resume, i) => {
         const name = candidateNames[i]?.trim();
         if (name) {
@@ -124,23 +129,33 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.1 }}
-      className="bg-[#1F2937] rounded-xl shadow-lg p-6 border border-gray-700"
+      className="bg-[#1f2937] rounded-2xl shadow-xl p-6 border border-[#334155] hover:border-[#475569] transition-all"
     >
-      <div className="flex items-center gap-3 mb-4">
+      {/* Header */}
+      <div className="flex items-center gap-3 mb-6">
         <motion.div
           whileHover={{ scale: 1.1, rotate: -5 }}
-          className="w-10 h-10 bg-emerald-500/20 rounded-lg flex items-center justify-center text-xl border border-emerald-500/30"
+          className="w-12 h-12 bg-[#10b981]/20 rounded-xl flex items-center justify-center text-xl border border-[#10b981]/30"
         >
           📄
         </motion.div>
         <div>
-          <motion.h2 whileHover={{ scale: 1.02 }} className="text-lg font-semibold text-white cursor-default">
+          <motion.h2
+            whileHover={{ scale: 1.02 }}
+            className="text-lg font-display font-semibold text-[#f8fafc]"
+          >
             输入简历
           </motion.h2>
-          <motion.p whileHover={{ scale: 1.02 }} className="text-sm text-gray-400 cursor-default">粘贴候选人简历内容</motion.p>
+          <motion.p
+            whileHover={{ scale: 1.02 }}
+            className="text-sm text-[#94a3b8]"
+          >
+            粘贴候选人简历内容
+          </motion.p>
         </div>
       </div>
 
+      {/* Resume List */}
       <div className="space-y-4">
         <AnimatePresence>
           {resumes.map((_, index) => (
@@ -150,10 +165,14 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.2 }}
-              className="border border-gray-600 rounded-lg p-4 bg-[#111827]"
+              className="border border-[#334155] rounded-xl p-4 bg-[#0a0f1a]"
             >
+              {/* Resume Header */}
               <div className="flex justify-between items-center mb-3">
-                <motion.span whileHover={{ scale: 1.05 }} className="text-sm font-medium text-gray-300 cursor-default">
+                <motion.span
+                  whileHover={{ scale: 1.05 }}
+                  className="text-sm font-medium text-[#f8fafc]"
+                >
                   简历 {index + 1}
                 </motion.span>
                 {resumes.length > 1 && (
@@ -161,27 +180,33 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => removeResume(index)}
-                    className="text-red-400 hover:text-red-300 text-sm flex items-center gap-1 transition-colors"
+                    className="text-[#ef4444] hover:text-[#f87171] text-sm flex items-center gap-1 transition-colors"
                   >
                     <span>×</span> 删除
                   </motion.button>
                 )}
               </div>
+
+              {/* Name Input */}
               <input
                 type="text"
                 value={candidateNames[index]}
                 onChange={(e) => updateName(index, e.target.value)}
                 placeholder="候选人姓名（可选）"
-                className="w-full px-3 py-2 border border-gray-600 rounded mb-2 focus:ring-2 focus:ring-emerald-500 outline-none bg-[#1F2937] text-white placeholder-gray-500 transition"
+                className="w-full px-3 py-2 bg-[#0a0f1a] border border-[#334155] rounded-lg mb-3 text-[#f8fafc] placeholder-[#64748b] focus:outline-none focus:border-[#10b981] focus:shadow-[0_0_0_3px_rgba(16,185,129,0.2)] transition-all text-sm"
               />
+
+              {/* Resume Textarea */}
               <div className="relative">
                 <textarea
                   value={resumes[index]}
                   onChange={(e) => updateResume(index, e.target.value)}
                   placeholder="粘贴简历内容..."
                   rows={5}
-                  className="w-full px-3 py-2 border border-gray-600 rounded focus:ring-2 focus:ring-emerald-500 outline-none resize-none bg-[#1F2937] text-white placeholder-gray-500 transition pr-20"
+                  className="w-full px-3 py-2 bg-[#0a0f1a] border border-[#334155] rounded-lg text-[#f8fafc] placeholder-[#64748b] focus:outline-none focus:border-[#10b981] focus:shadow-[0_0_0_3px_rgba(16,185,129,0.2)] resize-none transition-all pr-20 text-sm"
                 />
+
+                {/* Action Buttons */}
                 {resumes[index] && (
                   <div className="absolute top-2 right-2 flex gap-2">
                     <motion.button
@@ -193,8 +218,8 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
                         setCopiedIndex(index);
                         setTimeout(() => setCopiedIndex(null), 2000);
                       }}
-                      className={`text-xs transition-colors flex items-center gap-1 bg-[#1F2937]/80 px-2 py-1 rounded ${
-                        copiedIndex === index ? "text-emerald-400" : "text-gray-400 hover:text-emerald-400"
+                      className={`text-xs transition-colors flex items-center gap-1 bg-[#1f2937]/80 px-2 py-1 rounded-lg ${
+                        copiedIndex === index ? "text-[#10b981]" : "text-[#94a3b8] hover:text-[#10b981]"
                       }`}
                     >
                       <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -207,7 +232,7 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                       onClick={() => updateResume(index, "")}
-                      className="text-xs text-gray-400 hover:text-red-400 transition-colors flex items-center gap-1 bg-[#1F2937]/80 px-2 py-1 rounded"
+                      className="text-xs text-[#94a3b8] hover:text-[#ef4444] transition-colors flex items-center gap-1 bg-[#1f2937]/80 px-2 py-1 rounded-lg"
                     >
                       <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -216,14 +241,20 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
                   </div>
                 )}
               </div>
+
+              {/* Character Count */}
               {resumes[index] && (
-                <div className="flex justify-between items-center mt-1 px-1">
-                  <motion.span whileHover={{ scale: 1.02 }} className="text-xs text-gray-500 cursor-default">
-                    已输入 <span className={resumes[index].length >= 20 ? "text-emerald-400" : "text-amber-400"}>{resumes[index].length}</span> 字符
-                    {resumes[index].length < 20 && <span className="text-amber-400">（最少20字符）</span>}
+                <div className="flex justify-between items-center mt-2 px-1">
+                  <motion.span
+                    whileHover={{ scale: 1.02 }}
+                    className="text-xs text-[#64748b] cursor-default"
+                  >
+                    已输入 <span className={resumes[index].length >= 20 ? "text-[#10b981]" : "text-[#f59e0b]"}>{resumes[index].length}</span> 字符
+                    {resumes[index].length < 20 && <span className="text-[#f59e0b]">（最少20字符）</span>}
                   </motion.span>
                 </div>
               )}
+
               {/* Resume Preview */}
               {resumes[index] && resumes[index].length > 30 && (() => {
                 const preview = extractResumePreview(resumes[index]);
@@ -232,42 +263,85 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
                     whileHover={{ scale: 1.01 }}
-                    className="mt-2 bg-[#1F2937] rounded p-2 border border-emerald-500/30 shadow-lg shadow-emerald-500/10"
+                    className="mt-3 bg-[#1f2937] rounded-xl p-3 border border-[#10b981]/30 shadow-lg shadow-[#10b981]/10"
                   >
-                    <motion.div whileHover={{ scale: 1.05 }} className="text-xs text-emerald-400 mb-1 cursor-default">📋 智能提取:</motion.div>
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      className="text-xs text-[#10b981] mb-2 cursor-default flex items-center gap-1"
+                    >
+                      📋 智能提取:
+                    </motion.div>
                     <div className="flex flex-wrap gap-2">
-                      {preview.name && <motion.span whileHover={{ scale: 1.05 }} className="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded cursor-default">姓名: {preview.name}</motion.span>}
-                      {preview.email && <motion.span whileHover={{ scale: 1.05 }} className="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded cursor-default">📧 {preview.email}</motion.span>}
-                      {preview.phone && <motion.span whileHover={{ scale: 1.05 }} className="text-xs bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded cursor-default">📱 {preview.phone}</motion.span>}
-                      {preview.education && <motion.span whileHover={{ scale: 1.05 }} className="text-xs bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded cursor-default">🎓 {preview.education}</motion.span>}
-                      {preview.experience && <motion.span whileHover={{ scale: 1.05 }} className="text-xs bg-cyan-500/20 text-cyan-400 px-2 py-0.5 rounded cursor-default">💼 {preview.experience}</motion.span>}
+                      {preview.name && (
+                        <motion.span
+                          whileHover={{ scale: 1.05 }}
+                          className="text-xs bg-[#3b82f6]/20 text-[#60a5fa] px-2 py-1 rounded-lg cursor-default"
+                        >
+                          姓名: {preview.name}
+                        </motion.span>
+                      )}
+                      {preview.email && (
+                        <motion.span
+                          whileHover={{ scale: 1.05 }}
+                          className="text-xs bg-[#10b981]/20 text-[#34d399] px-2 py-1 rounded-lg cursor-default"
+                        >
+                          📧 {preview.email}
+                        </motion.span>
+                      )}
+                      {preview.phone && (
+                        <motion.span
+                          whileHover={{ scale: 1.05 }}
+                          className="text-xs bg-[#8b5cf6]/20 text-[#a78bfa] px-2 py-1 rounded-lg cursor-default"
+                        >
+                          📱 {preview.phone}
+                        </motion.span>
+                      )}
+                      {preview.education && (
+                        <motion.span
+                          whileHover={{ scale: 1.05 }}
+                          className="text-xs bg-[#f59e0b]/20 text-[#fbbf24] px-2 py-1 rounded-lg cursor-default"
+                        >
+                          🎓 {preview.education}
+                        </motion.span>
+                      )}
+                      {preview.experience && (
+                        <motion.span
+                          whileHover={{ scale: 1.05 }}
+                          className="text-xs bg-[#0891b2]/20 text-[#22d3ee] px-2 py-1 rounded-lg cursor-default"
+                        >
+                          💼 {preview.experience}
+                        </motion.span>
+                      )}
                     </div>
                   </motion.div>
                 ) : null;
               })()}
+
+              {/* Error Message */}
               {errors[index] && (
-                <p className="mt-1 text-xs text-red-400">{errors[index]}</p>
+                <p className="mt-2 text-xs text-[#ef4444]">{errors[index]}</p>
               )}
             </motion.div>
           ))}
         </AnimatePresence>
       </div>
 
-      <div className="flex gap-3 mt-4">
+      {/* Action Buttons */}
+      <div className="flex gap-3 mt-6">
         <motion.button
-          whileHover={{ scale: 1.02, boxShadow: "0 4px 12px rgba(0,0,0,0.3)" }}
+          whileHover={{ scale: 1.02, boxShadow: "0 4px 15px rgba(0,0,0,0.3)" }}
           whileTap={{ scale: 0.98 }}
           onClick={addResume}
-          className="flex-1 bg-[#374151] text-gray-200 py-3 px-4 rounded-lg hover:bg-gray-600 transition flex items-center justify-center gap-2 border border-gray-600 shadow-lg"
+          className="flex-1 bg-[#1f2937] text-[#94a3b8] py-3 px-4 rounded-xl hover:bg-[#334155] transition-all flex items-center justify-center gap-2 border border-[#334155] font-medium"
         >
           <span>+</span> 添加简历
         </motion.button>
         <motion.button
-          whileHover={{ scale: loading || validCount === 0 ? 1 : 1.02, boxShadow: "0 6px 20px rgba(16, 185, 129, 0.4)" }}
+          whileHover={{ scale: loading || validCount === 0 ? 1 : 1.02, boxShadow: "0 8px 30px rgba(16, 185, 129, 0.4)" }}
           whileTap={{ scale: loading || validCount === 0 ? 1 : 0.98 }}
           onClick={handleSubmit}
           disabled={loading || validCount === 0}
-          className="flex-1 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white py-3 px-4 rounded-lg disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed transition font-medium shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2"
+          className="flex-1 bg-gradient-to-r from-[#10b981] to-[#059669] text-white py-3 px-4 rounded-xl disabled:from-[#334155] disabled:to-[#1f2937] disabled:cursor-not-allowed disabled:shadow-none transition-all font-medium shadow-lg shadow-[#10b981]/20 flex items-center justify-center gap-2"
         >
           {loading ? (
             <motion.span
