@@ -227,11 +227,11 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
                   <div className="mt-2 bg-[#1F2937] rounded p-2 border border-emerald-500/30 shadow-lg shadow-emerald-500/10">
                     <div className="text-xs text-emerald-400 mb-1">📋 智能提取:</div>
                     <div className="flex flex-wrap gap-2">
-                      {preview.name && <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded">姓名: {preview.name}</span>}
-                      {preview.email && <span className="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded">📧 {preview.email}</span>}
-                      {preview.phone && <span className="text-xs bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded">📱 {preview.phone}</span>}
-                      {preview.education && <span className="text-xs bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded">🎓 {preview.education}</span>}
-                      {preview.experience && <span className="text-xs bg-cyan-500/20 text-cyan-400 px-2 py-0.5 rounded">💼 {preview.experience}</span>}
+                      {preview.name && <motion.span whileHover={{ scale: 1.05 }} className="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded cursor-default">姓名: {preview.name}</motion.span>}
+                      {preview.email && <motion.span whileHover={{ scale: 1.05 }} className="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded cursor-default">📧 {preview.email}</motion.span>}
+                      {preview.phone && <motion.span whileHover={{ scale: 1.05 }} className="text-xs bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded cursor-default">📱 {preview.phone}</motion.span>}
+                      {preview.education && <motion.span whileHover={{ scale: 1.05 }} className="text-xs bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded cursor-default">🎓 {preview.education}</motion.span>}
+                      {preview.experience && <motion.span whileHover={{ scale: 1.05 }} className="text-xs bg-cyan-500/20 text-cyan-400 px-2 py-0.5 rounded cursor-default">💼 {preview.experience}</motion.span>}
                     </div>
                   </div>
                 ) : null;
