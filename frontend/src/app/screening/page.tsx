@@ -239,12 +239,12 @@ export default function ScreeningPage() {
                 🕷️
               </motion.div>
               <div>
-                <h1 className="text-xl font-bold text-white">
+                <motion.h1 whileHover={{ scale: 1.05 }} className="text-xl font-bold text-white cursor-default">
                   Spider
-                </h1>
-                <p className="text-xs text-gray-400">
+                </motion.h1>
+                <motion.p whileHover={{ scale: 1.05 }} className="text-xs text-gray-400 cursor-default">
                   垂直浏览器Agent - 简历筛选
-                </p>
+                </motion.p>
               </div>
             </div>
             <motion.div
@@ -301,12 +301,12 @@ export default function ScreeningPage() {
               className="space-y-8"
             >
               <motion.div whileHover={{ scale: 1.01 }} className="text-center cursor-default">
-                <h2 className="text-2xl font-bold text-white mb-2">
+                <motion.h2 whileHover={{ scale: 1.02 }} className="text-2xl font-bold text-white mb-2 cursor-default">
                   筛选进行中...
-                </h2>
-                <p className="text-gray-400">
+                </motion.h2>
+                <motion.p whileHover={{ scale: 1.02 }} className="text-gray-400 cursor-default">
                   AI正在分析简历与JD的匹配度
-                </p>
+                </motion.p>
               </motion.div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <BrowserPreview screenshot={undefined} currentStep={currentStep} />
@@ -322,15 +322,15 @@ export default function ScreeningPage() {
                   >
                     🔄
                   </motion.div>
-                  <h2 className="text-xl font-semibold text-white mb-2">
+                  <motion.h2 whileHover={{ scale: 1.02 }} className="text-xl font-semibold text-white mb-2 cursor-default">
                     AI筛选中
-                  </h2>
-                  <p className="text-gray-400 text-center">
+                  </motion.h2>
+                  <motion.p whileHover={{ scale: 1.02 }} className="text-gray-400 text-center cursor-default">
                     {currentStep === "parsing_jd" && "正在解析职位描述..."}
                     {currentStep === "parsing_resumes" && "正在提取简历关键信息..."}
                     {currentStep === "matching" && "正在计算匹配度..."}
                     {currentStep === "generating_report" && "正在生成筛选报告..."}
-                  </p>
+                  </motion.p>
                 </motion.div>
               </div>
             </motion.div>
