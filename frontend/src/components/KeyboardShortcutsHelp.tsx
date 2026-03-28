@@ -57,12 +57,14 @@ export default function KeyboardShortcutsHelp() {
                 <h3 className="text-lg font-semibold text-white flex items-center gap-2">
                   <span>⌨️</span> 键盘快捷键
                 </h3>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.2, rotate: 90 }}
+                  whileTap={{ scale: 0.9 }}
                   onClick={() => setIsOpen(false)}
                   className="text-gray-400 hover:text-white transition-colors"
                 >
                   ✕
-                </button>
+                </motion.button>
               </div>
 
               <div className="space-y-3">
