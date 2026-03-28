@@ -75,6 +75,9 @@ export default function KeyboardShortcutsHelp() {
               <p className="text-xs text-gray-500 mt-4 text-center">
                 在输入框外按下快捷键即可触发
               </p>
+              <div className="mt-3 pt-3 border-t border-gray-700 text-center">
+                <span className="text-xs text-gray-600">Spider v1.34.2</span>
+              </div>
             </motion.div>
           </motion.div>
         )}
