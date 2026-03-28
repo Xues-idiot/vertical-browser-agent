@@ -108,22 +108,22 @@ function JDComparisonTable({
                           className={`h-full ${getScoreBg(score)} rounded-full`}
                         />
                       </div>
-                      <span className={`text-sm font-bold ${getScoreColor(score)} w-10`}>
+                      <motion.span whileHover={{ scale: 1.1 }} className={`text-sm font-bold ${getScoreColor(score)} w-10 cursor-default`}>
                         {score}%
-                      </span>
+                      </motion.span>
                     </div>
                     <div className="flex gap-1 mt-1 flex-wrap">
                       {candidate.score_breakdown && (
                         <>
                           {candidate.score_breakdown.hard_conditions !== undefined && (
-                            <span className="text-xs text-gray-500">
+                            <motion.span whileHover={{ scale: 1.1 }} className="text-xs text-gray-500 cursor-default">
                               硬{candidate.score_breakdown.hard_conditions}
-                            </span>
+                            </motion.span>
                           )}
                           {candidate.score_breakdown.skill_match !== undefined && (
-                            <span className="text-xs text-gray-500">
+                            <motion.span whileHover={{ scale: 1.1 }} className="text-xs text-gray-500 cursor-default">
                               技{candidate.score_breakdown.skill_match}
-                            </span>
+                            </motion.span>
                           )}
                         </>
                       )}
