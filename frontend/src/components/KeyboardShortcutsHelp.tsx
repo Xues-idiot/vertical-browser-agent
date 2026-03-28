@@ -22,7 +22,9 @@ export default function KeyboardShortcutsHelp() {
 
   return (
     <>
-      <button
+      <motion.button
+        whileHover={{ scale: 1.1, boxShadow: "0 0 20px rgba(34, 211, 238, 0.4)" }}
+        whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(true)}
         className="fixed bottom-4 right-4 w-12 h-12 bg-[#1F2937] border border-gray-700 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:border-gray-600 transition-colors z-40 shadow-lg"
         title="键盘快捷键"
@@ -35,7 +37,7 @@ export default function KeyboardShortcutsHelp() {
         >
           {shortcuts.length}
         </motion.span>
-      </button>
+      </motion.button>
 
       <AnimatePresence>
         {isOpen && (
