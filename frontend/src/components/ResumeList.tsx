@@ -224,8 +224,8 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
               {resumes[index] && resumes[index].length > 30 && (() => {
                 const preview = extractResumePreview(resumes[index]);
                 return preview.name || preview.email || preview.phone || preview.education || preview.experience ? (
-                  <div className="mt-2 bg-[#1F2937] rounded p-2 border border-gray-700">
-                    <div className="text-xs text-gray-400 mb-1">📋 智能提取:</div>
+                  <div className="mt-2 bg-[#1F2937] rounded p-2 border border-emerald-500/30 shadow-lg shadow-emerald-500/10">
+                    <div className="text-xs text-emerald-400 mb-1">📋 智能提取:</div>
                     <div className="flex flex-wrap gap-2">
                       {preview.name && <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded">姓名: {preview.name}</span>}
                       {preview.email && <span className="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded">📧 {preview.email}</span>}
