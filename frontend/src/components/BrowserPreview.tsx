@@ -145,7 +145,7 @@ export default function BrowserPreview({ screenshot, currentStep }: BrowserPrevi
                   initial={{ width: 0 }}
                   animate={{ width: `${((currentIndex) / (steps.length - 2)) * 100}%` }}
                   transition={{ duration: 0.5, ease: "easeOut" }}
-                  className="h-full bg-gradient-to-r from-cyan-500 to-cyan-600 rounded-full"
+                  className="h-full bg-gradient-to-r from-cyan-500 to-cyan-600 rounded-full shadow-lg shadow-cyan-500/50"
                 />
               </div>
             </div>
