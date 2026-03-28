@@ -323,12 +323,14 @@ export default function CandidateComparison({
                 </button>
               </>
             )}
-            <button
+            <motion.button
+              whileHover={{ scale: 1.2, rotate: 90 }}
+              whileTap={{ scale: 0.9 }}
               onClick={onClose}
               className="text-cyan-100 hover:text-white transition-colors"
             >
               ✕
-            </button>
+            </motion.button>
           </div>
         </div>
 
