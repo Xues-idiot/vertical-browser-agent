@@ -67,15 +67,16 @@ export default function KeyboardShortcutsHelp() {
 
               <div className="space-y-3">
                 {shortcuts.map((shortcut) => (
-                  <div
+                  <motion.div
                     key={shortcut.key}
-                    className="flex items-center justify-between py-2 border-b border-gray-700 last:border-0"
+                    whileHover={{ x: 4, backgroundColor: "rgba(55, 65, 81, 0.3)" }}
+                    className="flex items-center justify-between py-2 border-b border-gray-700 last:border-0 cursor-pointer rounded px-2 -mx-2"
                   >
                     <span className="text-gray-400 text-sm">{shortcut.description}</span>
                     <kbd className="px-2 py-1 bg-[#111827] border border-gray-600 rounded text-xs text-gray-300 font-mono">
                       {shortcut.key}
                     </kbd>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
 
