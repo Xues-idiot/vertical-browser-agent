@@ -1605,10 +1605,19 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
           transition={{ duration: 0.5, delay: 0.4 }}
           className="bg-[#1F2937] rounded-xl shadow-lg border border-gray-700 overflow-hidden"
         >
-          <div className="bg-gradient-to-r from-gray-600 to-gray-700 px-6 py-4">
+          <div className="bg-gradient-to-r from-gray-600 to-gray-700 px-6 py-4 flex justify-between items-center">
             <h3 className="text-lg font-semibold text-white flex items-center gap-2">
               <span>💡</span> 筛选标准
             </h3>
+            <button
+              onClick={() => navigator.clipboard.writeText(criteria.join("\n"))}
+              className="text-xs text-gray-400 hover:text-cyan-400 transition-colors flex items-center gap-1"
+            >
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              复制
+            </button>
           </div>
           <div className="p-6">
             <div className="flex flex-wrap gap-2">
