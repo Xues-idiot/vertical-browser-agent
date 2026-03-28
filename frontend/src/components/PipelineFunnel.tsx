@@ -70,6 +70,7 @@ function getStatusCounts(candidates: Candidate[], total: number) {
 export default function PipelineFunnel({ candidates, totalResumes }: PipelineFunnelProps) {
   const [expandedStage, setExpandedStage] = useState<string | null>(null);
   const [allExpanded, setAllExpanded] = useState(false);
+  const [copied, setCopied] = useState(false);
   const counts = useMemo(() => getStatusCounts(candidates, totalResumes), [candidates, totalResumes]);
 
   const toggleAllStages = () => {
@@ -295,13 +296,17 @@ export default function PipelineFunnel({ candidates, totalResumes }: PipelineFun
                   .filter(s => !s.endsWith(": 0"))
                   .join(", ");
                 navigator.clipboard.writeText(summary || "无来源数据");
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
               }}
-              className="text-xs text-gray-400 hover:text-cyan-400 transition-colors flex items-center gap-1"
+              className={`text-xs transition-colors flex items-center gap-1 ${
+                copied ? "text-emerald-400" : "text-gray-400 hover:text-cyan-400"
+              }`}
             >
               <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
               </svg>
-              复制
+              {copied ? "已复制" : "复制"}
             </button>
           </div>
           <div className="flex flex-wrap gap-2">
