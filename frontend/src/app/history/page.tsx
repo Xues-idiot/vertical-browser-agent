@@ -167,8 +167,8 @@ export default function HistoryPage() {
                 🕷️
               </motion.div>
               <div>
-                <h1 className="text-xl font-bold text-white">Spider</h1>
-                <p className="text-xs text-gray-400">筛选历史记录</p>
+                <motion.h1 whileHover={{ scale: 1.05 }} className="text-xl font-bold text-white cursor-default">Spider</motion.h1>
+                <motion.p whileHover={{ scale: 1.05 }} className="text-xs text-gray-400 cursor-default">筛选历史记录</motion.p>
               </div>
             </div>
             <motion.div
@@ -253,8 +253,8 @@ export default function HistoryPage() {
         ) : filteredHistory.length === 0 ? (
           <div className="text-center py-16">
             <div className="text-6xl mb-4">📋</div>
-            <h3 className="text-xl font-semibold text-white mb-2">暂无筛选记录</h3>
-            <p className="text-gray-400 mb-6">开始你的第一次简历筛选吧</p>
+            <motion.h3 whileHover={{ scale: 1.05 }} className="text-xl font-semibold text-white mb-2 cursor-default">暂无筛选记录</motion.h3>
+            <motion.p whileHover={{ scale: 1.05 }} className="text-gray-400 mb-6 cursor-default">开始你的第一次简历筛选吧</motion.p>
             <a
               href="/"
               className="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-600 to-cyan-700 text-white px-6 py-3 rounded-xl shadow-lg shadow-cyan-500/20 hover:from-cyan-700 hover:to-cyan-800 transition-all"
@@ -278,9 +278,9 @@ export default function HistoryPage() {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-lg font-semibold text-white">
+                        <motion.h3 whileHover={{ scale: 1.02 }} className="text-lg font-semibold text-white cursor-default">
                           {item.position_name}
-                        </h3>
+                        </motion.h3>
                         {getStatusBadge(item.status)}
                       </div>
                       <motion.p whileHover={{ scale: 1.02 }} className="text-gray-400 text-sm mb-3 truncate cursor-default" title={item.jd_source || ""}>
