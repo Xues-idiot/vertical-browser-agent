@@ -311,7 +311,11 @@ export default function JDComparison({
           {/* Summary */}
           <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
             {candidates.slice(0, 3).map((c, i) => (
-              <div key={i} className="bg-[#111827] rounded-lg p-4 border border-gray-700">
+              <motion.div
+                key={i}
+                whileHover={{ scale: 1.03, borderColor: "rgba(34, 211, 238, 0.4)" }}
+                className="bg-[#111827] rounded-lg p-4 border border-gray-700 cursor-default"
+              >
                 <div className="flex items-center gap-2 mb-2">
                   <span className="w-6 h-6 bg-cyan-500/20 text-cyan-400 rounded-full flex items-center justify-center text-xs font-bold">
                     {i + 1}
@@ -325,7 +329,7 @@ export default function JDComparison({
                   </span>{" "}
                   ({jds[0]?.name})
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
