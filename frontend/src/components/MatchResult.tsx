@@ -444,9 +444,9 @@ function CandidateDetailModal({
 
           {/* Screening Criteria Reference */}
           <div className="mb-6">
-            <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
+            <motion.h3 whileHover={{ scale: 1.02 }} className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3 cursor-default">
               筛选标准 (JD要求)
-            </h3>
+            </motion.h3>
             <div className="flex flex-wrap gap-2">
               {criteria.map((c, i) => (
                 <motion.span
