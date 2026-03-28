@@ -289,7 +289,7 @@ export default function JDComparison({
           <div className="bg-[#111827] rounded-xl border border-gray-700 overflow-hidden">
             <div className="bg-gradient-to-r from-gray-600 to-gray-700 px-6 py-3">
               <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-                <span>📊</span> 适配度对比表
+                <span>📊</span> 适配度对比表 ({candidates.length}人)
               </h3>
             </div>
             <JDComparisonTable candidates={candidates} jds={jds} />
