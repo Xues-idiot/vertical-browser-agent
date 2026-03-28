@@ -693,7 +693,9 @@ function CandidateDetailModal({
             >
               ✉️ 发送邮件
             </button>
-            <button
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => {
                 setStatus("offer");
                 onStatusChange("offer");
@@ -701,8 +703,10 @@ function CandidateDetailModal({
               className="px-4 py-2 bg-purple-600/20 text-purple-400 border border-purple-500/30 rounded-lg hover:bg-purple-600/30 transition-colors text-sm flex items-center gap-2"
             >
               🎯 发放Offer
-            </button>
-            <button
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => {
                 const data = JSON.stringify({ ...candidate, note, status }, null, 2);
                 const blob = new Blob([data], { type: "application/json" });
@@ -716,7 +720,7 @@ function CandidateDetailModal({
               className="px-4 py-2 bg-cyan-600/20 text-cyan-400 border border-cyan-500/30 rounded-lg hover:bg-cyan-600/30 transition-colors text-sm flex items-center gap-2"
             >
               📥 导出
-            </button>
+            </motion.button>
           </div>
         </div>
       </motion.div>
