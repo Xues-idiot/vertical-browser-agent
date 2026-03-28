@@ -256,7 +256,7 @@ export default function JDComparison({
                 </div>
               ))}
             </div>
-            {jds.length < 5 && (
+            {jds.length < 5 ? (
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -272,6 +272,10 @@ export default function JDComparison({
                 >
                   添加JD
                 </button>
+              </div>
+            ) : (
+              <div className="text-xs text-gray-500 bg-[#111827] rounded-lg px-3 py-2 border border-gray-700">
+                已达到最大职位数量（5个），如需添加请先删除现有职位
               </div>
             )}
           </div>
