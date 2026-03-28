@@ -287,21 +287,21 @@ export default function HistoryPage() {
                         来源: {item.jd_source ? (item.jd_source.length > 50 ? item.jd_source.slice(0, 50) + "..." : item.jd_source) : "无"}
                       </p>
                       <div className="flex flex-wrap gap-4 text-sm">
-                        <span className="text-gray-400">
+                        <motion.span whileHover={{ scale: 1.05 }} className="text-gray-400 cursor-default">
                           📅 {formatDate(item.generated_at)}
-                        </span>
-                        <span className="text-gray-400">
+                        </motion.span>
+                        <motion.span whileHover={{ scale: 1.05 }} className="text-gray-400 cursor-default">
                           📄 简历: {item.total_resumes}份
-                        </span>
-                        <span className="text-emerald-400">
+                        </motion.span>
+                        <motion.span whileHover={{ scale: 1.05 }} className="text-emerald-400 cursor-default">
                           ✅ 推荐: {item.strong_count}份
-                        </span>
-                        <span className="text-amber-400">
+                        </motion.span>
+                        <motion.span whileHover={{ scale: 1.05 }} className="text-amber-400 cursor-default">
                           ⏳ 备选: {item.backup_count}份
-                        </span>
-                        <span className="text-red-400">
+                        </motion.span>
+                        <motion.span whileHover={{ scale: 1.05 }} className="text-red-400 cursor-default">
                           ❌ 淘汰: {item.rejected_count}份
-                        </span>
+                        </motion.span>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
