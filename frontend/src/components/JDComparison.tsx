@@ -104,6 +104,7 @@ function JDComparisonTable({
                           initial={{ width: 0 }}
                           animate={{ width: `${score}%` }}
                           transition={{ duration: 0.5, delay: cIndex * 0.1 + jdIndex * 0.05 }}
+                          whileHover={{ boxShadow: "0 0 8px rgba(34, 211, 238, 0.5)" }}
                           className={`h-full ${getScoreBg(score)} rounded-full`}
                         />
                       </div>
