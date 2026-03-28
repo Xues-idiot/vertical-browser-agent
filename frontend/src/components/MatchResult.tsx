@@ -654,11 +654,15 @@ function CandidateDetailModal({
                       <span className="text-sm font-medium text-cyan-400">第{interview.round}轮面试</span>
                       <div className="flex items-center gap-1">
                         {Array.from({ length: 5 }).map((_, si) => (
-                          <span key={si} className={`text-sm ${si < interview.rating ? "text-amber-400" : "text-gray-600"}`}>★</span>
+                          <motion.span
+                            key={si}
+                            whileHover={{ scale: 1.3 }}
+                            className={`text-sm ${si < interview.rating ? "text-amber-400" : "text-gray-600"}`}
+                          >★</motion.span>
                         ))}
                       </div>
                     </div>
-                    <p className="text-xs text-gray-400 mb-1">{interview.date}</p>
+                    <motion.p whileHover={{ scale: 1.02 }} className="text-xs text-gray-400 mb-1 cursor-default">{interview.date}</motion.p>
                     <p className="text-sm text-gray-300">{interview.feedback}</p>
                   </motion.div>
                 ))}
