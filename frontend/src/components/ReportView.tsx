@@ -141,7 +141,9 @@ export default function ReportView({ report, markdown }: ReportViewProps) {
           transition={{ delay: 0.6 }}
           className="mt-4 pt-4 border-t border-gray-700"
         >
-          <button
+          <motion.button
+            whileHover={{ scale: 1.02, boxShadow: "0 4px 12px rgba(0,0,0,0.2)" }}
+            whileTap={{ scale: 0.98 }}
             onClick={handleCopyReport}
             className={`w-full py-2 px-3 bg-[#111827] border rounded-lg text-sm flex items-center justify-center gap-2 transition-colors ${
               copied
@@ -153,7 +155,7 @@ export default function ReportView({ report, markdown }: ReportViewProps) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
             </svg>
             {copied ? "已复制!" : "复制报告摘要"}
-          </button>
+          </motion.button>
         </motion.div>
       </div>
     </motion.div>
