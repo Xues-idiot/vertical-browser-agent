@@ -58,7 +58,7 @@ export default function BrowserPreview({ screenshot, currentStep }: BrowserPrevi
       </div>
 
       {/* 预览区域 */}
-      <div className="bg-[#111827] h-72 relative overflow-hidden">
+      <div className={`bg-[#111827] h-72 relative overflow-hidden ${isCompleted ? "ring-2 ring-emerald-500/30" : ""}`}>
         {screenshot ? (
           <img
             src={screenshot}
