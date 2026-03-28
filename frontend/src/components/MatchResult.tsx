@@ -346,68 +346,72 @@ function CandidateDetailModal({
                     评分明细
                   </h4>
                   {candidate.score_breakdown.hard_conditions !== undefined && (
-                    <div className="flex items-center gap-3">
+                    <motion.div whileHover={{ scale: 1.02 }} className="flex items-center gap-3">
                       <span className="w-20 text-xs text-gray-400">硬性条件</span>
                       <div className="flex-1 bg-gray-700/50 rounded-full h-2 overflow-hidden">
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${candidate.score_breakdown.hard_conditions}%` }}
                           transition={{ duration: 0.8, delay: 0.1 }}
+                          whileHover={{ boxShadow: "0 0 8px rgba(34, 211, 238, 0.6)" }}
                           className="h-full bg-cyan-500 rounded-full"
                         />
                       </div>
                       <span className="w-10 text-xs text-cyan-400 font-medium">
                         {candidate.score_breakdown.hard_conditions}%
                       </span>
-                    </div>
+                    </motion.div>
                   )}
                   {candidate.score_breakdown.skill_match !== undefined && (
-                    <div className="flex items-center gap-3">
+                    <motion.div whileHover={{ scale: 1.02 }} className="flex items-center gap-3">
                       <span className="w-20 text-xs text-gray-400">技能匹配</span>
                       <div className="flex-1 bg-gray-700/50 rounded-full h-2 overflow-hidden">
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${candidate.score_breakdown.skill_match}%` }}
                           transition={{ duration: 0.8, delay: 0.2 }}
+                          whileHover={{ boxShadow: "0 0 8px rgba(52, 211, 153, 0.6)" }}
                           className="h-full bg-emerald-500 rounded-full"
                         />
                       </div>
                       <span className="w-10 text-xs text-emerald-400 font-medium">
                         {candidate.score_breakdown.skill_match}%
                       </span>
-                    </div>
+                    </motion.div>
                   )}
                   {candidate.score_breakdown.industry_exp !== undefined && (
-                    <div className="flex items-center gap-3">
+                    <motion.div whileHover={{ scale: 1.02 }} className="flex items-center gap-3">
                       <span className="w-20 text-xs text-gray-400">行业经验</span>
                       <div className="flex-1 bg-gray-700/50 rounded-full h-2 overflow-hidden">
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${candidate.score_breakdown.industry_exp}%` }}
                           transition={{ duration: 0.8, delay: 0.3 }}
+                          whileHover={{ boxShadow: "0 0 8px rgba(251, 191, 36, 0.6)" }}
                           className="h-full bg-amber-500 rounded-full"
                         />
                       </div>
                       <span className="w-10 text-xs text-amber-400 font-medium">
                         {candidate.score_breakdown.industry_exp}%
                       </span>
-                    </div>
+                    </motion.div>
                   )}
                   {candidate.score_breakdown.potential !== undefined && (
-                    <div className="flex items-center gap-3">
+                    <motion.div whileHover={{ scale: 1.02 }} className="flex items-center gap-3">
                       <span className="w-20 text-xs text-gray-400">发展潜力</span>
                       <div className="flex-1 bg-gray-700/50 rounded-full h-2 overflow-hidden">
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${candidate.score_breakdown.potential}%` }}
                           transition={{ duration: 0.8, delay: 0.4 }}
+                          whileHover={{ boxShadow: "0 0 8px rgba(167, 139, 250, 0.6)" }}
                           className="h-full bg-purple-500 rounded-full"
                         />
                       </div>
                       <span className="w-10 text-xs text-purple-400 font-medium">
                         {candidate.score_breakdown.potential}%
                       </span>
-                    </div>
+                    </motion.div>
                   )}
                 </div>
               )}
