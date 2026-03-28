@@ -54,7 +54,8 @@ export default function ReportView({ report, markdown }: ReportViewProps) {
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1 }}
-            className="flex justify-between items-center p-3 bg-[#111827] rounded-lg border border-gray-700 shadow-sm"
+            whileHover={{ scale: 1.01, borderColor: "rgba(34, 211, 238, 0.4)" }}
+            className="flex justify-between items-center p-3 bg-[#111827] rounded-lg border border-gray-700 shadow-sm cursor-default"
           >
             <span className="text-gray-400">岗位</span>
             <span className="font-semibold text-white">
@@ -65,7 +66,8 @@ export default function ReportView({ report, markdown }: ReportViewProps) {
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.15 }}
-            className="flex justify-between items-center p-3 bg-[#111827] rounded-lg border border-gray-700 shadow-sm"
+            whileHover={{ scale: 1.01, borderColor: "rgba(34, 211, 238, 0.4)" }}
+            className="flex justify-between items-center p-3 bg-[#111827] rounded-lg border border-gray-700 shadow-sm cursor-default"
           >
             <span className="text-gray-400">收到简历</span>
             <span className="font-semibold text-white">
@@ -76,7 +78,8 @@ export default function ReportView({ report, markdown }: ReportViewProps) {
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2 }}
-            className="flex justify-between items-center p-3 bg-emerald-500/10 rounded-lg border border-emerald-500/30 shadow-sm shadow-emerald-500/10"
+            whileHover={{ scale: 1.01, borderColor: "rgba(52, 211, 153, 0.4)" }}
+            className="flex justify-between items-center p-3 bg-emerald-500/10 rounded-lg border border-emerald-500/30 shadow-sm shadow-emerald-500/10 cursor-default"
           >
             <span className="text-emerald-400">筛选通过</span>
             <span className="font-bold text-emerald-400 text-lg">
@@ -87,7 +90,8 @@ export default function ReportView({ report, markdown }: ReportViewProps) {
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.25 }}
-            className="flex justify-between items-center p-3 bg-red-500/10 rounded-lg border border-red-500/30 shadow-sm shadow-red-500/10"
+            whileHover={{ scale: 1.01, borderColor: "rgba(248, 113, 113, 0.4)" }}
+            className="flex justify-between items-center p-3 bg-red-500/10 rounded-lg border border-red-500/30 shadow-sm shadow-red-500/10 cursor-default"
           >
             <span className="text-red-400">淘汰</span>
             <span className="font-bold text-red-400 text-lg">
