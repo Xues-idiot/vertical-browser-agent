@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useState } from "react";
 
 interface Report {
   position_name: string;
@@ -16,9 +17,22 @@ interface ReportViewProps {
 }
 
 export default function ReportView({ report, markdown }: ReportViewProps) {
+  const [copied, setCopied] = useState(false);
   const passRate = report.total_resumes > 0
     ? Math.round((report.screened_resumes / report.total_resumes) * 100)
     : 0;
+
+  const handleCopyReport = () => {
+    const summary = `【筛选报告】
+岗位: ${report.position_name}
+收到简历: ${report.total_resumes}份
+筛选通过: ${report.screened_resumes}份
+通过率: ${passRate}%
+生成时间: ${report.generated_at}`;
+    navigator.clipboard.writeText(summary);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <motion.div
@@ -128,21 +142,17 @@ export default function ReportView({ report, markdown }: ReportViewProps) {
           className="mt-4 pt-4 border-t border-gray-700"
         >
           <button
-            onClick={() => {
-              const summary = `【筛选报告】
-岗位: ${report.position_name}
-收到简历: ${report.total_resumes}份
-筛选通过: ${report.screened_resumes}份
-通过率: ${passRate}%
-生成时间: ${report.generated_at}`;
-              navigator.clipboard.writeText(summary);
-            }}
-            className="w-full py-2 px-3 bg-[#111827] border border-gray-700 rounded-lg text-sm text-gray-400 hover:text-cyan-400 hover:border-cyan-500/50 transition-colors flex items-center justify-center gap-2"
+            onClick={handleCopyReport}
+            className={`w-full py-2 px-3 bg-[#111827] border rounded-lg text-sm flex items-center justify-center gap-2 transition-colors ${
+              copied
+                ? "border-emerald-500/50 text-emerald-400"
+                : "border-gray-700 text-gray-400 hover:text-cyan-400 hover:border-cyan-500/50"
+            }`}
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
             </svg>
-            复制报告摘要
+            {copied ? "已复制!" : "复制报告摘要"}
           </button>
         </motion.div>
       </div>
