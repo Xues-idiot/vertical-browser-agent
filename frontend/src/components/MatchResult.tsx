@@ -428,13 +428,14 @@ function CandidateDetailModal({
               </h3>
               <div className="flex flex-wrap gap-2">
                 {candidate.matched_criteria.map((c, i) => (
-                  <span
+                  <motion.span
                     key={i}
-                    className="bg-emerald-500/20 text-emerald-400 px-3 py-1.5 rounded-full text-sm border border-emerald-500/30 flex items-center gap-1"
+                    whileHover={{ scale: 1.05, boxShadow: "0 0 12px rgba(52, 211, 153, 0.4)" }}
+                    className="bg-emerald-500/20 text-emerald-400 px-3 py-1.5 rounded-full text-sm border border-emerald-500/30 flex items-center gap-1 cursor-default"
                   >
                     <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full" />
                     {c}
-                  </span>
+                  </motion.span>
                 ))}
               </div>
             </div>
@@ -447,13 +448,14 @@ function CandidateDetailModal({
             </h3>
             <div className="flex flex-wrap gap-2">
               {criteria.map((c, i) => (
-                <span
+                <motion.span
                   key={i}
-                  className="bg-[#111827] text-gray-300 px-3 py-1.5 rounded-full text-sm border border-gray-700 flex items-center gap-1"
+                  whileHover={{ scale: 1.05, borderColor: "rgba(34, 211, 238, 0.5)" }}
+                  className="bg-[#111827] text-gray-300 px-3 py-1.5 rounded-full text-sm border border-gray-700 flex items-center gap-1 cursor-default"
                 >
                   <span className="w-1.5 h-1.5 bg-cyan-500 rounded-full" />
                   {c}
-                </span>
+                </motion.span>
               ))}
             </div>
           </div>
@@ -507,12 +509,16 @@ function CandidateDetailModal({
               </h3>
               <div className="space-y-2">
                 {(candidate.key_highlights || generateKeyHighlights(candidate)).map((highlight, i) => (
-                  <div key={i} className="flex items-start gap-2 bg-[#111827] rounded-lg p-3 border border-gray-700">
+                  <motion.div
+                    key={i}
+                    whileHover={{ scale: 1.01, borderColor: "rgba(52, 211, 153, 0.4)" }}
+                    className="flex items-start gap-2 bg-[#111827] rounded-lg p-3 border border-gray-700 cursor-default"
+                  >
                     <span className="w-5 h-5 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center text-xs flex-shrink-0 mt-0.5">
                       {i + 1}
                     </span>
                     <p className="text-gray-300 text-sm">{highlight}</p>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </div>
@@ -550,6 +556,7 @@ function CandidateDetailModal({
                           initial={{ height: 0 }}
                           animate={{ height: height }}
                           transition={{ duration: 0.5, delay: i * 0.1 }}
+                          whileHover={{ scaleY: 1.1, boxShadow: "0 0 10px rgba(34, 211, 238, 0.5)" }}
                           className={`w-full rounded-t-sm ${isLatest ? "bg-cyan-500" : "bg-gray-600"}`}
                         />
                         <span className="text-xs text-gray-500">
