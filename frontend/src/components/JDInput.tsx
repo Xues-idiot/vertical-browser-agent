@@ -260,7 +260,7 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
         <motion.button
           type="submit"
           disabled={loading || (inputMode === "url" ? !jdUrl.trim() : !jdText.trim())}
-          whileHover={{ scale: loading ? 1 : 1.02 }}
+          whileHover={{ scale: loading ? 1 : 1.02, boxShadow: "0 6px 20px rgba(34, 211, 238, 0.4)" }}
           whileTap={{ scale: loading ? 1 : 0.98 }}
           className="w-full bg-gradient-to-r from-cyan-600 to-cyan-700 text-white py-3 px-4 rounded-lg disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed transition font-medium shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2"
         >
