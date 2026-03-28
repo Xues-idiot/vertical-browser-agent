@@ -284,7 +284,9 @@ export default function PipelineFunnel({ candidates, totalResumes }: PipelineFun
             <h4 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
               来源渠道分析
             </h4>
-            <button
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() => {
                 const sourceLabels: Record<string, string> = {
                   referral: "内推",
@@ -309,7 +311,7 @@ export default function PipelineFunnel({ candidates, totalResumes }: PipelineFun
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
               </svg>
               {copied ? "已复制" : "复制"}
-            </button>
+            </motion.button>
           </div>
           <div className="flex flex-wrap gap-2">
             {["referral", "headhunter", "website", "resume_db", "other"].map((src) => {
