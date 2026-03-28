@@ -151,7 +151,7 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
               type="text"
               value={jdUrl}
               onChange={(e) => { setJdUrl(e.target.value); setError(null); }}
-              placeholder="https://www.zhipin.com/job/... 或 https://www.lagou.com/jobs/..."
+              placeholder="https://www.zhipin.com/job/... / https://www.lagou.com/jobs/... / https://www.boss.com/..."
               className="w-full px-4 py-3 border border-gray-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition bg-[#111827] text-white placeholder-gray-500"
               disabled={loading}
             />
