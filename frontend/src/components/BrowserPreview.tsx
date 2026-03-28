@@ -33,15 +33,15 @@ export default function BrowserPreview({ screenshot, currentStep }: BrowserPrevi
           <div className="flex space-x-1.5">
             <motion.div
               whileHover={{ scale: 1.2 }}
-              className="w-3 h-3 rounded-full bg-red-500 cursor-pointer shadow-sm"
+              className="w-3 h-3 rounded-full bg-red-500 cursor-pointer shadow-lg shadow-red-500/40"
             />
             <motion.div
               whileHover={{ scale: 1.2 }}
-              className="w-3 h-3 rounded-full bg-yellow-500 cursor-pointer shadow-sm"
+              className="w-3 h-3 rounded-full bg-yellow-500 cursor-pointer shadow-lg shadow-yellow-500/40"
             />
             <motion.div
               whileHover={{ scale: 1.2 }}
-              className="w-3 h-3 rounded-full bg-green-500 cursor-pointer shadow-sm"
+              className="w-3 h-3 rounded-full bg-green-500 cursor-pointer shadow-lg shadow-green-500/40"
             />
           </div>
           <span className="text-gray-300 text-sm font-medium">
