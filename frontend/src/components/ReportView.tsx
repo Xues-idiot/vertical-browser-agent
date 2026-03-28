@@ -69,6 +69,17 @@ export default function ReportView({ report, markdown }: ReportViewProps) {
               {report.screened_resumes}份
             </span>
           </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.25 }}
+            className="flex justify-between items-center p-3 bg-red-500/10 rounded-lg border border-red-500/30"
+          >
+            <span className="text-red-400">淘汰</span>
+            <span className="font-bold text-red-400 text-lg">
+              {report.total_resumes - report.screened_resumes}份
+            </span>
+          </motion.div>
         </div>
 
         {/* 通过率 */}
