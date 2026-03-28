@@ -133,7 +133,8 @@ export default function ReportView({ report, markdown }: ReportViewProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="text-center text-sm text-gray-500"
+          whileHover={{ scale: 1.02 }}
+          className="text-center text-sm text-gray-500 cursor-default"
         >
           生成时间: {report.generated_at}
         </motion.div>
