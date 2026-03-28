@@ -679,7 +679,9 @@ function CandidateDetailModal({
             <span className="text-sm text-gray-400">快捷操作</span>
           </div>
           <div className="flex flex-wrap gap-2">
-            <button
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => {
                 setStatus("interview");
                 onStatusChange("interview");
@@ -687,8 +689,10 @@ function CandidateDetailModal({
               className="px-4 py-2 bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 rounded-lg hover:bg-emerald-600/30 transition-colors text-sm flex items-center gap-2"
             >
               📅 安排面试
-            </button>
-            <button
+            </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => {
                 const subject = encodeURIComponent(`【Spider招聘】关于${candidate.candidate_name}的面试邀请`);
                 window.open(`mailto:?subject=${subject}`);
@@ -696,7 +700,7 @@ function CandidateDetailModal({
               className="px-4 py-2 bg-blue-600/20 text-blue-400 border border-blue-500/30 rounded-lg hover:bg-blue-600/30 transition-colors text-sm flex items-center gap-2"
             >
               ✉️ 发送邮件
-            </button>
+            </motion.button>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
