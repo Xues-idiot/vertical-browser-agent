@@ -72,19 +72,43 @@ export default function BrowserPreview({ screenshot, currentStep }: BrowserPrevi
             transition={{ duration: 2, repeat: isCompleted ? 0 : Infinity }}
           >
             <div className="text-center">
-              <motion.div
-                animate={{ rotate: isCompleted ? 360 : 0 }}
-                transition={{ duration: 0.5 }}
-                className="text-6xl mb-4"
-              >
-                🕷️
-              </motion.div>
-              <p className="text-gray-400 font-medium">
-                {steps.find(s => s.key === currentStep)?.label || currentStep}
-              </p>
-              <p className="text-gray-500 text-sm mt-1">
-                {steps.find(s => s.key === currentStep)?.description || ""}
-              </p>
+              {isCompleted ? (
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 200, damping: 15 }}
+                >
+                  <motion.div
+                    animate={{ rotate: [0, 10, -10, 0] }}
+                    transition={{ delay: 0.3, duration: 0.5 }}
+                    className="text-6xl mb-4"
+                  >
+                    ✅
+                  </motion.div>
+                  <p className="text-emerald-400 font-medium text-lg">
+                    筛选完成!
+                  </p>
+                  <p className="text-gray-500 text-sm mt-1">
+                    点击查看筛选结果
+                  </p>
+                </motion.div>
+              ) : (
+                <>
+                  <motion.div
+                    animate={{ rotate: isCompleted ? 360 : 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-6xl mb-4"
+                  >
+                    🕷️
+                  </motion.div>
+                  <p className="text-gray-400 font-medium">
+                    {steps.find(s => s.key === currentStep)?.label || currentStep}
+                  </p>
+                  <p className="text-gray-500 text-sm mt-1">
+                    {steps.find(s => s.key === currentStep)?.description || ""}
+                  </p>
+                </>
+              )}
             </div>
           </motion.div>
         )}
