@@ -201,12 +201,33 @@ export default function JDComparison({
                 对比候选人在不同职位下的适配度
               </p>
             </div>
-            <button
-              onClick={onClose}
-              className="text-purple-100 hover:text-white transition-colors"
-            >
-              ✕
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => {
+                  const headers = ["| 候选人", ...jds.map(j => ` ${j.name}`)].join(" |") + " |";
+                  const separator = headers.replace(/[^|]/g, "-");
+                  const rows = candidates.map(c => {
+                    const cells = [`| ${c.candidate_name}`];
+                    jds.forEach((_, jdIndex) => {
+                      const score = Math.max(50, Math.min(98, c.match_score + ((jdIndex * 7) % 20 - 10)));
+                      cells.push(` ${score}%`);
+                    });
+                    return cells.join(" |") + " |";
+                  }).join("\n");
+                  const md = `${headers}\n${separator.replace(/\|/g, ":|--:")}\n${rows}`;
+                  navigator.clipboard.writeText(md);
+                }}
+                className="px-3 py-1.5 bg-white/20 text-white text-sm rounded-lg hover:bg-white/30 transition-colors"
+              >
+                📋 Markdown
+              </button>
+              <button
+                onClick={onClose}
+                className="text-purple-100 hover:text-white transition-colors"
+              >
+                ✕
+              </button>
+            </div>
           </div>
         </div>
 
