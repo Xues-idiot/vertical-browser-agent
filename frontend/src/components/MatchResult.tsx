@@ -570,8 +570,10 @@ function CandidateDetailModal({
             </h3>
             <div className="flex flex-wrap gap-2">
               {statusOptions.map((opt) => (
-                <button
+                <motion.button
                   key={opt.value}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => {
                     setStatus(opt.value);
                     onStatusChange(opt.value);
@@ -583,7 +585,7 @@ function CandidateDetailModal({
                   }`}
                 >
                   {opt.label}
-                </button>
+                </motion.button>
               ))}
             </div>
           </div>
