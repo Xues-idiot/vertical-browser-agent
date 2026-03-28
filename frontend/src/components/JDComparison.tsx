@@ -70,7 +70,7 @@ function JDComparisonTable({
                 className="text-left py-3 px-4 text-sm font-semibold text-white min-w-[120px]"
               >
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 bg-cyan-500 rounded-full" />
+                  <motion.span whileHover={{ scale: 1.3 }} className="w-2 h-2 bg-cyan-500 rounded-full shadow-lg shadow-cyan-500/40" />
                   {jd.name}
                 </div>
                 <p className="text-xs text-gray-400 font-normal mt-1">
