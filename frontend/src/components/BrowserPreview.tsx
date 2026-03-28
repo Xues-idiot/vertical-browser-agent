@@ -154,7 +154,10 @@ export default function BrowserPreview({ screenshot, currentStep }: BrowserPrevi
       </div>
 
       {/* 状态栏 */}
-      <div className="bg-[#1F2937] px-4 py-3 border-t border-gray-700">
+      <motion.div
+        whileHover={{ backgroundColor: "rgba(31, 41, 55, 1)" }}
+        className="bg-[#1F2937] px-4 py-3 border-t border-gray-700"
+      >
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <motion.div
@@ -172,7 +175,7 @@ export default function BrowserPreview({ screenshot, currentStep }: BrowserPrevi
             Spider v1.34.2
           </span>
         </div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 }
