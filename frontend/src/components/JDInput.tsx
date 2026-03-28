@@ -184,8 +184,10 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
                     </svg>
                     {copied ? "已复制" : "复制"}
                   </button>
-                  <button
+                  <motion.button
                     type="button"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
                     onClick={() => {
                       setJdText("");
                       setError(null);
@@ -196,7 +198,7 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                     清除
-                  </button>
+                  </motion.button>
                 </div>
               )}
             </div>
