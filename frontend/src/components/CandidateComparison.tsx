@@ -315,12 +315,14 @@ export default function CandidateComparison({
                 >
                   📊 CSV
                 </button>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={handleExportJSON}
                   className="px-3 py-1.5 bg-emerald-500/40 text-white text-sm rounded-lg hover:bg-emerald-500/50 transition-colors flex items-center gap-1"
                 >
                   📋 JSON
-                </button>
+                </motion.button>
               </>
             )}
             <motion.button
