@@ -119,7 +119,7 @@ export default function ReportView({ report, markdown }: ReportViewProps) {
               initial={{ width: 0 }}
               animate={{ width: `${passRate}%` }}
               transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
-              className="bg-gradient-to-r from-cyan-500 to-cyan-600 h-3 rounded-full"
+              className="bg-gradient-to-r from-cyan-500 to-cyan-600 h-3 rounded-full shadow-lg shadow-cyan-500/30"
             />
           </div>
         </motion.div>
