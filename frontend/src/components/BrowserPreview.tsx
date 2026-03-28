@@ -133,6 +133,7 @@ export default function BrowserPreview({ screenshot, currentStep }: BrowserPrevi
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: index <= currentIndex - 1 ? 1 : 0.4, y: 0 }}
                     transition={{ delay: index * 0.1 }}
+                    whileHover={{ scale: 1.15 }}
                     className="flex flex-col items-center"
                   >
                     <span className="text-lg">{step.icon}</span>
