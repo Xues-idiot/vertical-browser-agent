@@ -262,20 +262,20 @@ export default function PipelineFunnel({ candidates, totalResumes }: PipelineFun
         {/* Quick stats */}
         <div className="mt-6 flex items-center justify-between text-sm">
           <div className="flex items-center gap-4">
-            <span className="text-gray-400">
+            <motion.span whileHover={{ scale: 1.05 }} className="text-gray-400 cursor-default">
               共 <span className="text-white font-medium">{candidates.length}</span> 位候选人
-            </span>
+            </motion.span>
             <span className="text-gray-500">|</span>
-            <span className="text-emerald-400">
+            <motion.span whileHover={{ scale: 1.05 }} className="text-emerald-400 cursor-default">
               强烈推荐 <span className="font-medium">{candidates.filter(c => c.level === "strong_recommend").length}</span>
-            </span>
-            <span className="text-amber-400">
+            </motion.span>
+            <motion.span whileHover={{ scale: 1.05 }} className="text-amber-400 cursor-default">
               可备选 <span className="font-medium">{candidates.filter(c => c.level === "backup").length}</span>
-            </span>
+            </motion.span>
           </div>
-          <div className="text-gray-500">
+          <motion.span whileHover={{ scale: 1.05 }} className="text-gray-500 cursor-default">
             漏斗更新时间: {new Date().toLocaleTimeString()}
-          </div>
+          </motion.span>
         </div>
 
         {/* 来源统计 */}
