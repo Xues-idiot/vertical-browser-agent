@@ -83,7 +83,11 @@ function JDComparisonTable({
         </thead>
         <tbody>
           {candidates.map((candidate, cIndex) => (
-            <tr key={cIndex} className="border-b border-gray-700/50">
+            <motion.tr
+              key={cIndex}
+              whileHover={{ backgroundColor: "rgba(55, 65, 81, 0.3)" }}
+              className="border-b border-gray-700/50 cursor-pointer"
+            >
               <td className="py-4 px-4 sticky left-0 bg-[#111827] z-10">
                 <div className="font-medium text-white">{candidate.candidate_name}</div>
                 <div className="text-xs text-gray-400">
@@ -126,7 +130,7 @@ function JDComparisonTable({
                   </td>
                 );
               })}
-            </tr>
+            </motion.tr>
           ))}
         </tbody>
       </table>
