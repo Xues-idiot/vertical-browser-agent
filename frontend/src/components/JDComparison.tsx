@@ -152,6 +152,7 @@ export default function JDComparison({
     },
   ]);
   const [newJDName, setNewJDName] = useState("");
+  const [copied, setCopied] = useState(false);
 
   const getScoreColor = useCallback((score: number) => {
     if (score >= 80) return "text-emerald-400";
@@ -216,10 +217,14 @@ export default function JDComparison({
                   }).join("\n");
                   const md = `${headers}\n${separator.replace(/\|/g, ":|--:")}\n${rows}`;
                   navigator.clipboard.writeText(md);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
                 }}
-                className="px-3 py-1.5 bg-white/20 text-white text-sm rounded-lg hover:bg-white/30 transition-colors"
+                className={`px-3 py-1.5 text-white text-sm rounded-lg transition-colors ${
+                  copied ? "bg-emerald-500/40" : "bg-white/20 hover:bg-white/30"
+                }`}
               >
-                📋 Markdown
+                {copied ? "✅ 已复制" : "📋 Markdown"}
               </button>
               <button
                 onClick={onClose}
