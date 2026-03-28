@@ -171,9 +171,12 @@ export default function BrowserPreview({ screenshot, currentStep }: BrowserPrevi
               {isCompleted ? "任务已完成" : "处理中..."}
             </span>
           </div>
-          <span className="text-xs text-gray-500">
+          <motion.span
+            whileHover={{ scale: 1.1, color: "#22d3ee" }}
+            className="text-xs text-gray-500 cursor-default"
+          >
             Spider v1.34.2
-          </span>
+          </motion.span>
         </div>
       </motion.div>
     </motion.div>
