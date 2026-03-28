@@ -303,12 +303,14 @@ export default function CandidateComparison({
                 >
                   {copied ? "✅ 已复制" : "📄 复制报告"}
                 </button>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={handleShareLink}
                   className="px-3 py-1.5 bg-white/20 text-white text-sm rounded-lg hover:bg-white/30 transition-colors flex items-center gap-1"
                 >
                   🔗 分享链接
-                </button>
+                </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
