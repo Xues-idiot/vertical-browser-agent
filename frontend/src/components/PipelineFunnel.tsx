@@ -115,12 +115,14 @@ export default function PipelineFunnel({ candidates, totalResumes }: PipelineFun
           </h3>
           <p className="text-gray-300 text-sm mt-1">候选人状态流转追踪</p>
         </div>
-        <button
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={toggleAllStages}
           className="text-xs text-gray-300 hover:text-white bg-white/10 px-3 py-1.5 rounded-lg transition-colors"
         >
           {allExpanded ? "收起全部" : "展开全部"}
-        </button>
+        </motion.button>
       </div>
 
       <div className="p-6">
