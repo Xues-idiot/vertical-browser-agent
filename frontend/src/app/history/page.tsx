@@ -383,57 +383,63 @@ export default function HistoryPage() {
                   <>
                     <div className="bg-gradient-to-r from-cyan-600 to-cyan-700 px-6 py-4 flex justify-between items-center">
                       <h2 className="text-xl font-bold text-white">{item.position_name}</h2>
-                      <button
+                      <motion.button
+                        whileHover={{ scale: 1.2, rotate: 90 }}
+                        whileTap={{ scale: 0.9 }}
                         onClick={() => setSelectedId(null)}
                         className="text-cyan-100 hover:text-white transition-colors"
                       >
                         ✕
-                      </button>
+                      </motion.button>
                     </div>
                     <div className="p-6 overflow-y-auto max-h-[60vh]">
                       <div className="space-y-4">
-                        <div className="flex justify-between items-center p-3 bg-[#111827] rounded-lg">
+                        <motion.div whileHover={{ scale: 1.01 }} className="flex justify-between items-center p-3 bg-[#111827] rounded-lg">
                           <span className="text-gray-400">状态</span>
                           {getStatusBadge(item.status)}
-                        </div>
-                        <div className="flex justify-between items-center p-3 bg-[#111827] rounded-lg">
+                        </motion.div>
+                        <motion.div whileHover={{ scale: 1.01 }} className="flex justify-between items-center p-3 bg-[#111827] rounded-lg">
                           <span className="text-gray-400">简历总数</span>
                           <span className="text-white font-medium">{item.total_resumes}份</span>
-                        </div>
-                        <div className="flex justify-between items-center p-3 bg-[#111827] rounded-lg">
+                        </motion.div>
+                        <motion.div whileHover={{ scale: 1.01 }} className="flex justify-between items-center p-3 bg-[#111827] rounded-lg">
                           <span className="text-gray-400">筛选通过</span>
                           <span className="text-emerald-400 font-medium">{item.screened_resumes}份</span>
-                        </div>
-                        <div className="flex justify-between items-center p-3 bg-[#111827] rounded-lg">
+                        </motion.div>
+                        <motion.div whileHover={{ scale: 1.01 }} className="flex justify-between items-center p-3 bg-[#111827] rounded-lg">
                           <span className="text-gray-400">强烈推荐</span>
                           <span className="text-emerald-400 font-medium">{item.strong_count}份</span>
-                        </div>
-                        <div className="flex justify-between items-center p-3 bg-[#111827] rounded-lg">
+                        </motion.div>
+                        <motion.div whileHover={{ scale: 1.01 }} className="flex justify-between items-center p-3 bg-[#111827] rounded-lg">
                           <span className="text-gray-400">可备选</span>
                           <span className="text-amber-400 font-medium">{item.backup_count}份</span>
-                        </div>
-                        <div className="flex justify-between items-center p-3 bg-[#111827] rounded-lg">
+                        </motion.div>
+                        <motion.div whileHover={{ scale: 1.01 }} className="flex justify-between items-center p-3 bg-[#111827] rounded-lg">
                           <span className="text-gray-400">淘汰</span>
                           <span className="text-red-400 font-medium">{item.rejected_count}份</span>
-                        </div>
-                        <div className="p-3 bg-[#111827] rounded-lg">
+                        </motion.div>
+                        <motion.div whileHover={{ scale: 1.01 }} className="p-3 bg-[#111827] rounded-lg">
                           <span className="text-gray-400 text-sm">JD来源</span>
                           <p className="text-white text-sm mt-1 truncate">{item.jd_source}</p>
-                        </div>
-                        <div className="p-3 bg-[#111827] rounded-lg">
+                        </motion.div>
+                        <motion.div whileHover={{ scale: 1.01 }} className="p-3 bg-[#111827] rounded-lg">
                           <span className="text-gray-400 text-sm">筛选标准</span>
                           <div className="flex flex-wrap gap-2 mt-2">
                             {(item.screening_criteria || []).map((c, i) => (
-                              <span key={i} className="bg-cyan-500/20 text-cyan-400 px-2 py-1 rounded-full text-xs">
+                              <motion.span
+                                key={i}
+                                whileHover={{ scale: 1.1 }}
+                                className="bg-cyan-500/20 text-cyan-400 px-2 py-1 rounded-full text-xs"
+                              >
                                 {c}
-                              </span>
+                              </motion.span>
                             ))}
                           </div>
-                        </div>
-                        <div className="p-3 bg-[#111827] rounded-lg">
+                        </motion.div>
+                        <motion.div whileHover={{ scale: 1.01 }} className="p-3 bg-[#111827] rounded-lg">
                           <span className="text-gray-400 text-sm">生成时间</span>
                           <p className="text-white text-sm mt-1">{new Date(item.generated_at).toLocaleString()}</p>
-                        </div>
+                        </motion.div>
                       </div>
                     </div>
                     <div className="bg-[#111827] px-6 py-4 border-t border-gray-700 flex gap-3">
