@@ -69,7 +69,18 @@ function getStatusCounts(candidates: Candidate[], total: number) {
 
 export default function PipelineFunnel({ candidates, totalResumes }: PipelineFunnelProps) {
   const [expandedStage, setExpandedStage] = useState<string | null>(null);
+  const [allExpanded, setAllExpanded] = useState(false);
   const counts = useMemo(() => getStatusCounts(candidates, totalResumes), [candidates, totalResumes]);
+
+  const toggleAllStages = () => {
+    if (allExpanded) {
+      setExpandedStage(null);
+    } else {
+      // Expand the screened stage by default (most interesting)
+      setExpandedStage("screened");
+    }
+    setAllExpanded(!allExpanded);
+  };
 
   // Calculate percentages for funnel width
   const maxCount = Math.max(...Object.values(counts), 1);
@@ -96,11 +107,19 @@ export default function PipelineFunnel({ candidates, totalResumes }: PipelineFun
       animate={{ opacity: 1, y: 0 }}
       className="bg-[#1F2937] rounded-xl shadow-lg border border-gray-700 overflow-hidden"
     >
-      <div className="bg-gradient-to-r from-gray-600 to-gray-700 px-6 py-4">
-        <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-          <span>🔍</span> 招聘漏斗
-        </h3>
-        <p className="text-gray-300 text-sm mt-1">候选人状态流转追踪</p>
+      <div className="bg-gradient-to-r from-gray-600 to-gray-700 px-6 py-4 flex justify-between items-center">
+        <div>
+          <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+            <span>🔍</span> 招聘漏斗
+          </h3>
+          <p className="text-gray-300 text-sm mt-1">候选人状态流转追踪</p>
+        </div>
+        <button
+          onClick={toggleAllStages}
+          className="text-xs text-gray-300 hover:text-white bg-white/10 px-3 py-1.5 rounded-lg transition-colors"
+        >
+          {allExpanded ? "收起全部" : "展开全部"}
+        </button>
       </div>
 
       <div className="p-6">
