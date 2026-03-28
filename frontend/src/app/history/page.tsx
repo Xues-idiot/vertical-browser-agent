@@ -270,7 +270,8 @@ export default function HistoryPage() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ delay: index * 0.05 }}
-                  className="bg-[#1F2937] rounded-xl p-6 hover:bg-[#252d3d] transition-colors"
+                  whileHover={{ scale: 1.01 }}
+                  className="bg-[#1F2937] rounded-xl p-6 hover:bg-[#252d3d] transition-colors shadow-lg hover:shadow-xl"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
