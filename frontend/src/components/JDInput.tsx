@@ -112,8 +112,10 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
 
       {/* 模式切换 */}
       <div className="flex gap-2 mb-4">
-        <button
+        <motion.button
           type="button"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={() => setInputMode("url")}
           className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
             inputMode === "url"
@@ -122,9 +124,11 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
           }`}
         >
           🔗 URL模式
-        </button>
-        <button
+        </motion.button>
+        <motion.button
           type="button"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={() => setInputMode("text")}
           className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
             inputMode === "text"
@@ -133,7 +137,7 @@ export default function JDInput({ onSubmit, loading }: JDInputProps) {
           }`}
         >
           📝 文本模式
-        </button>
+        </motion.button>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
