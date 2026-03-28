@@ -283,9 +283,9 @@ export default function HistoryPage() {
                         </h3>
                         {getStatusBadge(item.status)}
                       </div>
-                      <p className="text-gray-400 text-sm mb-3 truncate" title={item.jd_source || ""}>
+                      <motion.p whileHover={{ scale: 1.02 }} className="text-gray-400 text-sm mb-3 truncate cursor-default" title={item.jd_source || ""}>
                         来源: {item.jd_source ? (item.jd_source.length > 50 ? item.jd_source.slice(0, 50) + "..." : item.jd_source) : "无"}
-                      </p>
+                      </motion.p>
                       <div className="flex flex-wrap gap-4 text-sm">
                         <motion.span whileHover={{ scale: 1.05 }} className="text-gray-400 cursor-default">
                           📅 {formatDate(item.generated_at)}
