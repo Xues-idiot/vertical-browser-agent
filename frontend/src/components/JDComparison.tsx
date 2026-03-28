@@ -279,12 +279,14 @@ export default function JDComparison({
                   placeholder="输入新职位名称..."
                   className="flex-1 bg-[#111827] border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:border-cyan-500"
                 />
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={addJD}
                   className="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors text-sm"
                 >
                   添加JD
-                </button>
+                </motion.button>
               </div>
             ) : (
               <div className="text-xs text-gray-500 bg-[#111827] rounded-lg px-3 py-2 border border-gray-700">
