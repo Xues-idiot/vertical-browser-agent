@@ -652,12 +652,14 @@ function CandidateDetailModal({
               <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
                 备注
               </h3>
-              <button
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => onSaveNote?.(candidate.candidate_name, note)}
                 className="px-3 py-1 bg-cyan-600/20 text-cyan-400 border border-cyan-500/30 rounded-lg hover:bg-cyan-600/30 transition-colors text-xs flex items-center gap-1"
               >
                 💾 保存备注
-              </button>
+              </motion.button>
             </div>
             <textarea
               value={note}
