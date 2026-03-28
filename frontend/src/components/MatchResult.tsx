@@ -1267,9 +1267,9 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
 
       {/* Statistics Panel */}
       <div className="bg-[#1F2937] rounded-xl p-4 border border-gray-700">
-        <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+        <motion.h3 whileHover={{ scale: 1.02 }} className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-2 cursor-default">
           <span>📊</span> 候选人统计
-        </h3>
+        </motion.h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <motion.div whileHover={{ scale: 1.05 }} className="bg-[#111827] rounded-lg p-3 text-center cursor-default">
             <div className="text-2xl font-bold text-cyan-400">{candidateStats.avgScore}%</div>
@@ -1290,7 +1290,7 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
         </div>
         {candidateStats.topTags.length > 0 && (
           <div className="mt-4">
-            <div className="text-xs text-gray-400 mb-2">热门标签:</div>
+            <motion.span whileHover={{ scale: 1.05 }} className="text-xs text-gray-400 mb-2 inline-block cursor-default">热门标签:</motion.span>
             <div className="flex flex-wrap gap-2">
               {candidateStats.topTags.map(([tag, count]) => (
                 <motion.span
@@ -1316,9 +1316,9 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
           className="bg-[#1F2937] rounded-xl shadow-lg border border-gray-700 overflow-hidden"
         >
           <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 px-6 py-4">
-            <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+            <motion.h3 whileHover={{ scale: 1.02 }} className="text-lg font-semibold text-white flex items-center gap-2 cursor-default">
               <span>⭐</span> 强烈推荐 ({sortedFilteredStrong.length}份)
-            </h3>
+            </motion.h3>
           </div>
           <div className="p-6 space-y-4">
             {sortedFilteredStrong.map((candidate, index) => (
@@ -1491,9 +1491,9 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
           className="bg-[#1F2937] rounded-xl shadow-lg border border-gray-700 overflow-hidden"
         >
           <div className="bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-4">
-            <h3 className="text-lg font-semibold text-amber-900 flex items-center gap-2">
+            <motion.h3 whileHover={{ scale: 1.02 }} className="text-lg font-semibold text-amber-900 flex items-center gap-2 cursor-default">
               <span>🟡</span> 可备选 ({sortedFilteredBackup.length}份)
-            </h3>
+            </motion.h3>
           </div>
           <div className="p-6 space-y-4">
             {sortedFilteredBackup.map((candidate, index) => (
