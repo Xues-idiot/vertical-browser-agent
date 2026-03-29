@@ -80,7 +80,13 @@ export default function PipelineFunnel({ candidates, totalResumes }: PipelineFun
   const [expandedStage, setExpandedStage] = useState<string | null>(null);
   const [allExpanded, setAllExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [updateTime, setUpdateTime] = useState<string>("");
   const counts = useMemo(() => getStatusCounts(candidates, totalResumes), [candidates, totalResumes]);
+
+  // Update time when candidates change
+  useMemo(() => {
+    setUpdateTime(new Date().toLocaleTimeString());
+  }, [candidates.length]);
 
   const toggleAllStages = () => {
     if (allExpanded) {
@@ -328,7 +334,7 @@ export default function PipelineFunnel({ candidates, totalResumes }: PipelineFun
             whileHover={{ scale: 1.05 }}
             className="text-[#64748b] cursor-default"
           >
-            漏斗更新时间: {new Date().toLocaleTimeString()}
+            漏斗更新时间: {updateTime}
           </motion.span>
         </div>
 

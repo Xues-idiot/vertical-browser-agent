@@ -1413,7 +1413,7 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
           <div className="p-6 space-y-4">
             {sortedFilteredStrong.map((candidate, index) => (
               <motion.div
-                key={index}
+                key={candidate.candidate_name}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
@@ -1594,7 +1594,7 @@ ${candidate.matched_criteria?.length ? `匹配标准: ${candidate.matched_criter
           <div className="p-6 space-y-4">
             {sortedFilteredBackup.map((candidate, index) => (
               <motion.div
-                key={index}
+                key={candidate.candidate_name}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 + index * 0.1 }}
