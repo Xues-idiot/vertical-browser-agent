@@ -109,7 +109,6 @@ export default function ScreeningPage() {
   const [jdText, setJdText] = useState("");
   const [report, setReport] = useState<Report | null>(null);
   const [viewMode, setViewMode] = useState<"list" | "funnel" | "compare">("list");
-  const [showComparison, setShowComparison] = useState(false);
   const [showJDComparison, setShowJDComparison] = useState(false);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
 

@@ -48,10 +48,10 @@
 
   /* Surface Layers (Depth Design) */
   --color-bg-deep: #0a0f1a;
-  --color-bg-surface: #111827;
-  --color-bg-elevated: #1a2332;
+  --color-bg-surface: #0f172a;
+  --color-bg-elevated: #1e293b;
   --color-bg-card: #1f2937;
-  --color-bg-hover: #252d3d;
+  --color-bg-hover: #334155;
 
   /* Text Colors */
   --color-text-primary: #f8fafc;

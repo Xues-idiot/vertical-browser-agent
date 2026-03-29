@@ -94,7 +94,7 @@ function JDComparisonTable({
         <tbody>
           {candidates.map((candidate, cIndex) => (
             <motion.tr
-              key={cIndex}
+              key={candidate.candidate_name}
               whileHover={{ backgroundColor: "rgba(55, 65, 81, 0.3)" }}
               className="border-b border-[#334155]/50 cursor-pointer"
             >
@@ -337,7 +337,7 @@ export default function JDComparison({
           <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
             {candidates.slice(0, 3).map((c, i) => (
               <motion.div
-                key={i}
+                key={c.candidate_name}
                 whileHover={{ scale: 1.03, borderColor: "rgba(34, 211, 238, 0.4)" }}
                 className="bg-[#0a0f1a] rounded-lg p-4 border border-[#334155] cursor-default"
               >

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useId } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { validateResumeText } from "@/lib/validation";
 
@@ -45,6 +45,7 @@ function extractResumePreview(text: string): { name?: string; email?: string; ph
 }
 
 export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
+  const uniqueId = useId();
   const [resumes, setResumes] = useState<string[]>([""]);
   const [candidateNames, setCandidateNames] = useState<string[]>([""]);
   const [errors, setErrors] = useState<(string | null)[]>([]);
@@ -160,7 +161,7 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
         <AnimatePresence>
           {resumes.map((_, index) => (
             <motion.div
-              key={index}
+              key={`${uniqueId}-${index}`}
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
@@ -193,7 +194,8 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
                 value={candidateNames[index]}
                 onChange={(e) => updateName(index, e.target.value)}
                 placeholder="候选人姓名（可选）"
-                className="w-full px-3 py-2 bg-[#0a0f1a] border border-[#334155] rounded-lg mb-3 text-[#f8fafc] placeholder-[#64748b] focus:outline-none focus:border-[#10b981] focus:shadow-[0_0_0_3px_rgba(16,185,129,0.2)] transition-all text-sm"
+                disabled={loading}
+                className="w-full px-3 py-2 bg-[#0a0f1a] border border-[#334155] rounded-lg mb-3 text-[#f8fafc] placeholder-[#64748b] focus:outline-none focus:border-[#10b981] focus:shadow-[0_0_0_3px_rgba(16,185,129,0.2)] transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
               />
 
               {/* Resume Textarea */}
@@ -203,11 +205,12 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
                   onChange={(e) => updateResume(index, e.target.value)}
                   placeholder="粘贴简历内容..."
                   rows={5}
-                  className="w-full px-3 py-2 bg-[#0a0f1a] border border-[#334155] rounded-lg text-[#f8fafc] placeholder-[#64748b] focus:outline-none focus:border-[#10b981] focus:shadow-[0_0_0_3px_rgba(16,185,129,0.2)] resize-none transition-all pr-20 text-sm"
+                  disabled={loading}
+                  className="w-full px-3 py-2 bg-[#0a0f1a] border border-[#334155] rounded-lg text-[#f8fafc] placeholder-[#64748b] focus:outline-none focus:border-[#10b981] focus:shadow-[0_0_0_3px_rgba(16,185,129,0.2)] resize-none transition-all pr-20 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 />
 
                 {/* Action Buttons */}
-                {resumes[index] && (
+                {resumes[index] && !loading && (
                   <div className="absolute top-2 right-2 flex gap-2">
                     <motion.button
                       type="button"
@@ -329,10 +332,11 @@ export default function ResumeList({ onSubmit, loading }: ResumeListProps) {
       {/* Action Buttons */}
       <div className="flex gap-3 mt-6">
         <motion.button
-          whileHover={{ scale: 1.02, boxShadow: "0 4px 15px rgba(0,0,0,0.3)" }}
-          whileTap={{ scale: 0.98 }}
+          whileHover={{ scale: loading ? 1 : 1.02, boxShadow: loading ? "none" : "0 4px 15px rgba(0,0,0,0.3)" }}
+          whileTap={{ scale: loading ? 1 : 0.98 }}
           onClick={addResume}
-          className="flex-1 bg-[#1f2937] text-[#94a3b8] py-3 px-4 rounded-xl hover:bg-[#334155] transition-all flex items-center justify-center gap-2 border border-[#334155] font-medium"
+          disabled={loading}
+          className="flex-1 bg-[#1f2937] text-[#94a3b8] py-3 px-4 rounded-xl hover:bg-[#334155] transition-all flex items-center justify-center gap-2 border border-[#334155] font-medium disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <span>+</span> 添加简历
         </motion.button>
